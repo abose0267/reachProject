@@ -1,10 +1,20 @@
 import React from "react";
-import { Image } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-paper";
+import {
+  View,
+  Image,
+  StyleSheet,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  StatusBar,
+  SafeAreaView,
+  Text,
+  Button,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 
-export default function App() {
+const SignUp2 = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View
@@ -19,10 +29,10 @@ export default function App() {
           Sign Up
         </Text>
         <View style={{ paddingBottom: 20, borderRadius: 50 }}>
-          <TextInput label="First Name" />
+          <TextInput label="Email" />
         </View>
 
-        <TextInput stye={styles.input} label="Last Name" />
+        <TextInput stye={styles.input} label="Password" />
       </View>
 
       <View
@@ -56,7 +66,9 @@ export default function App() {
       </View>
     </View>
   );
-}
+};
+
+export default SignUp2;
 
 const styles = StyleSheet.create({
   container: {

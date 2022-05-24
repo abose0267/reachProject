@@ -1,10 +1,20 @@
 import React from "react";
-import { Image } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-paper";
+import {
+  View,
+  Image,
+  StyleSheet,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  StatusBar,
+  SafeAreaView,
+  Text,
+  Button,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 
-export default function App() {
+const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View
@@ -16,13 +26,13 @@ export default function App() {
         }}
       >
         <Text style={{ fontSize: 30, fontWeight: "600", paddingBottom: "10%" }}>
-          Sign Up
+          Login
         </Text>
         <View style={{ paddingBottom: 20, borderRadius: 50 }}>
-          <TextInput label="First Name" />
+          <TextInput label="Username" />
         </View>
 
-        <TextInput stye={styles.input} label="Last Name" />
+        <TextInput stye={styles.input} label="Password" />
       </View>
 
       <View
@@ -51,12 +61,14 @@ export default function App() {
           }}
           onPress={{}}
         >
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Next</Text>
+          <Text style={{ fontSize: 20, fontWeight: "500" }}>Login</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-}
+};
+
+export default Login;
 
 const styles = StyleSheet.create({
   container: {

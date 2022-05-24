@@ -1,43 +1,51 @@
 import React from "react";
-import { Image } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { TextInput } from "react-native-paper";
+import {
+  View,
+  Image,
+  StyleSheet,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  StatusBar,
+  SafeAreaView,
+  Text,
+  Button,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 
-export default function App() {
+const LandingPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          flex: 1,
-          paddingTop: "18%",
-          width: "92%",
-          flexDirection: "column",
-        }}
-      >
-        <Text style={{ fontSize: 30, fontWeight: "600", paddingBottom: "10%" }}>
-          Sign Up
-        </Text>
-        <View style={{ paddingBottom: 20, borderRadius: 50 }}>
-          <TextInput label="First Name" />
-        </View>
-
-        <TextInput stye={styles.input} label="Last Name" />
-      </View>
-
+      <Image source={require("../assets/image3.png")} />
+      <Text style={styles.text}> Welcome to The REACH Portal</Text>
       <View
         style={{
           flex: 1,
           flexDirection: "column",
           position: "absolute",
           bottom: "1%",
+
           width: "100%",
           height: "25%",
           alignItems: "center",
-          justifyContent: "flex-end",
-          marginBottom: "20%",
         }}
       >
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#F8F8F8",
+            borderWidth: 1,
+            width: "75%",
+            alignItems: "center",
+            borderRadius: 10,
+            justifyContent: "center",
+            height: "25%",
+            marginTop: "5%",
+          }}
+          onPress={{}}
+        >
+          <Text style={{ fontSize: 20, fontWeight: "500" }}>Login</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={{
             backgroundColor: "#379770",
@@ -51,12 +59,13 @@ export default function App() {
           }}
           onPress={{}}
         >
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Next</Text>
+          <Text style={{ fontSize: 20, fontWeight: "500" }}>Sign Up</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-}
+};
+export default LandingPage;
 
 const styles = StyleSheet.create({
   container: {
@@ -70,11 +79,5 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight: "bold",
     paddingTop: 20,
-  },
-  input: {
-    paddingTop: "10%",
-    width: "100%",
-    height: "25%",
-    borderRadius: 20,
   },
 });
