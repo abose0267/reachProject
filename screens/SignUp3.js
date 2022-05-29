@@ -12,6 +12,7 @@ import {
   Button,
   TouchableOpacity,
   Dimensions,
+  TextInput,
 } from "react-native";
 
 const SignUp3 = ({ navigation }) => {
