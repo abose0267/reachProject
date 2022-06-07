@@ -1,9 +1,13 @@
 {
-  "compilerOptions": {},
   "extends": "expo/tsconfig.base",
-  "paths": {
-    "@app/*": [
-      "./*"
-    ]
+  "compilerOptions": {
+    "strict": false,
+    // "baseUrl": "src",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "paths": {
+      "@app/*": ["./src/*"]
+    }
   },
 }

@@ -19,9 +19,9 @@ const Contacts = () => {
       </ImageContainer>
       <ActionContainer>
         <BlockButton style={styles.button} outlined>
-          Message
+          Email
         </BlockButton>
-        <BlockButton style={styles.button}>Email</BlockButton>
+        <BlockButton style={styles.button}>Message</BlockButton>
       </ActionContainer>
     </SafeAreaView>
   );

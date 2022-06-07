@@ -21,7 +21,7 @@ module.exports = function (api) {
             '.ios.js',
             '.ios.tsx',
           ],
-          alias: {'@app': './'},
+          alias: {'@app': './src/'},
           // root: ['./src'],
         },
       ],

@@ -5,9 +5,9 @@ interface BlockButtonProps extends ComponentProps<typeof TouchableOpacity> {
   outlined?: boolean;
 }
 
-export const BlockButton = ({ children, style, outlined = false }: BlockButtonProps) => {
+export const BlockButton = ({ children, style, outlined = false, ...rest }: BlockButtonProps) => {
   return (
-    <TouchableOpacity style={[styles.button, (outlined && styles.outlined), style]}>
+    <TouchableOpacity {...rest} style={[styles.button, (outlined && styles.outlined), style]}>
       <Text style={styles.text}>{children}</Text>
     </TouchableOpacity>
   );
@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     justifyContent: 'center',
+    marginBottom: 10,
   },
   text: {
     fontSize: 17,

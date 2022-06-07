@@ -11,41 +11,44 @@ import {
   Text,
   Button,
   TouchableOpacity,
+  TextInput,
   Dimensions,
 } from "react-native";
 
-const LandingPage = ({ navigation }) => {
+const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Image source={require("../assets/image3.png")} />
-      <Text style={styles.text}> Welcome to The REACH Portal</Text>
+      <View
+        style={{
+          flex: 1,
+          paddingTop: "18%",
+          width: "92%",
+          flexDirection: "column",
+        }}
+      >
+        <Text style={{ fontSize: 30, fontWeight: "600", paddingBottom: "10%" }}>
+          Login
+        </Text>
+        <View style={{ paddingBottom: 20, borderRadius: 50 }}>
+          <TextInput label="Username" />
+        </View>
+
+        <TextInput stye={styles.input} label="Password" />
+      </View>
+
       <View
         style={{
           flex: 1,
           flexDirection: "column",
           position: "absolute",
           bottom: "1%",
-
           width: "100%",
           height: "25%",
           alignItems: "center",
+          justifyContent: "flex-end",
+          marginBottom: "20%",
         }}
       >
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#F8F8F8",
-            borderWidth: 1,
-            width: "75%",
-            alignItems: "center",
-            borderRadius: 10,
-            justifyContent: "center",
-            height: "25%",
-            marginTop: "5%",
-          }}
-          onPress={{}}
-        >
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Login</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={{
             backgroundColor: "#379770",
@@ -59,13 +62,14 @@ const LandingPage = ({ navigation }) => {
           }}
           onPress={{}}
         >
-          <Text style={{ fontSize: 20, fontWeight: "500" }}>Sign Up</Text>
+          <Text style={{ fontSize: 20, fontWeight: "500" }}>Login</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-export default LandingPage;
+
+export default Login;
 
 const styles = StyleSheet.create({
   container: {
@@ -79,5 +83,11 @@ const styles = StyleSheet.create({
     color: "black",
     fontWeight: "bold",
     paddingTop: 20,
+  },
+  input: {
+    paddingTop: "10%",
+    width: "100%",
+    height: "25%",
+    borderRadius: 20,
   },
 });
