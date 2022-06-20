@@ -1,5 +1,5 @@
 import React, { ComponentProps } from 'react';
-import { View, Image, StyleSheet, SafeAreaView, Text } from 'react-native';
+import { View, Image, StyleSheet, SafeAreaView, Text, Linking } from 'react-native';
 import BlockButton from '@app/components/BlockButton';
 import { ActionContainer } from '@app/components';
 
@@ -18,7 +18,8 @@ const Contacts = () => {
         <Text style={styles.handleText}>{data.handle}</Text>
       </ImageContainer>
       <ActionContainer>
-        <BlockButton style={styles.button} outlined>
+        <BlockButton style={styles.button} outlined
+          onPress={() => Linking.openURL('mailto:kirthivel@gmail.com') }>
           Email
         </BlockButton>
         <BlockButton style={styles.button}>Message</BlockButton>
