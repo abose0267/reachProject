@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { auth } from './firebase'
+import { createUser } from "./user";
 
 const authContext = createContext(null);
 
@@ -8,7 +9,6 @@ export const ProvideAuth = ({ children }) => {
   const auth = useProvideAuth();
   return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }
-
 
 interface UseAuthReturnValue {
   user: any;
@@ -21,7 +21,6 @@ export const useAuth = () => {
   return useContext<UseAuthReturnValue>(authContext);
 };
 
-
 export interface UserAccountCreateInput {
   username: string;
   email: string;
@@ -29,7 +28,6 @@ export interface UserAccountCreateInput {
   firstname: string;
   lastname: string;
 }
-
 
 export interface UserLoginInput {
   email: string;
@@ -49,28 +47,19 @@ const useProvideAuth = (): UseAuthReturnValue => {
   const signup = async (data: UserAccountCreateInput) => {
     const response = await createUserWithEmailAndPassword(auth, data.email, data.password);
     setUser(response.user);
-    const user = response.user;
-    // do something with the user
+    const { uid } = response.user;
+    createUser(uid, {
+      email: data.email,
+      username: data.username,
+      firstname: data.firstname,
+      lastname: data.lastname,
+    })
   };
 
   const signout = async () => {
     await signOut(auth);
     setUser(false);
   };
-
-  // const resetPass = (email) => {
-  //   return sendPasswordResetEmail(auth, email)
-  //     .then(() => {
-  //       return true;
-  //     });
-  // };
-
-  // const confirmPasswordReset = (code, password) => {
-  //   return confirmPasswordReset(code, password)
-  //     .then(() => {
-  //       return true;
-  //     });
-  // };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

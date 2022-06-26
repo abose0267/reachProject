@@ -1,49 +1,30 @@
 import React from 'react';
-import { View, Image, StyleSheet, SafeAreaView, Text } from 'react-native';
-import { BlockButton, TextInput, ActionContainer, Header } from '@app/components';
-import { useAuth, UserAccountCreateInput, UserLoginInput } from '@app/lib';
-import { Controller, useForm } from 'react-hook-form';
+import { View, Image, StyleSheet, SafeAreaView, Text, Alert } from 'react-native';
+import { BlockButton, TextInput, ActionContainer, Header, ControlledTextInput, ControlledInputProps } from '@app/components';
+import { useAuth, UserLoginInput } from '@app/lib';
+import { useForm } from 'react-hook-form';
+
+// wrap controlled input to add type safety (name field must match valid key)
+const LoginTextInput = (props: ControlledInputProps<UserLoginInput>) => (
+  <ControlledTextInput {...props} />
+);
 
 const Login = ({ navigation }) => {
-  const { user, signin } = useAuth();
+  const { signin } = useAuth();
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<UserLoginInput>({});
 
-  const onSubmit = (data: UserLoginInput) => signin(data);
+  const onSubmit = (data: UserLoginInput) => signin(data).catch(err => Alert.alert(err.message));
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
         <Header label="Login" />
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="Email"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          name="email"
-        />
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="Password"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          name="password"
-        />
+        <LoginTextInput name="email" control={control} label="Email" textContentType="emailAddress"/>
+        <LoginTextInput name="password" control={control} label="Password" textContentType="password" secureTextEntry/>
       </View>
       <ActionContainer>
         <BlockButton onPress={handleSubmit(onSubmit)}>

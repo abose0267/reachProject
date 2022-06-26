@@ -1,117 +1,40 @@
 import React from 'react';
-import { View, Image, StyleSheet, SafeAreaView, Text } from 'react-native';
-import { BlockButton, TextInput, ActionContainer, Header } from '@app/components';
+import { View, StyleSheet, SafeAreaView, Alert } from 'react-native';
+import { BlockButton, ActionContainer, Header, ControlledTextInput, ControlledInputProps } from '@app/components';
 import { NavigationProp } from '@react-navigation/native';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useAuth, UserAccountCreateInput } from '@app/lib';
+
+
+// wrap controlled input to add type safety (name field must match valid key)
+const RegisterTextInput = (props: ControlledInputProps<UserAccountCreateInput>) => (
+  <ControlledTextInput {...props} />
+);
 
 type Props = {
   navigation: NavigationProp<any>;
 };
 
-const Landing = ({ navigation }: Props) => {
-  const { user, signup } = useAuth();
-  
+const Register = ({ navigation }: Props) => {
+  const { signup } = useAuth();
   const {
     control,
     handleSubmit,
-    formState: { errors },
   } = useForm<UserAccountCreateInput>({});
 
-  const onSubmit = (data: UserAccountCreateInput) => signup(data);
-
-  // interface ControlledInputProps {
-  //   label: string;
-  //   name: keyof UserAccountCreateInput;
-  // }
-
-  // const ControlledInput = ({ name, label }: ControlledInputProps) => (
-  //   <Controllear
-  //     control={control}
-  //     rules={{ required: true }}
-  //     render={({ field: { onChange, onBlur, value } }) => (
-  //       <TextInput
-  //         label={label}
-  //         // onBlur={onBlur}
-  //         onChangeText={onChange}
-  //         value={value}
-  //       />
-  //     )}
-  //     name={name}
-  //   />
-  // );
+  const onSubmit = (data: UserAccountCreateInput) => signup(data).catch(err => Alert.alert(err.message));
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
         <Header label="Sign Up" />
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="First Name"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          name="firstname"
-        />
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="Last Name"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          name="lastname"
-        />
+        <RegisterTextInput name="firstname" control={control} label="First Name" textContentType="givenName" />
+        <RegisterTextInput name="lastname" control={control} label="Last Name" textContentType="familyName" />
         <Spacer />
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="Email"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          name="email"
-        />
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="Password"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          name="password"
-        />
+        <RegisterTextInput name="email" control={control} label="Email" textContentType="emailAddress" keyboardType="email-address" />
+        <RegisterTextInput name="password" control={control} label="Password" textContentType="password" secureTextEntry={true} />
         <Spacer />
-        <Controller
-          control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="Username"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          name="username"
-        />
+        <RegisterTextInput name="username" control={control} label="Username" />
       </View>
       <ActionContainer>
         <BlockButton onPress={handleSubmit(onSubmit)}>
@@ -124,7 +47,7 @@ const Landing = ({ navigation }: Props) => {
 
 const Spacer = () => <View style={{ height: 30 }} />;
 
-export default Landing;
+export default Register;
 
 const styles = StyleSheet.create({
   container: {
