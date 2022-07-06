@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Profile from './screens/Profile';
 import Directory from './screens/Directory';
+import Messages from '../messages/screens/Messages';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,11 @@ const DirectoryStack = () => (
           name="profile"
           component={Profile}
           options={{ title: 'Profile' }}
+      />
+              <Stack.Screen
+          name="messages"
+          component={Messages}
+          options={{ title: 'Messages' }}
         />
       </Stack.Navigator>
     </>

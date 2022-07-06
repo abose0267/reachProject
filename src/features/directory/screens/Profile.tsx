@@ -1,11 +1,11 @@
 import React, { ComponentProps } from 'react';
-import { View, Image, StyleSheet, SafeAreaView, Text, Linking } from 'react-native';
+import { View, Image, StyleSheet, SafeAreaView, Text, Linking, Alert } from 'react-native';
 import BlockButton from '@app/components/BlockButton';
 import { ActionContainer } from '@app/components';
 import { Avatar } from 'react-native-paper';
 import { UserProfile } from '@app/lib';
 
-const Contacts = ({ route }) => {
+const Contacts = ({ route,navigation }) => {
   const params = route.params as UserProfile;
   const { firstname, lastname, email } = params;
   const initials = firstname[0] + lastname[0]; 
@@ -24,7 +24,10 @@ const Contacts = ({ route }) => {
         >
           Email
         </BlockButton>
-        <BlockButton style={styles.button}>Message</BlockButton>
+        <BlockButton onPress={() => {
+          navigation.navigate("messages")
+
+        }} style={styles.button}>Message</BlockButton>
       </ActionContainer>
     </SafeAreaView>
   );
