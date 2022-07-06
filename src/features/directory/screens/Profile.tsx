@@ -2,28 +2,26 @@ import React, { ComponentProps } from 'react';
 import { View, Image, StyleSheet, SafeAreaView, Text, Linking } from 'react-native';
 import BlockButton from '@app/components/BlockButton';
 import { ActionContainer } from '@app/components';
-import { useNavigation } from '@react-navigation/native';
 import { Avatar } from 'react-native-paper';
-
-const data = {
-  name: 'Jerry Mathews',
-  handle: '@jerrymathews',
-  profileImage: 'https://tinyurl.com/ypp7rvs6',
-};
+import { UserProfile } from '@app/lib';
 
 const Contacts = ({ route }) => {
-  const { firstname, lastname } = route.params
+  const params = route.params as UserProfile;
+  const { firstname, lastname, email } = params;
+  const initials = firstname[0] + lastname[0]; 
   return (
     <SafeAreaView style={styles.container}>
       <ImageContainer>
-        {/* <Image source={{ uri: data.profileImage }} style={styles.image} /> */}
-        <Avatar.Text label={firstname[0]+lastname[0]} size={200} />
+        <Avatar.Text label={initials} size={200} />
         <Text style={styles.nameText}>{`${firstname} ${lastname}`}</Text>
         <Text style={styles.handleText}>{`@${firstname}${lastname[0]}`}</Text>
       </ImageContainer>
       <ActionContainer>
-        <BlockButton style={styles.button} outlined
-          onPress={() => Linking.openURL('mailto:kirthivel@gmail.com') }>
+        <BlockButton 
+          style={styles.button} 
+          outlined
+          onPress={() => Linking.openURL(`mailto:${email}`).catch(console.error)}
+        >
           Email
         </BlockButton>
         <BlockButton style={styles.button}>Message</BlockButton>

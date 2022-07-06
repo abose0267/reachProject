@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { View, SafeAreaView, StyleSheet, FlatList } from 'react-native';
 import { BlockButton, ContactCard, Header, TextInput } from '@app/components';
 import { colors } from '@app/constants';
-import { useAuth } from '@app/lib';
+import { useAuth, UserProfile } from '@app/lib';
+import { useCollection } from '@app/lib/useFirebase';
 
 const Contacts = ({ navigation }) => {
   const { signout } = useAuth();
+  const { data: users } = useCollection<UserProfile>('users');
+
   return (
     <SafeAreaView style={[styles.container]}>
       <View style={[styles.padding]}>
@@ -14,36 +17,15 @@ const Contacts = ({ navigation }) => {
       </View>
       <Divider />
       <View style={[styles.padding]}>
-        <ContactCard
-          data={{
-            firstname: 'John',
-            lastname: 'Doe',
-          }}
-          onPress={() => navigation.navigate('profile', {
-            firstname: 'John',
-            lastname: 'Doe',
-          })}
-        />
-        <ContactCard
-          data={{
-            firstname: 'Bob',
-            lastname: 'Smith',
-          }}
-          onPress={() => navigation.navigate('profile', {
-            firstname: 'Bob',
-            lastname: 'Smith',
-          })}
-        />
-        <ContactCard
-          data={{
-            firstname: 'Arvind',
-            lastname: 'Balaji',
-          }}
-          onPress={() => navigation.navigate('profile', {
-            firstname: 'Bob',
-            lastname: 'Smith',
-          })}
-        />
+      <FlatList
+          data={users}
+          renderItem={({ item }) => (
+            <ContactCard
+              data={item}
+              onPress={() => navigation.navigate('profile', item)}
+            />
+          )}
+      /> 
       </View>
     </SafeAreaView>
   );

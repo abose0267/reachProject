@@ -26,3 +26,8 @@ export const createUser = async (uid: string, data: CreateUserData) => {
     uid,
   });
 };
+
+// export const getUsers = async () => {
+//   const users = await usersRef.get();
+//   return users.docs.map(doc => doc.data());
+// }
