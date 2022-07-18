@@ -1,6 +1,7 @@
-import { createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, User } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, User, UserProfile } from "firebase/auth";
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { auth } from './firebase'
+import { useDoc } from "./useFirebase";
 import { createUser } from "./user";
 
 const authContext = createContext(null);
@@ -79,3 +80,9 @@ const useProvideAuth = (): UseAuthReturnValue => {
     signout,
   };
 }
+
+// export const useAuthenticatedUser = () => {
+//   const { user } = useAuth();
+//   const { data: userData } = useDoc<UserProfile>('users', user.uid);
+//   return { user: userData };
+// }

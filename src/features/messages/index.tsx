@@ -5,7 +5,7 @@ import Messages from './screens/Messages';
 
 const Stack = createNativeStackNavigator();
 
-const AuthStack = () => {
+const MessagesStack = () => {
   return (
     <>
       {/*// @ts-ignore */}
@@ -21,4 +21,4 @@ const AuthStack = () => {
   )
 }
 
-export default AuthStack;
+export default MessagesStack;

@@ -5,6 +5,11 @@ import AuthStack from '@app/features/auth';
 import MemberNavigator from '@app/features/memberNavigator';
 import '@app/lib/firebase';
 import { ProvideAuth, useAuth } from './lib';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([/AsyncStorage has been extracted from react-native core/]);
+LogBox.ignoreLogs(['Require Cycle']);
+
 
 const navTheme = {
   ...DefaultTheme,
@@ -34,3 +39,4 @@ const Navigator = () => {
  }
 
 export default registerRootComponent(App as unknown as ComponentType<any>);
+

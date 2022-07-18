@@ -3,12 +3,15 @@ import { View, Image, StyleSheet, SafeAreaView, Text, Linking, Alert } from 'rea
 import BlockButton from '@app/components/BlockButton';
 import { ActionContainer } from '@app/components';
 import { Avatar } from 'react-native-paper';
-import { UserProfile } from '@app/lib';
+import { useAuthenticatedUser, UserProfile } from '@app/lib';
+import { getMessageGroup } from '@app/features/messages/useMessaging';
 
 const Contacts = ({ route,navigation }) => {
   const params = route.params as UserProfile;
-  const { firstname, lastname, email } = params;
+  const { firstname, lastname, email, uid } = params;
   const initials = firstname[0] + lastname[0]; 
+  const { user } = useAuthenticatedUser();
+  
   return (
     <SafeAreaView style={styles.container}>
       <ImageContainer>
@@ -24,10 +27,16 @@ const Contacts = ({ route,navigation }) => {
         >
           Email
         </BlockButton>
-        <BlockButton onPress={() => {
-          navigation.navigate("messages")
-
-        }} style={styles.button}>Message</BlockButton>
+        <BlockButton 
+          onPress={() => 
+            getMessageGroup([{ uid: user.uid as string }, { uid }])
+            .then(id => navigation.navigate('messages', { id }))
+            .catch(err => console.error(err))
+          } 
+          style={styles.button}
+        >
+            Message
+        </BlockButton>
       </ActionContainer>
     </SafeAreaView>
   );
