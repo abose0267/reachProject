@@ -8,10 +8,10 @@ import {
   ControlledTextInput,
   ControlledInputProps,
 } from '@app/components';
-import {useAuth, UserLoginInput} from '@app/lib';
+import {Message, useAuth, useAuthenticatedUser, UserLoginInput} from '@app/lib';
 import {useForm} from 'react-hook-form';
 import {GiftedChat, Bubble, Send, IMessage} from 'react-native-gifted-chat';
-import { useMessageGroup } from '../useMessaging';
+import {useMessageGroup} from '../useMessaging';
 
 // wrap controlled input to add type safety (name field must match valid key)
 const LoginTextInput = (props: ControlledInputProps<UserLoginInput>) => (
@@ -19,19 +19,21 @@ const LoginTextInput = (props: ControlledInputProps<UserLoginInput>) => (
 );
 
 const Messages = ({route, navigation}) => {
-  const { group, messages, sendMessage } = useMessageGroup(route.params.id);
+  const {group, messages, sendMessage} = useMessageGroup(route.params.id);
+  const {user, loading} = useAuthenticatedUser();
 
-  const displayMessages= messages.map<IMessage>((m, i) => ({
-    _id: i,
-    text: m.text,
-    createdAt: new Date(),
-    user: {
-      _id: m.from.uid,
-    }
-  }))
+  console.log(user);
+
+  // const displayMessages= messages.map<IMessage>((m, i) => ({
+  //   _id: i,
+  //   text: m.text,
+  //   createdAt: new Date(),
+  //   user: {
+  //     _id: m.from.uid,
+  //   }
+  // }))
 
   // const [messages, setMessages] = useState([]);
-
 
   // useEffect(() => {
   //   setMessages([
@@ -48,18 +50,24 @@ const Messages = ({route, navigation}) => {
   //   ]);
   // }, []);
 
-  const onSend = useCallback((messages = []) => {
-    sendMessage(messages[0].text);
+  const onSend = useCallback((messages: Message[] = []) => {
+    sendMessage(messages[0]);
   }, []);
 
+  console.log({user})
+  // console.log(messages.map(m => ({...m, date: m.createdAt})))
   return (
-    <GiftedChat
-      messages={displayMessages}
-      onSend={messages => onSend(messages)}
-      user={{
-        _id: 1,
-      }}
-    />
+    <>
+     
+      <GiftedChat
+        messages={messages}
+        onSend={messages => onSend(messages)}
+        user={{
+          _id: user?.uid,
+          name: `${user?.firstname} ${user?.lastname}`,
+        }}
+      />
+    </>
   );
 };
 

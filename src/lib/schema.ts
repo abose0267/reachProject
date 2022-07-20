@@ -1,3 +1,5 @@
+import { IMessage } from "react-native-gifted-chat";
+
 export interface UserProfile {
     uid: string;
     firstname: string;
@@ -12,10 +14,7 @@ export interface MessageProfile {
   }
 
   
-export interface Message {
-    text: string
-    from: Partial<UserProfile>
-}
+export interface Message extends IMessage {}
 
 export interface MessageGroup {
     name: string
