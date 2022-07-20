@@ -5,6 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors } from '@app/constants';
 import Settings from '../settings';
 import MessageList from '../messages/screens/MessageList';
+import MessagesStack from '../messages';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +36,7 @@ const MemberNavigator = () => (
       })
     }
       >
-        <Tab.Screen name="Messages" component={MessageList} options={{ headerShown: false }}/>
+        <Tab.Screen name="Messages" component={MessagesStack} options={{ headerShown: false }}/>
         <Tab.Screen name="Directory" component={DirectoryStack} options={{ headerShown: false }}/>
         <Tab.Screen name="Settings" component={Settings} options={{ headerShown: true }}/>
       </Tab.Navigator>

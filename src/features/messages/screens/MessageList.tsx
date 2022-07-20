@@ -49,7 +49,7 @@ const MessageList = ({ navigation }) => {
                     <MessageCard data={item} />
                 )}
             />
-            <TouchableOpacity style={{ position: 'absolute', bottom: 25, right: 30, zIndex: 10, backgroundColor: '#379770', borderRadius: 20 }}>
+            <TouchableOpacity onPress={() => {navigation.navigate("CreateMessage")}}style={{ position: 'absolute', bottom: 25, right: 30, zIndex: 10, backgroundColor: '#379770', borderRadius: 20 }}>
                 <Ionicons name='chatbox-outline' size={30} style={{ borderWidth: 1, borderRadius: 20, padding: 20 }} />
             </TouchableOpacity>
 
