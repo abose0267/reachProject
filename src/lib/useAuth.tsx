@@ -13,6 +13,7 @@ export const ProvideAuth = ({ children }) => {
 
 interface UseAuthReturnValue {
   user: any;
+  // profile: UserProfile;
   signin: (data: UserLoginInput) => Promise<User>;
   signup: (data: UserAccountCreateInput) => Promise<void>;
   signout: () => Promise<void>;
@@ -37,7 +38,8 @@ export interface UserLoginInput {
 
 const useProvideAuth = (): UseAuthReturnValue => {
   const [user, setUser] = useState(null);
-
+  console.log('uid', auth.currentUser?.uid);
+  // const {data: profile} = useDoc<UserProfile>('users', auth.currentUser?.uid);
   const signin = async (data: UserLoginInput) => {
     console.log(data);
     const response = await signInWithEmailAndPassword(auth, data.email, data.password);
@@ -75,6 +77,7 @@ const useProvideAuth = (): UseAuthReturnValue => {
 
   return {
     user,
+    // profile,
     signin,
     signup,
     signout,

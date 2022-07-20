@@ -76,11 +76,13 @@ export const useDoc = <T>(collectionName: string, docId?: string) => {
     fetchDoc()
       .then(data => {
         setError(null);
+        console.log('data', data);
         setData(data);
         setLoading(false);
       })
       .catch(err => {
         setError(err);
+        console.error(err);
         setLoading(false);
       });
   }, [collectionName]);

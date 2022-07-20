@@ -42,17 +42,10 @@ export const useMessageGroup = (groupId?: string) => {
     const { data: messages, addDoc: addMessage } = useCollection<Message>(`messageGroups/${groupId}/messages`);
     const { user } = useAuthenticatedUser();
 
-    console.log("bar", user);
-    const sendMessage = useCallback(async (text) => {
-        await addMessage({from: { uid: '0', }, text})
+    const sendMessage = useCallback(async (message: Message) => {
+        await addMessage(message);
     }, [user])
 
-    // const sendMessage = async (text: string) => {
-    //     const message: Message = {;
-
-        
-    // }
-
-    return { group, messages, sendMessage };
+    return { group, messages: messages.map(m => ({...m, createdAt: m.createdAt.toDate()})), sendMessage };
 }
 
