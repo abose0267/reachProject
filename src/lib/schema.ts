@@ -4,6 +4,11 @@ export interface UserProfile {
     lastname: string;
     email: string;
     role: string;
+}
+  
+export interface MessageProfile {
+    name: string;
+    members: Array<UserProfile>;
   }
 
   
