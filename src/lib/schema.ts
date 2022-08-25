@@ -8,12 +8,6 @@ export interface UserProfile {
     role: string;
 }
   
-export interface MessageProfile {
-    name: string;
-    members: Array<UserProfile>;
-  }
-
-  
 export interface Message extends IMessage {}
 
 export interface MessageGroup {

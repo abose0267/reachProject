@@ -15,9 +15,9 @@ const MessagesStack = () => {
       {/*// @ts-ignore */}
       <Stack.Navigator initialRouteName='landing'>
         <Stack.Screen
-          name="landing"
+          name="Messages"
           component={MessageList}
-          options={{ headerShown: false }}
+          // options={{ headerShown: false }}
         />
             <Stack.Screen
           name="CreateMessage"
