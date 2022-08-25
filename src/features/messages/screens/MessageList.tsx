@@ -18,21 +18,6 @@ const MessageList = ({navigation}) => {
   const [searchVal, setSearch] = useState('');
   const {data: groups} = useCollection<MessageGroup>(`users/${user.uid}/groups`);
 
-//   const [messageData, setMessages] = useState([]);
-
-//   useEffect(() => {
-//     console.log('messages', messages);
-//     let messages2 = [];
-//     for (var i = 0; i < messages.length; i++) {
-//       for (var j = 0; j < messages[i].members.length; j++) {
-//         if (messages[i].members[j].uid == getAuth().currentUser.uid) {
-//           messages2.push(messages[i]);
-//         }
-//       }
-//     }
-
-//     setMessages(messages2);
-//   }, [messages]);
   return (
     <SafeAreaView style={[styles.container]}>
       <FlatList
@@ -44,7 +29,7 @@ const MessageList = ({navigation}) => {
         data={groups}
         renderItem={({item}) => <MessageCard data={item} />}
       />
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           navigation.navigate('CreateMessage');
         }}
@@ -61,30 +46,12 @@ const MessageList = ({navigation}) => {
           size={30}
           style={{borderWidth: 1, borderRadius: 20, padding: 20}}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </SafeAreaView>
   );
 };
 
 export default MessageList;
-
-const Divider = () => (
-  <View
-    style={{
-      flexDirection: 'row',
-      height: 1,
-      backgroundColor: colors.grey,
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 1,
-      shadowRadius: 1,
-      marginTop: 10,
-      marginHorizontal: 20,
-    }}
-  />
-);
 
 const styles = StyleSheet.create({
   container: {
