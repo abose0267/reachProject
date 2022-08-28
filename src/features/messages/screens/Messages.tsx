@@ -83,31 +83,31 @@ const Messages = ({ route, navigation }) => {
           //   borderWidth: 1,
           //   height: 50,
           // }}
-          // renderInputToolbar={() => (
-          //   <TextInput 
-          //     style={{
-          //       borderWidth: 1,
-          //       width: Dimensions.get("screen").width,
-          //       minHeight: 50,
-          //       height: height,
-          //       padding: 10,
-          //       fontSize: 15,
-          //       flexDirection: "column",
-          //       justifyContent: "center",
-          //       textAlign: "justify",
-          //       paddingTop: 10,
-          //       position: "absolute",
-          //       bottom: keyboardisOpen ? keyboardHeight-100: -25,
-          //       paddingBottom: 10,
-          //     }}
-          //     scrollEnabled={false}
-          //     onContentSizeChange={(e) => 
-          //       setHeight(e.nativeEvent.contentSize.height)
+          renderInputToolbar={() => (
+            <TextInput 
+              style={{
+                borderWidth: 1,
+                width: Dimensions.get("screen").width,
+                minHeight: 50,
+                height: height,
+                padding: 10,
+                fontSize: 15,
+                flexDirection: "column",
+                justifyContent: "center",
+                textAlign: "justify",
+                paddingTop: 10,
+                position: "absolute",
+                bottom: keyboardisOpen ? keyboardHeight-100: -25,
+                paddingBottom: 10,
+              }}
+              scrollEnabled={false}
+              onContentSizeChange={(e) => 
+                setHeight(e.nativeEvent.contentSize.height)
                 
-          //     }
-          //     multiline
-          //   />
-          // )}
+              }
+              multiline
+            />
+          )}
           // minComposerHeight={50}
           maxComposerHeight={50}
           minInputToolbarHeight={40}
