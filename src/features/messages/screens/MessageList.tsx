@@ -10,6 +10,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import {MessageCard} from '@app/components/MessageCard';
 import {getAuth} from 'firebase/auth';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { getMessageGroup } from '../useMessaging';
+import { StatusBar } from 'expo-status-bar';
 
 const MessageList = ({navigation}) => {
   const {signout} = useAuth();
@@ -35,6 +37,7 @@ const MessageList = ({navigation}) => {
 //   }, [messages]);
   return (
     <SafeAreaView style={[styles.container]}>
+      <StatusBar style="dark" />
       <FlatList
         style={
           {
@@ -42,7 +45,11 @@ const MessageList = ({navigation}) => {
           }
         }
         data={groups}
-        renderItem={({item}) => <MessageCard data={item} />}
+        renderItem={({item}) => <MessageCard data={item} onPress={() => 
+          getMessageGroup([{ uid: user.uid as string }, { uid: item.members.find((item) => item?.uid != user?.uid).uid }])
+          .then(id => navigation.navigate('messages', { id }))
+          .catch(err => console.error(err))
+        }  />}
       />
       <TouchableOpacity
         onPress={() => {

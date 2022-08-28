@@ -24,7 +24,11 @@ const MessagesStack = () => {
           component={CreateMessage}
           options={{ headerShown: false }}
         />
-
+      <Stack.Screen
+          name="messages"
+          component={Messages}
+          options={{ title: 'Messages' }}
+        />
       </Stack.Navigator>
     </>
   )
