@@ -6,6 +6,8 @@ export interface UserProfile {
     lastname: string;
     email: string;
     role: string;
+    username: string;
+    
 }
   
 export interface Message extends IMessage {}
