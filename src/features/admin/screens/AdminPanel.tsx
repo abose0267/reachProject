@@ -16,9 +16,10 @@ const AdminPanel = ({navigation}) => {
             onPress: () => navigation.navigate('sendannouncement')
         },
         {
-            title: "Send a blast message",
+            title: "Send a personalized message",
             icon: "people-outline",
-            description: "Send a message to a specific group of users. This can be all users or just one."
+            description: "Send a message to a specific group of users. This can be all users or just one.",
+            onPress: () => navigation.navigate('blasts')
         }
     ]
     return(
