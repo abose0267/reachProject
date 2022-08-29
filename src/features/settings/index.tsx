@@ -1,21 +1,31 @@
-import React from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import React, {ComponentProps} from 'react';
 import { BlockButton, ContactCard, Header, TextInput } from '@app/components';
 import { colors } from '@app/constants';
 import { useAuth } from '@app/lib';
-
+import { View, Image, StyleSheet, SafeAreaView, Text, Linking, Alert } from 'react-native';
+import { ActionContainer } from '@app/components';
+import { Avatar } from 'react-native-paper';
+import { useAuthenticatedUser, UserProfile } from '@app/lib';
 const Settings = ({ navigation }) => {
   const { signout } = useAuth();
+  const { user } = useAuthenticatedUser();
   return (
     <SafeAreaView style={[styles.container]}>
-      <BlockButton onPress={() => signout()} outlined style={{ marginTop: 20 }}>Edit Profile</BlockButton>
-      <BlockButton onPress={() => signout()} outlined >Log Out</BlockButton>
+      <ImageContainer>
+        <Avatar.Text label={`${user?.firstname[0] + user?.lastname[0]}`} size={200} />
+        <Text style={styles.nameText}>{`${user?.firstname} ${user?.lastname}`}</Text>
+        <Text style={styles.handleText}>{`@${user?.username}`}</Text>
+      </ImageContainer>
+      {/* <BlockButton onPress={() => signout()} outlined style={{ marginTop: 20 }}>Edit Profile</BlockButton> */}
+      <BlockButton onPress={() => signout()} outlined style={{borderColor: "red"}} textStyle={{color: "red"}}>Log Out</BlockButton>
     </SafeAreaView>
   );
 };
 
 export default Settings;
-
+const ImageContainer = ({ children }: ComponentProps<typeof View>) => (
+  <View style={styles.imageContainer}>{children}</View>
+);
 const Divider = () => (
   <View
     style={{
@@ -46,5 +56,20 @@ const styles = StyleSheet.create({
   },
   padding: {
     paddingHorizontal: 20,
-  }
+  },
+  imageContainer: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  actionContainer: {},
+  nameText: {
+    fontSize: 25,
+    fontWeight: '500',
+    marginTop: 20,
+  },
+  handleText: {
+    fontSize: 17,
+    fontWeight: '400',
+    marginTop: 5,
+  },
 });

@@ -4,6 +4,7 @@ import Messages from './screens/Messages';
 import MessageList from './screens/MessageList';
 import Settings from '../settings';
 import CreateMessage from './screens/CreateMessage';
+import ReadAnnouncements from './screens/ReadAnnouncements';
 // import { Settings } from 'react-native';
 
 
@@ -17,17 +18,25 @@ const MessagesStack = () => {
         <Stack.Screen
           name="Messages"
           component={MessageList}
-          // options={{ headerShown: false }}
+          options={{ headerShown: false }}
         />
-            <Stack.Screen
+        <Stack.Screen
           name="CreateMessage"
           component={CreateMessage}
           options={{ headerShown: false }}
         />
-      <Stack.Screen
+        <Stack.Screen
           name="messages"
           component={Messages}
           options={{ title: 'Messages' }}
+        />
+        <Stack.Screen 
+          name="readannouncements"
+          component={ReadAnnouncements}
+          options={{
+            headerShown: false, 
+            presentation: 'modal'
+          }}
         />
       </Stack.Navigator>
     </>

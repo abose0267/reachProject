@@ -6,10 +6,14 @@ import { colors } from '@app/constants';
 import Settings from '../settings';
 import MessageList from '../messages/screens/MessageList';
 import MessagesStack from '../messages';
+import { useAuthenticatedUser } from '@app/lib';
+import AdminStack from '../admin';
 
 const Tab = createBottomTabNavigator();
-
-const MemberNavigator = () => (
+// 
+const MemberNavigator = () => {
+  const {user} = useAuthenticatedUser();
+  return(
     <>
       {/*// @ts-ignore */}
       <Tab.Navigator 
@@ -25,6 +29,8 @@ const MemberNavigator = () => (
             iconName = focused ? 'settings' : 'settings-outline';
           } else if (route.name === 'Messages') {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+          } else if (route.name === "Admin") {
+            iconName = focused ? "shield" : "shield-outline";
           }
 
           // You can return any component that you like here!
@@ -38,9 +44,10 @@ const MemberNavigator = () => (
       >
         <Tab.Screen name="Messages" component={MessagesStack} options={{ headerShown: false }}/>
         <Tab.Screen name="Directory" component={DirectoryStack} options={{ headerShown: false }}/>
-        <Tab.Screen name="Settings" component={Settings} options={{ headerShown: true }}/>
+        {user?.role == "Admin" && <Tab.Screen name="Admin" component={AdminStack} options={{ headerShown: false }}/>}
+        <Tab.Screen name="Settings" component={Settings} options={{ headerShown: false }}/>
       </Tab.Navigator>
     </>
-  )
+  )}
 
 export default MemberNavigator;

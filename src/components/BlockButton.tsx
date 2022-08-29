@@ -3,12 +3,13 @@ import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 
 interface BlockButtonProps extends ComponentProps<typeof TouchableOpacity> {
   outlined?: boolean;
+  textStyle: Object;
 }
 
-export const BlockButton = ({ children, style, outlined = false, ...rest }: BlockButtonProps) => {
+export const BlockButton = ({ children, style, outlined = false, textStyle, ...rest }: BlockButtonProps) => {
   return (
     <TouchableOpacity {...rest} style={[styles.button, (outlined && styles.outlined), style]}>
-      <Text style={styles.text}>{children}</Text>
+      <Text style={[styles.text, textStyle]}>{children}</Text>
     </TouchableOpacity>
   );
 };

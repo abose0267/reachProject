@@ -16,3 +16,4 @@ export interface MessageGroup {
     name: string
     members?: UserProfile[]
 }
+

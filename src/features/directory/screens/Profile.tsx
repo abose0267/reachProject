@@ -8,7 +8,7 @@ import { getMessageGroup } from '@app/features/messages/useMessaging';
 
 const Contacts = ({ route,navigation }) => {
   const params = route.params as UserProfile;
-  const { firstname, lastname, email, uid } = params;
+  const { firstname, lastname, email, uid, username} = params;
   const initials = firstname[0] + lastname[0]; 
   const { user } = useAuthenticatedUser();
   
@@ -17,7 +17,7 @@ const Contacts = ({ route,navigation }) => {
       <ImageContainer>
         <Avatar.Text label={initials} size={200} />
         <Text style={styles.nameText}>{`${firstname} ${lastname}`}</Text>
-        <Text style={styles.handleText}>{`@${firstname}${lastname[0]}`}</Text>
+        <Text style={styles.handleText}>{`@${username}`}</Text>
       </ImageContainer>
       <ActionContainer>
         <BlockButton 

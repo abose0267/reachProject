@@ -30,6 +30,7 @@ export const useAuthenticatedUser = () => {
   return { user: userData, loading };
 }
 
+
 // export const getUsers = async () => {
 //   const users = await usersRef.get();
 //   return users.docs.map(doc => doc.data());

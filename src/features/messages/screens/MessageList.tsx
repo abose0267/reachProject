@@ -12,6 +12,8 @@ import {getAuth} from 'firebase/auth';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { getMessageGroup } from '../useMessaging';
 import { StatusBar } from 'expo-status-bar';
+import { useAnnouncements } from '@app/lib/announcement';
+import { AnnouncementCard } from '@app/components/Announcements';
 
 const MessageList = ({navigation}) => {
   const {signout} = useAuth();
@@ -19,10 +21,21 @@ const MessageList = ({navigation}) => {
   const {user} = useAuth();
   const [searchVal, setSearch] = useState('');
   const {data: groups} = useCollection<MessageGroup>(`users/${user.uid}/groups`);
-
+  const {announcements} = useAnnouncements();
   return (
     <SafeAreaView style={[styles.container]}>
+      <Header label="Messages" containerStyle={{marginBottom: 5}} />
       <StatusBar style="dark" />
+      <AnnouncementCard 
+        title={"Announcements"}
+        latestMessage={announcements?.length > 0 ? announcements[0].message : null}
+        onPress={() => navigation.navigate("readannouncements")}
+      />
+      <AnnouncementCard 
+        title={"Blasts"}
+        latestMessage={announcements?.length > 0 ? announcements[0].message : null}
+        onPress={() => console.log("howdy")}
+      />
       <FlatList
         style={
           {

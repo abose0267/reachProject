@@ -17,6 +17,7 @@ export const useCollection = <T>(
   const collectionRef = fb.collection(
     db,
     collectionName,
+
   ) as fb.CollectionReference<T>;
 
   useEffect(() => {
