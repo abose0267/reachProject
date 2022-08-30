@@ -6,25 +6,28 @@ module.exports = function (api) {
       production: {
         plugins: ['react-native-paper/babel'],
       },
-    },
-    plugins: [
-      [
-        'module-resolver',
-        {
-          extensions: [
-            '.js',
-            '.jsx',
-            '.ts',
-            '.tsx',
-            '.android.js',
-            '.android.tsx',
-            '.ios.js',
-            '.ios.tsx',
+      development: {
+        plugins: [
+          [
+            'module-resolver',
+            {
+              extensions: [
+                '.js',
+                '.jsx',
+                '.ts',
+                '.tsx',
+                '.android.js',
+                '.android.tsx',
+                '.ios.js',
+                '.ios.tsx',
+              ],
+              alias: {'@app': './src/'},
+              // root: ['./src'],
+            },
           ],
-          alias: {'@app': './src/'},
-          // root: ['./src'],
-        },
-      ],
-    ],
+          'react-native-reanimated/plugin'
+        ],
+      }
+    },
   };
 };

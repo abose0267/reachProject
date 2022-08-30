@@ -17,7 +17,7 @@ export const ContactCard = ({ data, onPress, onSelect, selected = false }: Conta
   const initials = data.firstname[0] + data.lastname[0];
   return (
     <>
-      <TouchableOpacity style={styles.container} onPress={onPress}>
+      <TouchableOpacity style={styles.container} onPress={onPress} disabled={onPress == null}>
         {/* @ts-ignore */}
         <View style={{flex: 1, flexDirection: 'row'}}>
           <Avatar.Text

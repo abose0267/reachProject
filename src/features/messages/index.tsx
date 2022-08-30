@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Messages from './screens/Messages';
 import MessageList from './screens/MessageList';
 import Settings from '../settings';
-import CreateMessage from './screens/CreateMessage';
+import CreateMessage from './screens/CreateGroup';
 import ReadAnnouncements from './screens/ReadAnnouncements';
 // import { Settings } from 'react-native';
 

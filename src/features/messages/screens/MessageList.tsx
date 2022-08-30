@@ -5,7 +5,7 @@ import {colors} from '@app/constants';
 // import { useAuth } from '@app/lib';
 import {FlatList} from 'react-native';
 import {useCollection} from '@app/lib/useFirebase';
-import {MessageGroup, MessageProfile, useAuth, UserProfile} from '@app/lib';
+import {MessageGroup, useAuth, UserProfile} from '@app/lib';
 import {useFocusEffect} from '@react-navigation/native';
 import {MessageCard} from '@app/components/MessageCard';
 import {getAuth} from 'firebase/auth';
@@ -16,10 +16,7 @@ import { useAnnouncements } from '@app/lib/announcement';
 import { AnnouncementCard } from '@app/components/Announcements';
 
 const MessageList = ({navigation}) => {
-  const {signout} = useAuth();
-
   const {user} = useAuth();
-  const [searchVal, setSearch] = useState('');
   const {data: groups} = useCollection<MessageGroup>(`users/${user.uid}/groups`);
   const {announcements} = useAnnouncements();
   return (
@@ -37,36 +34,31 @@ const MessageList = ({navigation}) => {
         onPress={() => console.log("howdy")}
       />
       <FlatList
-        style={
-          {
-            //   backgroundColor:'green',
-          }
-        }
         data={groups}
         renderItem={({item}) => <MessageCard data={item} onPress={() => 
-          getMessageGroup([{ uid: user.uid as string }, { uid: item.members.find((item) => item?.uid != user?.uid).uid }])
+          getMessageGroup(item.members.map(m => ({uid: m.uid})), item.members.length > 2 ? item.name : null)
           .then(id => navigation.navigate('messages', { id }))
           .catch(err => console.error(err))
         }  />}
       />
-      {/* <TouchableOpacity
+      <TouchableOpacity
         onPress={() => {
           navigation.navigate('CreateMessage');
         }}
         style={{
           position: 'absolute',
-          bottom: 25,
-          right: 30,
+          bottom: 10,
+          right: 10,
           zIndex: 10,
           backgroundColor: '#379770',
           borderRadius: 20,
         }}>
         <Ionicons
           name="chatbox-outline"
-          size={30}
+          size={25}
           style={{borderWidth: 1, borderRadius: 20, padding: 20}}
         />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -79,8 +71,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginHorizontal: 20,
     marginBottom: 20,
-    // padding: 75,
-    // flexDirection: 'column-reverse',
   },
   padding: {
     paddingHorizontal: 20,

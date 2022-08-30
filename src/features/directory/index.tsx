@@ -18,7 +18,7 @@ const DirectoryStack = () => (
         <Stack.Screen
           name="profile"
           component={Profile}
-          options={{ title: 'Profile' }}
+          options={{ headerShown: false }}
       />
               <Stack.Screen
           name="messages"

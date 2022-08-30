@@ -4,7 +4,6 @@ import { BlockButton, ContactCard, Header, TextInput } from '@app/components';
 import { colors } from '@app/constants';
 import { useAuth, UserProfile } from '@app/lib';
 import { useCollection } from '@app/lib/useFirebase';
-import { data } from 'autoprefixer';
 
 const Contacts = ({ navigation }) => {
   const { signout } = useAuth();
@@ -17,11 +16,9 @@ const Contacts = ({ navigation }) => {
   if (users) {
      for (var i = 0; i < users.length; i++) {
     if (users[i].role == "Admin") {
-      console.log("pushing")
       adminList.push(users[i])
     }
     else {
-      console.log("pushing")
       memberList.push(users[i])
     }
   }
@@ -31,8 +28,8 @@ const Contacts = ({ navigation }) => {
  
 
 useEffect(() => {
-  console.log("section list changed")
-  console.log(sectionedList)
+  // console.log("section list changed")
+  // console.log(sectionedList)
 }, [sectionedList])
 return (
   <SafeAreaView style={[styles.container]}>

@@ -4,7 +4,6 @@ import { BlockButton, ContactCard, Header, TextInput } from '@app/components';
 import { colors } from '@app/constants';
 import { useAuth, UserProfile } from '@app/lib';
 import { useCollection } from '@app/lib/useFirebase';
-import { data } from 'autoprefixer';
 
 const SelectUsers = ({ onChange }) => {
     const { signout } = useAuth();
@@ -17,11 +16,9 @@ const SelectUsers = ({ onChange }) => {
     if (users) {
         for (var i = 0; i < users.length; i++) {
             if (users[i].role == "Admin") {
-                console.log("pushing")
                 adminList.push(users[i])
             }
             else {  
-                console.log("pushing")
                 memberList.push(users[i])
             }
         }
@@ -50,11 +47,6 @@ const SelectUsers = ({ onChange }) => {
     // }, [sectionedList])
     return (
         <SafeAreaView style={[styles.container]}>
-            <View style={[styles.padding]}>
-                <Header label="Select Your Users" containerStyle={{ marginBottom: 5 }} />
-                <TextInput label="Search" dense style={{ height: 35 }} disabled />
-            </View>
-            <Divider />
             <View>
                 <SectionList
                     renderSectionHeader={({ section: { title } }) => (
@@ -69,6 +61,7 @@ const SelectUsers = ({ onChange }) => {
                             onSelect={(uid) => toggleSelection(uid)}
                             data={item}
                             selected={selected[item.uid] ?? false}
+                            
                         />
                     )}
                 />

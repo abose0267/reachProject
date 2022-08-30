@@ -41,7 +41,6 @@ const useProvideAuth = (): UseAuthReturnValue => {
   console.log('uid', auth.currentUser?.uid);
   // const {data: profile} = useDoc<UserProfile>('users', auth.currentUser?.uid);
   const signin = async (data: UserLoginInput) => {
-    console.log(data);
     const response = await signInWithEmailAndPassword(auth, data.email, data.password);
     setUser(response.user);
     return response.user;

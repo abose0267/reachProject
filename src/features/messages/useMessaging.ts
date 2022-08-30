@@ -3,15 +3,22 @@ import { useCollection, useDoc } from "@app/lib/useFirebase";
 import { getDoc, doc, setDoc, updateDoc, FieldValue, collection, addDoc } from "firebase/firestore";
 import { useCallback, useState } from "react";
 
-export const computeMessageGroupId = (members: Pick<UserProfile, 'uid'>[]) => 
-  members
+
+
+export const computeMessageGroupId = (members: Pick<UserProfile, 'uid'>[], name?  : string) =>  {
+    const hash = members
     .map(member => member.uid)
     .sort()
     .join('');
 
+    if (name) return hash + name
+    return hash
+}
+
+
 // gets the message group based on list of uids, if one doesn't exist, create a new one.
-export const getMessageGroup = async (members: Pick<UserProfile, 'uid'>[]) => {
-    const messageGroupId = computeMessageGroupId(members);
+export const getMessageGroup = async (members: Pick<UserProfile, 'uid'>[], name?: string) => {
+    const messageGroupId = computeMessageGroupId(members, name);
     const ref = doc(db, 'messageGroups', messageGroupId);
     const snap =  await getDoc(ref);
     const data = snap.data();
@@ -23,7 +30,7 @@ export const getMessageGroup = async (members: Pick<UserProfile, 'uid'>[]) => {
     const memberData = memberSnaps.map(snap => snap.data());
 
     const groupData: MessageGroup = {
-        name: memberData.map(member => member.firstname).join(', '),
+        name: name ? name : memberData.map(member => member.firstname).join(', '),
         members: memberData,
     }
 

@@ -22,8 +22,6 @@ const Messages = ({ route, navigation }) => {
   const { group, messages, sendMessage } = useMessageGroup(route.params.id);
   const { user, loading } = useAuthenticatedUser();
 
-  console.log(user);
-
   // const displayMessages= messages.map<IMessage>((m, i) => ({
   //   _id: i,
   //   text: m.text,

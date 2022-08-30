@@ -26,7 +26,7 @@ export const createUser = async (uid: string, data: CreateUserData) => {
 export const useAuthenticatedUser = () => {
   const { user } = useAuth();
   const { data: userData, loading } = useDoc<UserProfile>(`users/${user.uid}`);
-  console.log({foo: user.uid})
+  // console.log({foo: user.uid})
   return { user: userData, loading };
 }
 
