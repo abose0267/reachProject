@@ -16,12 +16,16 @@ import {getMessageGroup} from '@app/features/messages/useMessaging';
 import {useNavigation} from '@react-navigation/native';
 import {Ionicons, FontAwesome5} from '@expo/vector-icons';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
+import {useDoc} from '@app/lib/useFirebase';
 
 const Contacts = ({route, navigation}) => {
   const params = route.params as UserProfile;
-  const {firstname, lastname, email, uid, username} = params;
+  const {firstname, lastname, email, uid, username, role} = params;
+
+  console.log({role})
   const initials = firstname[0] + lastname[0];
   const {user} = useAuthenticatedUser();
+  const {updateDoc: updateUser} = useDoc<UserProfile>('users', uid);
 
   const {goBack} = useNavigation();
 
@@ -100,20 +104,36 @@ const Contacts = ({route, navigation}) => {
         )}
         snapPoints={snapPoints}>
         <View style={{paddingHorizontal: 20, paddingBottom: 20}}>
-          <BlockButton
-            style={styles.button}
-            outlined
-            onPress={() =>
-              Linking.openURL(`mailto:${email}`).catch(console.error)
-            }>
-            Make Admin
-          </BlockButton>
+          {role.toLowerCase() == 'member' && (
+            <BlockButton
+              style={styles.button}
+              outlined
+              onPress={() =>
+                updateUser({
+                  role: 'Admin',
+                })
+              }>
+              Make Admin
+            </BlockButton>
+          )}
+          {role.toLowerCase() == 'admin' && (
+            <BlockButton
+              style={styles.button}
+              outlined
+              onPress={() =>
+                updateUser({
+                  role: 'Member',
+                })
+              }>
+              Demote Admin
+            </BlockButton>
+          )}
+
           <BlockButton
             disabled
             // outlined
-            style={{backgroundColor: "red", borderColor: "red", marginTop: 10}} 
-            textStyle={{color: "#fff"}}
-          >
+            style={{backgroundColor: 'red', borderColor: 'red', marginTop: 10}}
+            textStyle={{color: '#fff'}}>
             Remove User
           </BlockButton>
         </View>

@@ -1,8 +1,7 @@
 import {useEffect, useState} from 'react';
 import * as fb from 'firebase/firestore';
 import {db} from './firebase';
-import { UpdateData } from 'firebase/firestore';
-
+import {UpdateData} from 'firebase/firestore';
 
 export type UseCollectionWhereFilter = [string, fb.WhereFilterOp, any];
 interface UseCollectionConfigOptions {
@@ -24,16 +23,20 @@ export const useCollection = <T>(
   ) as fb.CollectionReference<T>;
 
   useEffect(() => {
-    let q;
-    if(options?.where?.filter((item) => item === undefined).length == 0) {
-      q = fb.query(collectionRef, fb.where(...options.where));
-    } else {
-      q = fb.collection(db, collectionName);
-    }
+    const q = (() => {
+      const validWhere = options?.where.filter(s => s.length > 0).length == 3
+      if (validWhere) {
+        return fb.query(
+          fb.collection(db, collectionName),
+          fb.where(...options.where),
+        );
+      }
+      return fb.collection(db, collectionName);
+    })();
+
     // const q = fb.collection(db, collectionName);
 
     const unsub = fb.onSnapshot(
-      // collectionRef,
       q,
       snap => {
         const data = snap.docs.map(doc => doc.data());
@@ -82,9 +85,9 @@ export const useDoc = <T>(collectionName: string, docId?: string) => {
     return data;
   };
 
-  const updateDoc = (data: UpdateData<T>) => {
-    fb.updateDoc(docRef, data);
-  }
+  const updateDoc = (data: Partial<T>) => {
+    fb.updateDoc(docRef, data as UpdateData<T>);
+  };
 
   useEffect(() => {
     fetchDoc()
