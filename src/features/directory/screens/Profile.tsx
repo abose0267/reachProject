@@ -15,7 +15,7 @@ import {useAuthenticatedUser, UserProfile} from '@app/lib';
 import {getMessageGroup} from '@app/features/messages/useMessaging';
 import {useNavigation} from '@react-navigation/native';
 import {Ionicons, FontAwesome5} from '@expo/vector-icons';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 
 const Contacts = ({route, navigation}) => {
   const params = route.params as UserProfile;
@@ -28,16 +28,11 @@ const Contacts = ({route, navigation}) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   // variables
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
-  }, []);
+  const snapPoints = useMemo(() => [180], []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{zIndex: 100, marginBottom: 5}}>
+      <View style={{marginBottom: 5}}>
         <View
           style={{
             marginHorizontal: 20,
@@ -49,6 +44,7 @@ const Contacts = ({route, navigation}) => {
             size={28}
             color="black"
             style={{position: 'relative', top: 3}}
+            onPress={() => goBack()}
           />
           <Header
             label="Profile"
@@ -60,6 +56,7 @@ const Contacts = ({route, navigation}) => {
               size={22}
               color="black"
               style={{marginLeft: 'auto'}}
+              onPress={() => bottomSheetRef.current.expand()}
             />
           )}
         </View>
@@ -88,17 +85,39 @@ const Contacts = ({route, navigation}) => {
           style={styles.button}>
           Message
         </BlockButton>
-
-        {/* <BottomSheet
-          ref={bottomSheetRef}
-          index={0}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}>
-          <View>
-            <Text>Awesome 🎉</Text>
-          </View>
-        </BottomSheet> */}
       </View>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        style={{zIndex: 100}}
+        enablePanDownToClose
+        backdropComponent={props => (
+          <BottomSheetBackdrop
+            {...props}
+            disappearsOnIndex={-1}
+            appearsOnIndex={0}
+          />
+        )}
+        snapPoints={snapPoints}>
+        <View style={{paddingHorizontal: 20, paddingBottom: 20}}>
+          <BlockButton
+            style={styles.button}
+            outlined
+            onPress={() =>
+              Linking.openURL(`mailto:${email}`).catch(console.error)
+            }>
+            Make Admin
+          </BlockButton>
+          <BlockButton
+            disabled
+            // outlined
+            style={{backgroundColor: "red", borderColor: "red", marginTop: 10}} 
+            textStyle={{color: "#fff"}}
+          >
+            Remove User
+          </BlockButton>
+        </View>
+      </BottomSheet>
     </SafeAreaView>
   );
 };

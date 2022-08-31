@@ -1,73 +1,94 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Image, StyleSheet, SafeAreaView, Text, Alert, KeyboardAvoidingView, Dimensions, TextInput, Keyboard, TouchableOpacity, } from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {
+  View,
+  Image,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  Alert,
+  KeyboardAvoidingView,
+  Dimensions,
+  TextInput,
+  Keyboard,
+  TouchableOpacity,
+} from 'react-native';
 import {
   BlockButton,
   ActionContainer,
   Header,
   ControlledTextInput,
   ControlledInputProps,
+  Divider,
 } from '@app/components';
-import { Message, useAuth, useAuthenticatedUser, UserLoginInput } from '@app/lib';
-import { useForm } from 'react-hook-form';
-import { GiftedChat, Bubble, Send, IMessage } from 'react-native-gifted-chat';
-import { useMessageGroup } from '../useMessaging';
-import { addDoc } from 'firebase/firestore';
-
+import {Message, useAuth, useAuthenticatedUser, UserLoginInput} from '@app/lib';
+import {useForm} from 'react-hook-form';
+import {GiftedChat, Bubble, Send, IMessage} from 'react-native-gifted-chat';
+import {useMessageGroup} from '../useMessaging';
+import {addDoc} from 'firebase/firestore';
+import {Ionicons, FontAwesome5} from '@expo/vector-icons';
+import {useNavigation} from '@react-navigation/native';
 // wrap controlled input to add type safety (name field must match valid key)
 const LoginTextInput = (props: ControlledInputProps<UserLoginInput>) => (
   <ControlledTextInput {...props} />
 );
 
-const Messages = ({ route, navigation }) => {
-  const { group, messages, sendMessage } = useMessageGroup(route.params.id);
-  const { user, loading } = useAuthenticatedUser();
-
-  // const displayMessages= messages.map<IMessage>((m, i) => ({
-  //   _id: i,
-  //   text: m.text,
-  //   createdAt: new Date(),
-  //   user: {
-  //     _id: m.from.uid,
-  //   }
-  // }))
-
-  // const [messages, setMessages] = useState([]);
-
-  // useEffect(() => {
-  //   setMessages([
-  //     {
-  //       _id: 1,
-  //       text: 'Hello developer',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 2,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //   ]);
-  // }, []);
+const Messages = ({route, navigation}) => {
+  const {group, messages, sendMessage} = useMessageGroup(route.params.id);
+  const {user, loading} = useAuthenticatedUser();
 
   const onSend = useCallback((messages: Message[] = []) => {
     sendMessage(messages[0]);
   }, []);
 
-  console.log({ user })
+  console.log({user});
   const [height, setHeight] = useState(50);
   const [keyboardisOpen, setKeyboardisOpen] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [text, setText] = useState('');
-  const isOpen = Keyboard.addListener('keyboardDidShow', (e) => {
+  const isOpen = Keyboard.addListener('keyboardDidShow', e => {
     setKeyboardHeight(e.endCoordinates.height);
     setKeyboardisOpen(true);
-  })
-  const isClose = Keyboard.addListener('keyboardDidHide', (e) => {
-
+  });
+  const isClose = Keyboard.addListener('keyboardDidHide', e => {
     setKeyboardisOpen(false);
-  })
+  });
+
+  const {goBack} = useNavigation();
   // console.log(messages.map(m => ({...m, date: m.createdAt})))
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
+      <View style={{marginBottom: 5}}>
+        <View
+          style={{
+            marginHorizontal: 20,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <Ionicons
+            name="arrow-back"
+            size={28}
+            color="black"
+            style={{position: 'relative', top: 3}}
+            onPress={() => goBack()}
+          />
+          <Header
+            label={group?.members?.length > 2 ? group?.name : 'Messages'}
+            containerStyle={{marginBottom: 5, marginLeft: 20}}
+          />
+          {user?.role == 'Admin' && (
+            <Ionicons
+              name="information-circle-outline"
+              size={28}
+              color="black"
+              style={{marginLeft: 'auto'}}
+              onPress={() =>
+                navigation.navigate('GroupInfo', {id: route?.params?.id})
+              }
+            />
+          )}
+        </View>
+        <Divider />
+      </View>
       <GiftedChat
         messages={messages.sort((a, b) => b.createdAt - a.createdAt)}
         onSend={messages => onSend(messages)}
@@ -140,10 +161,10 @@ const Messages = ({ route, navigation }) => {
         // minComposerHeight={50}
         // maxComposerHeight={50}
         // minInputToolbarHeight={40}
-      // isKeyboardInternallyHandled={false}
+        // isKeyboardInternallyHandled={false}
       />
-      <KeyboardAvoidingView behavior='position' />
-    </View>
+      <KeyboardAvoidingView behavior="position" />
+    </SafeAreaView>
   );
 };
 

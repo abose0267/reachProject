@@ -31,7 +31,7 @@ export const ContactCard = ({ data, onPress, onSelect, selected = false }: Conta
           />
         <View style={styles.textContainer}>
           <Text style={styles.name}>{data.firstname} {data.lastname}</Text>
-          <Text style={styles.role}>{data.role}</Text>
+          <Text style={styles.role}>{data.role == "Admin" || data.role =="admin" ? "Admin":"Member"}</Text>
           </View>
         </View>
         {onSelect &&

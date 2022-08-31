@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {BlockButton, ContactCard, Header, TextInput} from '@app/components';
 import {colors} from '@app/constants';
-import {useAuth, UserProfile} from '@app/lib';
+import {useAuth, useAuthenticatedUser, UserProfile} from '@app/lib';
 import SelectUsers from '@app/features/directory/screens/SelectUsers';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
@@ -18,10 +18,10 @@ import {useCollection} from '@app/lib/useFirebase';
 import {getMessageGroup} from '../useMessaging';
 const CreateMessage = ({navigation}) => {
   const {data: users} = useCollection<UserProfile>('users');
+  const {user} = useAuthenticatedUser();
 
   const [selected, setSelected] = useState([]);
   const [name, setName] = useState('');
-
 
   return (
     <SafeAreaView style={[styles.container]}>
@@ -43,9 +43,10 @@ const CreateMessage = ({navigation}) => {
               size={30}
               color={colors.green}
               onPress={() =>
-                getMessageGroup(selected.map(uid => ({uid})), name).then(id =>
-                  console.log(id),
-                )
+                getMessageGroup(
+                  [...selected.map(uid => ({uid})), {uid: user.uid}],
+                  name,
+                ).then(id => navigation.navigate(navigation.navigate('messages', { id })))
               }
             />
           )}
@@ -57,16 +58,11 @@ const CreateMessage = ({navigation}) => {
           style={{height: 40}}
           value={name}
           onChange={e => setName(e.nativeEvent.text)}
-          returnKeyType='done'
+          returnKeyType="done"
         />
       </View>
       <Divider />
-      <SelectUsers onChange={s => setSelected(s)} />
-
-      {/* <TouchableOpacity style={{bottom: 15,right:10,position:'absolute',marginHorizontal:20,borderRadius:20,backgroundColor:"#379770"}}>
-              <Ionicons name= 'search-outline' size={30} style={{ borderWidth: 1, borderRadius: 20, padding: 20 }} />
-        
-          </TouchableOpacity> */}
+      <SelectUsers onChange={s => setSelected(s)} showCurrentUser={false} />
     </SafeAreaView>
   );
 };

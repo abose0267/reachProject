@@ -2,23 +2,24 @@ import React, { useEffect } from 'react';
 import { View, SafeAreaView, StyleSheet, SectionList ,Text} from 'react-native';
 import { BlockButton, ContactCard, Header, TextInput } from '@app/components';
 import { colors } from '@app/constants';
-import { useAuth, UserProfile } from '@app/lib';
+import { useAuth, useAuthenticatedUser, UserProfile } from '@app/lib';
 import { useCollection } from '@app/lib/useFirebase';
 
 const Contacts = ({ navigation }) => {
   const { signout } = useAuth();
   const { data: users } = useCollection<UserProfile>('users');
-
+  const { user } = useAuthenticatedUser();
   var sectionedList = []
   var adminList = []
   var memberList = []
-
+  
   if (users) {
-     for (var i = 0; i < users.length; i++) {
-    if (users[i].role == "Admin") {
+
+    for (var i = 0; i < users.length; i++) {
+    if (users[i].role == "Admin" && users[i].uid != user?.uid) {
       adminList.push(users[i])
     }
-    else {
+    else if(  users[i].uid != user?.uid){
       memberList.push(users[i])
     }
   }

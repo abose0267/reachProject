@@ -34,12 +34,13 @@ const MemberNavigator = () => {
           }
 
           // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons style={{marginTop:10}} name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: colors.green,
         tabBarInactiveTintColor: colors.black,
         initialRouteName: 'Directory',
-      })
+        })
+      
     }
       >
         <Tab.Screen name="Messages" component={MessagesStack} options={{ headerShown: false }}/>
