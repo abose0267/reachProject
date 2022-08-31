@@ -55,7 +55,7 @@ const CreateMessage = ({navigation}) => {
         <TextInput
           label="Group Name"
           dense
-          style={{height: 40}}
+          style={{height: 40,}}
           value={name}
           onChange={e => setName(e.nativeEvent.text)}
           returnKeyType="done"

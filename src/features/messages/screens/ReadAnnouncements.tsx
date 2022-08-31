@@ -8,21 +8,22 @@ import { useAnnouncements } from '@app/lib/announcement';
 import moment from 'moment';
 
 
-const ReadAnnouncements = ({ navigation }) => {
+const ReadAnnouncements = ({ navigation, route}) => {
     const {announcements} = useAnnouncements();
+    const {isAnnouncement, data} = route.params;
     return (
         <SafeAreaView style={[styles.container]}>
-            <Header label="Announcements" containerStyle={{ marginBottom: 5, padding: 10, paddingTop: 20,}} />
+            <Header label={isAnnouncement ? "Announcements" : "Blasts"} containerStyle={{ marginBottom: 5, padding: 10, paddingTop: 20,}} />
             <FlatList 
-                data={announcements}
+                data={data.sort((a, b) => b.createdAt - a.createdAt)}
                 renderItem={({item}) => {
                     console.log(new Date(item.createdAt.seconds * 1000).toUTCString())
                     let date = new Date(item.createdAt.seconds * 1000).toUTCString()
                     return(
                         <View style={{ borderTopWidth: 1, borderBottomWidth: 1, borderColor: "lightgray", paddingHorizontal: 20,}}>
                             <Text style={{ fontSize: 20, fontWeight: '500', marginTop: 10, color: "black" }}>{item.title}</Text>
-                            <Text style={{ fontSize: 15, fontWeight: '300', marginVertical: 5, color: "gray" }}>{moment(date).local().format('MM/DD/YYYY')}</Text>
-                            <Text style={{ fontSize: 15, fontWeight: '300', marginTop: 5, color: "black" }}>{item.message}</Text>
+                            <Text style={{ fontSize: 15, fontWeight: '300', marginTop: 5, color: "gray" }}>{moment(date).fromNow()}</Text>
+                            <Text style={{ fontSize: 15, fontWeight: '300', marginVertical: 5, color: "black" }}>{item.message}</Text>
                         </View>
                     )
                 }}

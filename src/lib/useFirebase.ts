@@ -25,16 +25,15 @@ export const useCollection = <T>(
 
   useEffect(() => {
     let q;
-    
-    if(options) {
-      alert('options'+ options[0] +" "+options[1]+" "+options[2]);
-      q = fb.query(fb.collection(db, collectionName), fb.where(options[0], options[1], options[2]));
+    if(options?.where?.filter((item) => item === undefined).length == 0) {
+      q = fb.query(collectionRef, fb.where(...options.where));
     } else {
       q = fb.collection(db, collectionName);
     }
     // const q = fb.collection(db, collectionName);
 
     const unsub = fb.onSnapshot(
+      // collectionRef,
       q,
       snap => {
         const data = snap.docs.map(doc => doc.data());

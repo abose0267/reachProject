@@ -19,21 +19,24 @@ const MessageList = ({navigation}) => {
   const {user} = useAuth();
   const {data: groups} = useCollection<MessageGroup>(`users/${user.uid}/groups`);
   const {announcements} = useAnnouncements();
+  const sortedAnnounce = announcements?.filter((item) => item.isAnnouncement == true).sort((a, b) => b.createdAt - a.createdAt);
   const {blasts} = useBlasts();
+
+  console.log("blasts", blasts)
   return (
     <SafeAreaView style={[styles.container]}>
       <Header label="Messages" containerStyle={{marginBottom: 5}} />
       <StatusBar style="dark" />
       <AnnouncementCard 
         title={"Announcements"}
-        latestMessage={announcements?.length > 0 ? announcements[0]?.title || "New announcement": null}
-        onPress={() => navigation.navigate("readannouncements")}
+        latestMessage={sortedAnnounce?.length > 0 ? sortedAnnounce[0]?.title || "New announcement": null}
+        onPress={() => navigation.navigate("readannouncements", {isAnnouncement: true, data: sortedAnnounce})}
       />
       <AnnouncementCard 
         title={"Blasts"}
         latestMessage={blasts?.length > 0 ? blasts[0]?.title || "New blast": null}
         // latestMessage={"New blast"}
-        onPress={() => console.log("howdy")}
+        onPress={() => navigation.navigate("readannouncements", {isAnnouncement: false, data: blasts})}
       />
       <FlatList
         data={groups}
