@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import * as fb from 'firebase/firestore';
 import {db} from './firebase';
+import { UpdateData } from 'firebase/firestore';
 
 interface UseCollectionConfigOptions {
   subscribe?: boolean;
@@ -60,18 +61,19 @@ export const useDoc = <T>(collectionName: string, docId?: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const docRef = (
+    docId ? fb.doc(db, collectionName, docId) : fb.doc(db, collectionName)
+  ) as fb.DocumentReference<T>;
+
   const fetchDoc = async () => {
-    const docRef = (
-      docId ? fb.doc(db, collectionName, docId) : fb.doc(db, collectionName)
-    ) as fb.DocumentReference<T>;
     const snap = await fb.getDoc(docRef);
     const data = snap.data();
     return data;
   };
 
-  // const unsub = onSnapshot(doc(db, 'cities', 'SF'), doc => {
-  //   console.log('Current data: ', doc.data());
-  // });
+  const updateDoc = (data: UpdateData<T>) => {
+    fb.updateDoc(docRef, data);
+  }
 
   useEffect(() => {
     fetchDoc()
@@ -87,5 +89,5 @@ export const useDoc = <T>(collectionName: string, docId?: string) => {
       });
   }, [collectionName]);
 
-  return {data, error, loading};
+  return {data, error, loading, updateDoc};
 };
