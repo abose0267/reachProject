@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Avatar } from 'react-native-paper';
-import { MessageGroup, MessageProfile, useAuthenticatedUser, UserProfile } from '@app/lib';
+import { MessageGroup, useAuthenticatedUser, UserProfile } from '@app/lib';
 import { colors } from '@app/constants';
 import { getAuth } from 'firebase/auth';
 
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Icon from 'react-native-ionicons';
 export interface MessageCardProps {
     data: MessageGroup;
     onPress?: () => void;
@@ -13,7 +15,7 @@ export interface MessageCardProps {
 export const MessageCard = ({ data, onPress }: MessageCardProps) => {
     const { user } = useAuthenticatedUser();
 
-    const initials = data.members[0].firstname[0] + data.members[0].lastname[0];
+    const initials = data.members[1].firstname[0] + data.members[1].lastname[0];
     const otherUsers = data?.members?.filter(p => p.uid != user?.uid);
     const chatName = otherUsers?.length <= 1 ? `${otherUsers[0]?.firstname} ${otherUsers[0]?.lastname}` : data?.name;
 
@@ -21,15 +23,28 @@ export const MessageCard = ({ data, onPress }: MessageCardProps) => {
         <>
             <TouchableOpacity style={styles.container} onPress={onPress}>
                 {/* @ts-ignore */}
-                <Avatar.Text
-                    label={initials}
-                    size={40}
-                    theme={{
-                        colors: {
-                            primary: colors.green,
-                        },
-                    }}
+                { data?.members?.length <3 ?
+                    <Avatar.Text
+                        label={initials}
+                        size={40}
+                        theme={{
+                            colors: {
+                                primary: colors.green,
+                            },
+                        }}
+                    />
+                    :
+                <Avatar.Icon
+                        icon={"account-group"}
+                             size={40}
+                        theme={{
+                            colors: {
+                                primary: colors.green,
+                            },
+                        }}
                 />
+
+                }
                 <View style={styles.textContainer}>
                     <Text style={styles.name}>{chatName}</Text>
                 </View>
