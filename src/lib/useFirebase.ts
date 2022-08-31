@@ -14,7 +14,6 @@ export const useCollection = <T>(
   collectionName: string,
   options?: UseCollectionConfigOptions,
 ) => {
-  const {user} = useAuthenticatedUser();
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
