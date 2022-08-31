@@ -12,25 +12,27 @@ import {getAuth} from 'firebase/auth';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { getMessageGroup } from '../useMessaging';
 import { StatusBar } from 'expo-status-bar';
-import { useAnnouncements } from '@app/lib/announcement';
+import { useAnnouncements, useBlasts } from '@app/lib/announcement';
 import { AnnouncementCard } from '@app/components/Announcements';
 
 const MessageList = ({navigation}) => {
   const {user} = useAuth();
   const {data: groups} = useCollection<MessageGroup>(`users/${user.uid}/groups`);
   const {announcements} = useAnnouncements();
+  const {blasts} = useBlasts();
   return (
     <SafeAreaView style={[styles.container]}>
       <Header label="Messages" containerStyle={{marginBottom: 5}} />
       <StatusBar style="dark" />
       <AnnouncementCard 
         title={"Announcements"}
-        latestMessage={announcements?.length > 0 ? announcements[0].message : null}
+        latestMessage={announcements?.length > 0 ? announcements[0]?.title || "New announcement": null}
         onPress={() => navigation.navigate("readannouncements")}
       />
       <AnnouncementCard 
         title={"Blasts"}
-        latestMessage={announcements?.length > 0 ? announcements[0].message : null}
+        latestMessage={blasts?.length > 0 ? blasts[0]?.title || "New blast": null}
+        // latestMessage={"New blast"}
         onPress={() => console.log("howdy")}
       />
       <FlatList
@@ -55,8 +57,9 @@ const MessageList = ({navigation}) => {
         }}>
         <Ionicons
           name="chatbox-outline"
-          size={25}
-          style={{borderWidth: 1, borderRadius: 20, padding: 20}}
+          size={30}
+          color="white"
+          style={{borderWidth: 0.5, borderRadius: 20, padding: 20}}
         />
       </TouchableOpacity>
     </SafeAreaView>

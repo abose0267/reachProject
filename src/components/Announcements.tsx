@@ -15,7 +15,7 @@ export const AnnouncementCard = ({ title, latestMessage, onPress }: MessageCardP
             <View >
                 <Text
                     style={{
-                        fontSize: 30,
+                        fontSize: 22,
                         fontWeight: '500',
                         color: colors.green,
 
@@ -29,6 +29,7 @@ export const AnnouncementCard = ({ title, latestMessage, onPress }: MessageCardP
                         fontWeight: '400',
                         color: "gray",
                     }}
+                    numberOfLines={2}
                 >
                     {latestMessage == null ? "No recent announcements" : latestMessage}
                 </Text>
@@ -41,11 +42,12 @@ const styles = StyleSheet.create({
     container: {
         width: Dimensions.get("screen").width - 40,
         // borderWidth: 1,
+        // justifyContent: 'center',
+        // alignItems: 'center',
         borderBottomWidth: 1,
         borderBottomColor: colors.grey,
-        minHeight: 70,
-        padding: 10,
-        paddingVertical: 20,
+        height: 70,
+        paddingVertical: 10,
     },
     // textContainer: {
     //     marginLeft: 

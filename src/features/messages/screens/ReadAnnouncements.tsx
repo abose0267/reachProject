@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { View, SafeAreaView, StyleSheet, SectionList, Text, FlatList, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAnnouncements } from '@app/lib/announcement';
+import moment from 'moment';
 
 
 const ReadAnnouncements = ({ navigation }) => {
@@ -18,9 +19,10 @@ const ReadAnnouncements = ({ navigation }) => {
                     console.log(new Date(item.createdAt.seconds * 1000).toUTCString())
                     let date = new Date(item.createdAt.seconds * 1000).toUTCString()
                     return(
-                        <View style={{ borderTopWidth: 1, borderTopColor: "lightgray", paddingHorizontal: 20,}}>
-                            <Text style={{ fontSize: 20, fontWeight: '500', marginTop: 10, color: "black" }}>{item.message}</Text>
-                            <Text style={{ fontSize: 15, fontWeight: '300', marginTop: 5, color: "gray" }}>At {date}</Text>
+                        <View style={{ borderTopWidth: 1, borderBottomWidth: 1, borderColor: "lightgray", paddingHorizontal: 20,}}>
+                            <Text style={{ fontSize: 20, fontWeight: '500', marginTop: 10, color: "black" }}>{item.title}</Text>
+                            <Text style={{ fontSize: 15, fontWeight: '300', marginVertical: 5, color: "gray" }}>{moment(date).local().format('MM/DD/YYYY')}</Text>
+                            <Text style={{ fontSize: 15, fontWeight: '300', marginTop: 5, color: "black" }}>{item.message}</Text>
                         </View>
                     )
                 }}

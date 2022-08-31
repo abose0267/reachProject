@@ -1,15 +1,20 @@
 import {useEffect, useState} from 'react';
 import * as fb from 'firebase/firestore';
 import {db} from './firebase';
+import { useAuthenticatedUser } from './user';
 
+
+export type UseCollectionWhereFilter = [string, fb.WhereFilterOp, any];
 interface UseCollectionConfigOptions {
   subscribe?: boolean;
+  where?: UseCollectionWhereFilter;
 }
 
 export const useCollection = <T>(
   collectionName: string,
   options?: UseCollectionConfigOptions,
 ) => {
+  const {user} = useAuthenticatedUser();
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,16 +22,25 @@ export const useCollection = <T>(
   const collectionRef = fb.collection(
     db,
     collectionName,
-
   ) as fb.CollectionReference<T>;
 
   useEffect(() => {
+    let q;
+    
+    if(options) {
+      alert('options'+ options[0] +" "+options[1]+" "+options[2]);
+      q = fb.query(fb.collection(db, collectionName), fb.where(options[0], options[1], options[2]));
+    } else {
+      q = fb.collection(db, collectionName);
+    }
+    // const q = fb.collection(db, collectionName);
+
     const unsub = fb.onSnapshot(
-      collectionRef,
+      q,
       snap => {
         const data = snap.docs.map(doc => doc.data());
         setError(null);
-        setData(data);
+        setData(data as unknown as T[]);
         setLoading(false);
       },
       error => {

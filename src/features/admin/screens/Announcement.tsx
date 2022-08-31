@@ -7,49 +7,90 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { createAnnouncement } from '@app/lib/announcement';
 
 
-const SendAnnouncement = ({ navigation }) => {
+const SendAnnouncement = ({ navigation, route }) => {
+    const {isAnnouncement, users} = route.params;
     const [message, setMessage] = React.useState('');
+    const [title, setTitle] = React.useState('');
+    const [height, setHeight] = React.useState(140);
     const {user} = useAuthenticatedUser()
     const handleCreate = () => {
-        createAnnouncement(
-            {
-                message: message,
-                creatorUID: user?.uid,
-                createdAt: new Date(),
-            }
-        ).then(() => {
-            Alert.alert("Announcement sent!")
-        }).then(() => {
-            navigation.goBack()
-        })
+        if(isAnnouncement) {
+            createAnnouncement(
+                {
+                    message: message,
+                    creatorUID: user?.uid,
+                    createdAt: new Date(),
+                    title: title,
+                    isAnnouncement: isAnnouncement,
+                }
+            ).then(() => {
+                Alert.alert("Announcement sent!")
+            }).then(() => {
+                navigation.goBack()
+            })
+        } else {
+            createAnnouncement(
+                {
+                    message: message,
+                    creatorUID: user?.uid,
+                    createdAt: new Date(),
+                    title: title,
+                    isAnnouncement: isAnnouncement,
+                    users: users,
+                }
+            ).then(() => {
+                Alert.alert("Blast sent!")
+            }).then(() => {
+                navigation.navigate("adminpanel")
+            })
+        }
     }
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()} style={styles.container}>
             <SafeAreaView style={[styles.container]}>
                 <View style={{ paddingHorizontal: 15, }}>
-                    <Header label="Send an announcement" containerStyle={{ marginBottom: 5 }} />
+                    <Header label={isAnnouncement ? "Send an announcement" : "Send a blast"} containerStyle={{ marginBottom: 5 }} />
                 </View>
 
                 <View style={{
-                    marginTop: 20,
+                    marginTop: 10,
                     paddingHorizontal: 15,
 
                 }}>
-                    <Text style={{ fontSize: 15, fontWeight: '300', marginVertical: 10, color: "gray" }}>Type a message</Text>
+                    <TextInput 
+                        style={{
+                            borderWidth: 1,
+                            borderColor: "lightgray",
+                            borderRadius: 5,
+                            padding: 10,
+                            // paddingLeft: 20,
+                            height: 50,
+                            marginBottom: 10,
+                            fontSize: 15,
+                        }}
+                        placeholder="Type a title..."
+                        onChangeText={(text) => setTitle(text)}
+                        value={title}
+                        
+                    />
                     <TextInput
                         style={{
                             borderWidth: 1,
                             borderColor: "lightgray",
                             borderRadius: 5,
                             padding: 10,
-                            paddingLeft: 20,
-                            paddingTop: 20,
-                            height: 140,
+                            // paddingLeft: 20,
+                            paddingTop: 15,
+                            minHeight: 140,
+                            height: height,
                             fontSize: 15,
                             backgroundColor: "white",
                         }}
-                        placeholder="Hello, this is an announcement"
+                        placeholder="Type a message..."
                         multiline
+                        onContentSizeChange={(event) => {
+                            setHeight(event.nativeEvent.contentSize.height)
+                        }}
                         onChangeText={(text) => setMessage(text)}
                     />
                 </View>
@@ -62,7 +103,11 @@ const SendAnnouncement = ({ navigation }) => {
                     }}
                 >
                     <BlockButton onPress={() => {
-                        handleCreate();
+                        if(title.length == 0 || message.length == 0) {
+                            Alert.alert("Please fill out all fields")
+                        } else {
+                            handleCreate();
+                        }
                     }} style={{borderColor: "green"}} textStyle={{color: "white"}}>Send</BlockButton>
                 </View>
             </SafeAreaView>
