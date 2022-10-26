@@ -38,7 +38,7 @@ export interface UserLoginInput {
 
 const useProvideAuth = (): UseAuthReturnValue => {
   const [user, setUser] = useState(null);
-  console.log('uid', auth.currentUser?.uid);
+  // console.log('uid', auth.currentUser?.uid);
   // const {data: profile} = useDoc<UserProfile>('users', auth.currentUser?.uid);
   const signin = async (data: UserLoginInput) => {
     const response = await signInWithEmailAndPassword(auth, data.email, data.password);
