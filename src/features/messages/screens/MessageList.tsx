@@ -6,7 +6,7 @@ import {colors} from '@app/constants';
 import {FlatList} from 'react-native';
 import {useCollection} from '@app/lib/useFirebase';
 import {MessageGroup, useAuth, UserProfile} from '@app/lib';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {MessageCard} from '@app/components/MessageCard';
 import {getAuth} from 'firebase/auth';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -22,10 +22,13 @@ const MessageList = ({navigation}) => {
   const {announcements} = useAnnouncements();
   const sortedAnnounce = announcements?.filter((item) => item.isAnnouncement == true).sort((a, b) => b.createdAt - a.createdAt);
   const {blasts} = useBlasts();
+  const isFocused = useIsFocused();
 
   console.log("blasts", blasts)
   return (
+    <>
     <SafeAreaView style={[styles.container]}>
+
       <Header label="Messages" containerStyle={{marginBottom: 5}} />
       <StatusBar style="dark" />
       <AnnouncementCard 
@@ -47,7 +50,7 @@ const MessageList = ({navigation}) => {
           .catch(err => console.error(err))
         }  />}
       />
-      <CreateMessageButton/>
+     
       {/* <TouchableOpacity
         onPress={() => {
           navigation.navigate('CreateMessage');
@@ -67,7 +70,10 @@ const MessageList = ({navigation}) => {
           style={{borderWidth: 0.5, borderRadius: 20, padding: 20}}
         />
       </TouchableOpacity> */}
+          {isFocused && <CreateMessageButton/>}
+
     </SafeAreaView>
+    </>
   );
 };
 

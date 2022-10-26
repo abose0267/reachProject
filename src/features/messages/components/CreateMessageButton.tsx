@@ -1,6 +1,7 @@
 import { colors } from '@app/constants';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
+import { Dimensions, StyleSheet } from 'react-native';
 import { FAB, Portal, Provider } from 'react-native-paper';
 export const CreateMessageButton = () => {
   const [state, setState] = React.useState({ open: false });
@@ -11,10 +12,10 @@ export const CreateMessageButton = () => {
   const { open } = state;
 
   return (
-    <Provider>
+    // <Provider>
       <Portal>
         <FAB.Group
-          style={{backgroundColor: '#00000000'}}
+          style={{backgroundColor: '#00000000', ...StyleSheet.absoluteFillObject, paddingBottom: 90}}
           open={open}
           visible
           color={colors.white}
@@ -27,12 +28,12 @@ export const CreateMessageButton = () => {
           actions={[
             // { icon: 'plus', onPress: () => console.log('Pressed add') },
             {
-              icon: 'star',
-              label: 'Personal Message',
+              icon: 'comment-text-multiple',
+              label: 'Personalized DM',
               onPress: () => navigate('CreateBlast'),
             },
             {
-              icon: 'email',
+              icon: 'account-group',
               label: 'Group Chat',
               onPress: () => navigate('CreateGroup'),
             },
@@ -50,7 +51,7 @@ export const CreateMessageButton = () => {
           }}
         />
       </Portal>
-    </Provider>
+    // </Provider>
   );
 };
 

@@ -25,36 +25,9 @@ const CreateBlast = ({navigation}) => {
   const [selected, setSelected] = useState([]);
   const [name, setName] = useState('');
   const {navigate} = useNavigation()
-
-  const handlePress = async () => {
-    for (const uid of selected) {
-      const id = await getMessageGroup([{uid}, {uid: user.uid}])
-      const collectionRef = fb.collection(
-        db,
-        `messageGroups/${id}/messages`,
-      ) as fb.CollectionReference<Message>;
-      const m:Message = {
-        _id: (Math.random() + 1).toString(36).substring(2),
-        createdAt: new Date(),
-        text: 'blast??',
-        user: {
-          _id: user.uid,
-          name: `${user.firstname} ${user.lastname}`
-        }
-      }
-      await fb.addDoc(collectionRef, m);
-
-    }
-    
-
-  }
   
   return (
     <SafeAreaView style={[styles.container]}>
-      {/* <TextInput
-              value={searchVal}
-              onChangeText={(val)=> setSearch(val)}
-      /> */}
       <View style={[styles.padding]}>
         <View
           style={{
@@ -62,7 +35,7 @@ const CreateBlast = ({navigation}) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Header label="Create ??" containerStyle={{marginBottom: 5}} />
+          <Header label="Members" containerStyle={{marginBottom: 5}} />
           {selected.length > 0 && (
             <MaterialCommunityIcons
               name="message-arrow-right"
