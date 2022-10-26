@@ -15,12 +15,12 @@ const AdminPanel = ({navigation}) => {
             description: "Send a quick message to all users",
             onPress: () => navigation.navigate('sendannouncement', {isAnnouncement: true})
         },
-        {
-            title: "Send a personalized message",
-            icon: "people-outline",
-            description: "Send a message to a specific group of users. This can be all users or just one.",
-            onPress: () => navigation.navigate('blasts', {isAnnouncement: false})
-        }
+        // {
+        //     title: "Send a personalized message",
+        //     icon: "people-outline",
+        //     description: "Send a message to a specific group of users. This can be all users or just one.",
+        //     onPress: () => navigation.navigate('blasts', {isAnnouncement: false})
+        // }
     ]
     return(
         <SafeAreaView style={[styles.container]}>

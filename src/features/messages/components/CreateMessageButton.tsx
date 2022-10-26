@@ -1,4 +1,5 @@
 import { colors } from '@app/constants';
+import { useAuthenticatedUser } from '@app/lib';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
@@ -6,11 +7,45 @@ import { FAB, Portal, Provider } from 'react-native-paper';
 export const CreateMessageButton = () => {
   const [state, setState] = React.useState({ open: false });
   const {navigate} = useNavigation();
-
+  const {user} = useAuthenticatedUser()
   const onStateChange = ({ open }) => setState({ open });
 
   const { open } = state;
 
+  const actions =  user?.role.toLowerCase() == 'admin' ?  [
+    // { icon: 'plus', onPress: () => console.log('Pressed add') },
+   
+    {
+      icon: 'comment-text-multiple',
+      label: 'Personalized DM',
+      onPress: () => navigate('CreateBlast'),
+
+    },
+    {
+      icon: 'account-group',
+      label: 'Group Chat',
+      onPress: () => navigate('CreateGroup'),
+    },
+    {
+      icon: 'bell',
+      label: 'Direct Message',
+      onPress: () => console.log('Pressed notifications'),
+    },
+  ] : 
+  [
+    // { icon: 'plus', onPress: () => console.log('Pressed add') },
+   
+    {
+      icon: 'account-group',
+      label: 'Group Chat',
+      onPress: () => navigate('CreateGroup'),
+    },
+    {
+      icon: 'bell',
+      label: 'Direct Message',
+      onPress: () => console.log('Pressed notifications'),
+    },
+  ]
   return (
     // <Provider>
       <Portal>
@@ -24,31 +59,9 @@ export const CreateMessageButton = () => {
             
           }}
           icon={open ? 'message' : 'message-plus'}
-          // backdropColor="#00000000"
-          actions={[
-            // { icon: 'plus', onPress: () => console.log('Pressed add') },
-            {
-              icon: 'comment-text-multiple',
-              label: 'Personalized DM',
-              onPress: () => navigate('CreateBlast'),
-            },
-            {
-              icon: 'account-group',
-              label: 'Group Chat',
-              onPress: () => navigate('CreateGroup'),
-            },
-            {
-              icon: 'bell',
-              label: 'Direct Message',
-              onPress: () => console.log('Pressed notifications'),
-            },
-          ]}
+          actions={actions}
           onStateChange={onStateChange}
-          onPress={() => {
-            if (open) {
-              // do something if the speed dial is open
-            }
-          }}
+          
         />
       </Portal>
     // </Provider>

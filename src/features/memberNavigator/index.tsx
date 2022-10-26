@@ -24,8 +24,8 @@ const MemberNavigator = () => {
 
           if (route.name === 'Directory') {
             iconName = focused
-              ? 'bookmarks'
-              : 'bookmarks-outline';
+              ? 'home'
+              : 'home-outline';
           } else if (route.name === 'Settings') {
             iconName = focused ? 'settings' : 'settings-outline';
           } else if (route.name === 'Messages') {

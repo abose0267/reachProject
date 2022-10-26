@@ -30,6 +30,7 @@ const DraftBlast = ({}) => {
   const {data: users} = useCollection<UserProfile>('users');
   const {user} = useAuthenticatedUser();
 
+  const navigation = useNavigation();
   const {params} = useRoute();
 
   //   console.log(params);
@@ -70,6 +71,8 @@ const DraftBlast = ({}) => {
       }
       addBlastGroup(blastGroup)
     }
+
+    navigation.navigate('Messages')
   };
 
   return (

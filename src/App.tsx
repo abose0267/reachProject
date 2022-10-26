@@ -38,5 +38,5 @@ const Navigator = () => {
     return <AuthStack />;
  }
 
-export default registerRootComponent(App as unknown as ComponentType<any>);
+export default App; 
 
