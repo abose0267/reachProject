@@ -3,9 +3,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Messages from './screens/Messages';
 import MessageList from './screens/MessageList';
 import Settings from '../settings';
-import CreateMessage from './screens/CreateGroup';
+import CreateGroup from './screens/CreateGroup';
 import ReadAnnouncements from './screens/ReadAnnouncements';
 import GroupInfo from './screens/GroupInfo';
+import CreateBlast from '../blast/CreateBlast';
+import DraftBlast from '../blast/DraftBlast';
 // import { Settings } from 'react-native';
 
 
@@ -22,8 +24,18 @@ const MessagesStack = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="CreateMessage"
-          component={CreateMessage}
+          name="CreateGroup"
+          component={CreateGroup}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CreateBlast"
+          component={CreateBlast}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="DraftBlast"
+          component={DraftBlast}
           options={{ headerShown: false }}
         />
         <Stack.Screen

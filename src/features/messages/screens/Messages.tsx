@@ -40,7 +40,7 @@ const Messages = ({route, navigation}) => {
     sendMessage(messages[0]);
   }, []);
 
-  console.log({user});
+  // console.log({user});
   const [height, setHeight] = useState(50);
   const [keyboardisOpen, setKeyboardisOpen] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);

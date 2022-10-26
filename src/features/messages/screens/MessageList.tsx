@@ -14,6 +14,7 @@ import { getMessageGroup } from '../useMessaging';
 import { StatusBar } from 'expo-status-bar';
 import { useAnnouncements, useBlasts } from '@app/lib/announcement';
 import { AnnouncementCard } from '@app/components/Announcements';
+import { CreateMessageButton } from '../components';
 
 const MessageList = ({navigation}) => {
   const {user} = useAuth();
@@ -46,7 +47,8 @@ const MessageList = ({navigation}) => {
           .catch(err => console.error(err))
         }  />}
       />
-      <TouchableOpacity
+      <CreateMessageButton/>
+      {/* <TouchableOpacity
         onPress={() => {
           navigation.navigate('CreateMessage');
         }}
@@ -64,7 +66,7 @@ const MessageList = ({navigation}) => {
           color="white"
           style={{borderWidth: 0.5, borderRadius: 20, padding: 20}}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </SafeAreaView>
   );
 };

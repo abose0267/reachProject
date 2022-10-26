@@ -32,11 +32,11 @@ export const useBlasts = () => {
   const { user } = useAuthenticatedUser();
   const uid = user?.uid;
   const where: UseCollectionWhereFilter = ["users", "array-contains", 'A7LyjDM6rVeOEVVh56jTN8N6oTH2'];
-  console.log("where", where);
+  // console.log("where", where);
   const { data: blasts } = useCollection<CreateAnnouncementData>(
     "announcements",
     {where: where}
   );
-  console.log("blasts", blasts);
+  // console.log("blasts", blasts);
   return { blasts };
 };
