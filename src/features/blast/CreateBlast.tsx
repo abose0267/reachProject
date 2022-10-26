@@ -5,10 +5,18 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  Text,
 } from 'react-native';
 import {BlockButton, ContactCard, Header, TextInput} from '@app/components';
 import {colors} from '@app/constants';
-import {db, Message, useAuth, useAuthenticatedUser, UserProfile} from '@app/lib';
+import {
+  BlastGroup,
+  db,
+  Message,
+  useAuth,
+  useAuthenticatedUser,
+  UserProfile,
+} from '@app/lib';
 import SelectUsers from '@app/features/directory/screens/SelectUsers';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
@@ -17,15 +25,18 @@ import * as fb from 'firebase/firestore';
 // import { FlatList } from 'react-native-gesture-handler';
 import {useCollection} from '@app/lib/useFirebase';
 import {getMessageGroup} from '../messages/useMessaging';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import { List } from 'react-native-paper';
 const CreateBlast = ({navigation}) => {
   const {data: users} = useCollection<UserProfile>('users');
   const {user} = useAuthenticatedUser();
 
   const [selected, setSelected] = useState([]);
   const [name, setName] = useState('');
-  const {navigate} = useNavigation()
-  
+  const {navigate} = useNavigation();
+
+  const {data: blastGroups} = useCollection<BlastGroup>('blastGroups');
+
   return (
     <SafeAreaView style={[styles.container]}>
       <View style={[styles.padding]}>
@@ -56,6 +67,26 @@ const CreateBlast = ({navigation}) => {
         /> */}
       </View>
       <Divider />
+      <View style={{backgroundColor: '#dedede', width: '100%'}}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  padding: 5,
+                  left: 6,
+                  fontWeight: '600',
+                  color: '#262626',
+                }}>
+                GROUPS
+              </Text>
+            </View>
+      {blastGroups.map(g => (
+        <List.Item
+          title={g.name}
+          description={g.members.map(m => m.firstname).join(', ')}
+          left={props => <List.Icon {...props} icon="account-group" />}
+          onPress={() => navigation.navigate('DraftBlast', {selected: g.members.map(m => m.uid)})}
+        />
+      ))}
       <SelectUsers onChange={s => setSelected(s)} showCurrentUser={false} />
     </SafeAreaView>
   );

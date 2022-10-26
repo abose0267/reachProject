@@ -24,7 +24,7 @@ const MessageList = ({navigation}) => {
   const {blasts} = useBlasts();
   const isFocused = useIsFocused();
 
-  console.log("blasts", blasts)
+  // console.log("blasts", blasts)
   return (
     <>
     <SafeAreaView style={[styles.container]}>
