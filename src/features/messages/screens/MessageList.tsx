@@ -27,7 +27,7 @@ const MessageList = ({navigation}) => {
     <SafeAreaView style={[styles.container]}>
       <Header label="Messages" containerStyle={{marginBottom: 5}} />
       <StatusBar style="dark" />
-      <AnnouncementCard 
+      {/* <AnnouncementCard 
         title={"Announcements"}
         latestMessage={sortedAnnounce?.length > 0 ? sortedAnnounce[0]?.title || "New announcement": null}
         onPress={() => navigation.navigate("readannouncements", {isAnnouncement: true, data: sortedAnnounce})}
@@ -37,7 +37,7 @@ const MessageList = ({navigation}) => {
         latestMessage={blasts?.length > 0 ? blasts[0]?.title || "New blast": null}
         // latestMessage={"New blast"}
         onPress={() => navigation.navigate("readannouncements", {isAnnouncement: false, data: blasts})}
-      />
+      /> */}
       <FlatList
         data={groups}
         renderItem={({item}) => <MessageCard data={item} onPress={() => 

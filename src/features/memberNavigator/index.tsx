@@ -44,7 +44,7 @@ const MemberNavigator = () => {
     }
       >
         <Tab.Screen name="Messages" component={MessagesStack} options={{ headerShown: false }}/>
-        <Tab.Screen name="Directory" component={DirectoryStack} options={{ headerShown: false }}/>
+        <Tab.Screen name="Directory" component={DirectoryStack} options={{ headerShown: false }} />
         {user?.role == "Admin" && <Tab.Screen name="Admin" component={AdminStack} options={{ headerShown: false }}/>}
         <Tab.Screen name="Settings" component={Settings} options={{ headerShown: false }}/>
       </Tab.Navigator>

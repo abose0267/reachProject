@@ -8,7 +8,7 @@ import { useAnnouncements, useBlasts } from '@app/lib/announcement';
 import { AnnouncementCard } from '@app/components/Announcements';
 
 
-const Contacts = ({ navigation }) => {
+const Directory_New = ({ navigation }) => {
   const { signout } = useAuth();
   const { data: users } = useCollection<UserProfile>('users');
   const { user } = useAuthenticatedUser();
@@ -51,23 +51,23 @@ return (
         onPress={() => navigation.navigate("readannouncements", {isAnnouncement: true, data: sortedAnnounce})}
         /> */}
 
-        <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' }} onPress={() => { navigation.navigate("announcements") }}>
+        {/* <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' }} onPress={() => { navigation.navigate("") }}>
           <Text style={{textAlign:'center',fontSize:30}}>
             Announcements
           </Text>
         </TouchableOpacity>
         
-         <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' ,marginTop:20}} onPress={() => { navigation.navigate("directory2") }}>
+         <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' ,marginTop:20}} onPress={() => { navigation.navigate("") }}>
           <Text style={{textAlign:'center',fontSize:30}}>
             Access Directory
           </Text>
           </TouchableOpacity>
-    
+     */}
     
     
        
 
-      {/* <SectionList
+      <SectionList
         renderSectionHeader={({ section: { title } }) => (
           <View style={{backgroundColor:'#dedede',width:"100%"}}>
             <Text style={{ fontSize: 15, padding: 5 , left: 6,fontWeight:'600', color: '#262626'}}>{title}</Text>  
@@ -82,14 +82,14 @@ return (
             onPress={() => navigation.navigate('profile', item)}
           />
         )}
-      /> */}
+      />
       </View>
 </View>
   </SafeAreaView>
 );
 };
 
-export default Contacts;
+export default Directory_New;
 
 const Divider = () => (
   <View

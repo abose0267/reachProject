@@ -8,7 +8,7 @@ import { useAnnouncements, useBlasts } from '@app/lib/announcement';
 import { AnnouncementCard } from '@app/components/Announcements';
 
 
-const Contacts = ({ navigation }) => {
+const Announcements = ({ navigation }) => {
   const { signout } = useAuth();
   const { data: users } = useCollection<UserProfile>('users');
   const { user } = useAuthenticatedUser();
@@ -45,24 +45,24 @@ return (
     </View>
     <Divider /> */}
       <View>
-           {/* <AnnouncementCard 
+           <AnnouncementCard 
         title={"Announcements"}
         latestMessage={sortedAnnounce?.length > 0 ? sortedAnnounce[0]?.title || "New announcement": null}
         onPress={() => navigation.navigate("readannouncements", {isAnnouncement: true, data: sortedAnnounce})}
-        /> */}
+        />
 
-        <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' }} onPress={() => { navigation.navigate("announcements") }}>
+        {/* <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' }} onPress={() => { navigation.navigate("") }}>
           <Text style={{textAlign:'center',fontSize:30}}>
             Announcements
           </Text>
         </TouchableOpacity>
         
-         <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' ,marginTop:20}} onPress={() => { navigation.navigate("directory2") }}>
+         <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' ,marginTop:20}} onPress={() => { navigation.navigate("") }}>
           <Text style={{textAlign:'center',fontSize:30}}>
             Access Directory
           </Text>
           </TouchableOpacity>
-    
+     */}
     
     
        
@@ -89,7 +89,7 @@ return (
 );
 };
 
-export default Contacts;
+export default Announcements;
 
 const Divider = () => (
   <View
