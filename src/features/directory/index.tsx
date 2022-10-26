@@ -4,7 +4,7 @@ import Profile from './screens/Profile';
 import Directory from './screens/Directory';
 import Messages from '../messages/screens/Messages';
 import Directory_New from './screens/Directory_New';
-import Announcements from './screens/Announcements';
+import Announcements from './screens/ReadAnnouncements';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +15,7 @@ const DirectoryStack = () => (
         <Stack.Screen
           name="directory"
           component={Directory}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, title: 'Home' }}
         />
         <Stack.Screen
           name="profile"
