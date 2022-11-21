@@ -1,37 +1,80 @@
 import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import {BlockButton, ContactCard, Header, TextInput} from '@app/components';
 import {colors} from '@app/constants';
 // import { useAuth } from '@app/lib';
 import {FlatList} from 'react-native';
 import {useCollection} from '@app/lib/useFirebase';
-import {MessageGroup, useAuth, UserProfile} from '@app/lib';
+import {MessageGroup, updateUser, useAuth, UserProfile} from '@app/lib';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {MessageCard} from '@app/components/MessageCard';
 import {getAuth} from 'firebase/auth';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { getMessageGroup } from '../useMessaging';
-import { StatusBar } from 'expo-status-bar';
-import { useAnnouncements, useBlasts } from '@app/lib/announcement';
-import { AnnouncementCard } from '@app/components/Announcements';
-import { CreateMessageButton } from '../components';
+import {getMessageGroup} from '../useMessaging';
+import {StatusBar} from 'expo-status-bar';
+import {useAnnouncements, useBlasts} from '@app/lib/announcement';
+import {AnnouncementCard} from '@app/components/Announcements';
+import {CreateMessageButton} from '../components';
+import { getExpoPushTokenAsync, getPermissionsAsync, requestPermissionsAsync, setNotificationChannelAsync } from 'expo-notifications';
 
 const MessageList = ({navigation}) => {
   const {user} = useAuth();
-  const {data: groups} = useCollection<MessageGroup>(`users/${user.uid}/groups`);
+  const {data: groups} = useCollection<MessageGroup>(
+    `users/${user.uid}/groups`,
+  );
   const {announcements} = useAnnouncements();
-  const sortedAnnounce = announcements?.filter((item) => item.isAnnouncement == true).sort((a, b) => b.createdAt - a.createdAt);
+  const sortedAnnounce = announcements
+    ?.filter(item => item.isAnnouncement == true)
+    .sort((a, b) => b.createdAt - a.createdAt);
   const {blasts} = useBlasts();
   const isFocused = useIsFocused();
 
   // console.log("blasts", blasts)
+
+  const registerForPushNotificationsAsync = async () => {
+    const {status: existingStatus} = await getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const {status} = await requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    const token = (await getExpoPushTokenAsync()).data;
+    console.log(token);
+    updateUser(user.uid, {
+      token
+    }).catch(err => console.log(err))
+    // this.setState({ expoPushToken: token });
+
+    if (Platform.OS === 'android') {
+      setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (user.uid)
+      registerForPushNotificationsAsync()
+  }, [user])
   return (
     <>
-    <SafeAreaView style={[styles.container]}>
-
-      <Header label="Messages" containerStyle={{marginBottom: 5}} />
-      <StatusBar style="dark" />
-      {/* <AnnouncementCard 
+      <SafeAreaView style={[styles.container]}>
+        <Header label="Messages" containerStyle={{marginBottom: 5}} />
+        <StatusBar style="dark" />
+        {/* <AnnouncementCard 
         title={"Announcements"}
         latestMessage={sortedAnnounce?.length > 0 ? sortedAnnounce[0]?.title || "New announcement": null}
         onPress={() => navigation.navigate("readannouncements", {isAnnouncement: true, data: sortedAnnounce})}
@@ -42,16 +85,24 @@ const MessageList = ({navigation}) => {
         // latestMessage={"New blast"}
         onPress={() => navigation.navigate("readannouncements", {isAnnouncement: false, data: blasts})}
       /> */}
-      <FlatList
-        data={groups}
-        renderItem={({item}) => <MessageCard data={item} onPress={() => 
-          getMessageGroup(item.members.map(m => ({uid: m.uid})), item.members.length > 2 ? item.name : null)
-          .then(id => navigation.navigate('messages', { id }))
-          .catch(err => console.error(err))
-        }  />}
-      />
-     
-      {/* <TouchableOpacity
+        <FlatList
+          data={groups}
+          renderItem={({item}) => (
+            <MessageCard
+              data={item}
+              onPress={() =>
+                getMessageGroup(
+                  item.members.map(m => ({uid: m.uid})),
+                  item.members.length > 2 ? item.name : null,
+                )
+                  .then(id => navigation.navigate('messages', {id}))
+                  .catch(err => console.error(err))
+              }
+            />
+          )}
+        />
+
+        {/* <TouchableOpacity
         onPress={() => {
           navigation.navigate('CreateMessage');
         }}
@@ -70,9 +121,8 @@ const MessageList = ({navigation}) => {
           style={{borderWidth: 0.5, borderRadius: 20, padding: 20}}
         />
       </TouchableOpacity> */}
-          {isFocused && <CreateMessageButton/>}
-
-    </SafeAreaView>
+        {isFocused && <CreateMessageButton />}
+      </SafeAreaView>
     </>
   );
 };

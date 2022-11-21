@@ -7,7 +7,7 @@ export interface UserProfile {
     email: string;
     role: string;
     username: string;
-    
+    token: string; 
 }
   
 export interface Message extends IMessage {}

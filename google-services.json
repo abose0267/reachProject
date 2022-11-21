@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "276446458257",
+    "project_id": "reach-project-ddbe2",
+    "storage_bucket": "reach-project-ddbe2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276446458257:android:b9b7af275a796aa5642a30",
+        "android_client_info": {
+          "package_name": "org.reach4home.reachapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276446458257-nttvit4d0f9hffk3tle2p4dpmfahe4j8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtxMg4NDPvQYhSB0fVNVTJeL7mj2my2UU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276446458257-nttvit4d0f9hffk3tle2p4dpmfahe4j8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
