@@ -6,7 +6,7 @@ import {colors} from '@app/constants';
 import {FlatList} from 'react-native';
 import {useCollection} from '@app/lib/useFirebase';
 import {MessageGroup, useAuth, UserProfile} from '@app/lib';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {MessageCard} from '@app/components/MessageCard';
 import {getAuth} from 'firebase/auth';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -14,6 +14,7 @@ import { getMessageGroup } from '../useMessaging';
 import { StatusBar } from 'expo-status-bar';
 import { useAnnouncements, useBlasts } from '@app/lib/announcement';
 import { AnnouncementCard } from '@app/components/Announcements';
+import { CreateMessageButton } from '../components';
 
 const MessageList = ({navigation}) => {
   const {user} = useAuth();
@@ -21,13 +22,16 @@ const MessageList = ({navigation}) => {
   const {announcements} = useAnnouncements();
   const sortedAnnounce = announcements?.filter((item) => item.isAnnouncement == true).sort((a, b) => b.createdAt - a.createdAt);
   const {blasts} = useBlasts();
+  const isFocused = useIsFocused();
 
-  console.log("blasts", blasts)
+  // console.log("blasts", blasts)
   return (
+    <>
     <SafeAreaView style={[styles.container]}>
+
       <Header label="Messages" containerStyle={{marginBottom: 5}} />
       <StatusBar style="dark" />
-      <AnnouncementCard 
+      {/* <AnnouncementCard 
         title={"Announcements"}
         latestMessage={sortedAnnounce?.length > 0 ? sortedAnnounce[0]?.title || "New announcement": null}
         onPress={() => navigation.navigate("readannouncements", {isAnnouncement: true, data: sortedAnnounce})}
@@ -37,7 +41,7 @@ const MessageList = ({navigation}) => {
         latestMessage={blasts?.length > 0 ? blasts[0]?.title || "New blast": null}
         // latestMessage={"New blast"}
         onPress={() => navigation.navigate("readannouncements", {isAnnouncement: false, data: blasts})}
-      />
+      /> */}
       <FlatList
         data={groups}
         renderItem={({item}) => <MessageCard data={item} onPress={() => 
@@ -46,7 +50,8 @@ const MessageList = ({navigation}) => {
           .catch(err => console.error(err))
         }  />}
       />
-      <TouchableOpacity
+     
+      {/* <TouchableOpacity
         onPress={() => {
           navigation.navigate('CreateMessage');
         }}
@@ -64,8 +69,11 @@ const MessageList = ({navigation}) => {
           color="white"
           style={{borderWidth: 0.5, borderRadius: 20, padding: 20}}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+          {isFocused && <CreateMessageButton/>}
+
     </SafeAreaView>
+    </>
   );
 };
 

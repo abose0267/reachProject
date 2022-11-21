@@ -8,13 +8,14 @@ import MessageList from '../messages/screens/MessageList';
 import MessagesStack from '../messages';
 import { useAuthenticatedUser } from '@app/lib';
 import AdminStack from '../admin';
+import { Portal, Provider } from 'react-native-paper';
 
 const Tab = createBottomTabNavigator();
 // 
 const MemberNavigator = () => {
   const {user} = useAuthenticatedUser();
   return(
-    <>
+    <Provider>
       {/*// @ts-ignore */}
       <Tab.Navigator 
        screenOptions={({ route }) => ({
@@ -23,8 +24,8 @@ const MemberNavigator = () => {
 
           if (route.name === 'Directory') {
             iconName = focused
-              ? 'bookmarks'
-              : 'bookmarks-outline';
+              ? 'home'
+              : 'home-outline';
           } else if (route.name === 'Settings') {
             iconName = focused ? 'settings' : 'settings-outline';
           } else if (route.name === 'Messages') {
@@ -44,11 +45,11 @@ const MemberNavigator = () => {
     }
       >
         <Tab.Screen name="Messages" component={MessagesStack} options={{ headerShown: false }}/>
-        <Tab.Screen name="Directory" component={DirectoryStack} options={{ headerShown: false }}/>
+        <Tab.Screen name="Directory" component={DirectoryStack} options={{ headerShown: false }} />
         {user?.role == "Admin" && <Tab.Screen name="Admin" component={AdminStack} options={{ headerShown: false }}/>}
         <Tab.Screen name="Settings" component={Settings} options={{ headerShown: false }}/>
       </Tab.Navigator>
-    </>
+    </Provider>
   )}
 
 export default MemberNavigator;

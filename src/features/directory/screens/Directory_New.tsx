@@ -21,7 +21,7 @@ import {useCollection} from '@app/lib/useFirebase';
 import {useAnnouncements, useBlasts} from '@app/lib/announcement';
 import {AnnouncementCard} from '@app/components/Announcements';
 
-const Contacts = ({navigation}) => {
+const Directory_New = ({navigation}) => {
   const {signout} = useAuth();
   const {data: users} = useCollection<UserProfile>('users');
   const {user} = useAuthenticatedUser();
@@ -54,32 +54,60 @@ const Contacts = ({navigation}) => {
   return (
     <SafeAreaView style={[styles.container]}>
       <View style={[styles.padding]}>
-        <Header label="The REACH Project" containerStyle={{marginBottom: 5}} />
+        {/* <Header label="The REACH Directory" containerStyle={{ marginBottom: 5 }} />
+      <TextInput label="Search" dense style={{ height: 35 }} disabled />
+    </View>
+    <Divider /> */}
+        <View>
+          {/* <AnnouncementCard 
+        title={"Announcements"}
+        latestMessage={sortedAnnounce?.length > 0 ? sortedAnnounce[0]?.title || "New announcement": null}
+        onPress={() => navigation.navigate("readannouncements", {isAnnouncement: true, data: sortedAnnounce})}
+        /> */}
 
-        {/* <View>
-        <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' }} onPress={() => { navigation.navigate("announcements") }}>
+          {/* <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' }} onPress={() => { navigation.navigate("") }}>
           <Text style={{textAlign:'center',fontSize:30}}>
             Announcements
           </Text>
         </TouchableOpacity>
         
-         <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' ,marginTop:20}} onPress={() => { navigation.navigate("directory2") }}>
+         <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' ,marginTop:20}} onPress={() => { navigation.navigate("") }}>
           <Text style={{textAlign:'center',fontSize:30}}>
             Access Directory
           </Text>
           </TouchableOpacity>
-      </View> */}
-      </View>
-      <Divider />
-      <View style={[styles.padding, {flex: 1, justifyContent: 'center'}]}>
-        <BlockButton style={{height: 80}} onPress={() => {navigation.navigate("announcements")}} >Announcements</BlockButton>
-        <BlockButton style={{height: 80, marginTop:20}} outlined onPress={() => {navigation.navigate("directory2")}}>Directory</BlockButton>
+     */}
+
+          <SectionList
+            renderSectionHeader={({section: {title}}) => (
+              <View style={{backgroundColor: '#dedede', width: '100%'}}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    padding: 5,
+                    left: 6,
+                    fontWeight: '600',
+                    color: '#262626',
+                  }}>
+                  {title}
+                </Text>
+              </View>
+            )}
+            sections={sectionedList}
+            renderItem={({item}) => (
+              <ContactCard
+                data={item}
+                onPress={() => navigation.navigate('profile', item)}
+              />
+            )}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
 };
 
-export default Contacts;
+export default Directory_New;
 
 const Divider = () => (
   <View
@@ -103,9 +131,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     // marginHorizontal: 20,
-    // marginBottom: 75,
+    marginBottom: 75,
   },
   padding: {
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
   },
 });

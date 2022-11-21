@@ -1,6 +1,6 @@
 {
   "expo": {
-    "entryPoint": "src/App.js",
+    // "entryPoint": "src/App.js",
     "name": "reachProject",
     "slug": "reachProject",
     "version": "1.0.0",
@@ -19,7 +19,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "org.reach4home.reachapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +30,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c4662b4a-9cab-45ff-bb73-a58974506bd9"
+      }
     }
   }
 }

@@ -17,3 +17,7 @@ export interface MessageGroup {
     members?: UserProfile[]
 }
 
+export interface BlastGroup {
+    name: String
+    members?: UserProfile[]
+}
