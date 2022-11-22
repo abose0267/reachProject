@@ -29,6 +29,7 @@ export interface UserAccountCreateInput {
   password: string;
   firstname: string;
   lastname: string;
+  title: string;
 }
 
 export interface UserLoginInput {

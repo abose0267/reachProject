@@ -1,7 +1,7 @@
 import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from './firebase';
 import { UserProfile } from './schema';
-import { useAuth } from './useAuth';
+import { useAuth, UserAccountCreateInput } from './useAuth';
 import { useDoc } from './useFirebase';
 
 const usersRef = collection(db, 'users');
@@ -28,6 +28,15 @@ export const updateUser = async (uid: string, data: Partial<UserProfile>) => {
     ...data,
   });
 };
+
+export const editUserProfile = async (uid:string, data: Partial<UserAccountCreateInput>) => {
+
+  const userDoc = doc(usersRef, uid);
+  await updateDoc(userDoc, {
+    ...data,
+  });
+};
+
 
 export const useAuthenticatedUser = () => {
   const { user } = useAuth();

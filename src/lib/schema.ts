@@ -1,6 +1,7 @@
 import { IMessage } from "react-native-gifted-chat";
 
 export interface UserProfile {
+    title: string;
     uid: string;
     firstname: string;
     lastname: string;
