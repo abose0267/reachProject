@@ -42,8 +42,8 @@ const Directory_New = ({navigation}) => {
       }
     }
     sectionedList = [
-      {title: 'ADMIN', data: adminList},
-      {title: 'MEMBER', data: memberList},
+      {title: 'REACH Staff', data: adminList},
+      {title: 'Members', data: memberList},
     ];
   }
 
