@@ -29,10 +29,7 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import Fuse from 'fuse.js'
-// wrap controlled input to add type safety (name field must match valid key)
-const LoginTextInput = (props: ControlledInputProps<UserLoginInput>) => (
-  <ControlledTextInput {...props} />
-);
+
 
 const Messages = ({ route, navigation }) => {
   const { group, messages, sendMessage } = useMessageGroup(route.params.id);
@@ -43,7 +40,6 @@ const Messages = ({ route, navigation }) => {
     sendMessage(messages[0]);
   }, []);
 
-  // console.log({user});
   const [height, setHeight] = useState(50);
   const [text, setText] = useState('');
   const [people, setPeople] = useState([]);
@@ -59,7 +55,9 @@ const Messages = ({ route, navigation }) => {
       "firstname"
     ]
   }
+
   const fuse = new Fuse(group?.members, options)
+
   useEffect(() => {
     const textmatch = text.match(/@(\w+)/)
     if(text.length == 0) {
@@ -126,6 +124,7 @@ const Messages = ({ route, navigation }) => {
         <Divider />
       </View>
       <GiftedChat
+        bottomOffset={80}
         messages={messages.sort((a, b) => b.createdAt - a.createdAt)}
         onSend={messages => onSend(messages)}
         user={{
