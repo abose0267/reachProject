@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef, useMemo} from 'react';
 import {
   View,
   Image,
@@ -27,13 +27,15 @@ import { useMessageGroup } from '../useMessaging';
 import { addDoc } from 'firebase/firestore';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import Fuse from 'fuse.js'
 
 
 const Messages = ({ route, navigation }) => {
   const { group, messages, sendMessage } = useMessageGroup(route.params.id);
   const { user, loading } = useAuthenticatedUser();
-
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => [200, 400], []);
   const onSend = useCallback((messages: Message[] = []) => {
     sendMessage(messages[0]);
   }, []);
@@ -42,7 +44,11 @@ const Messages = ({ route, navigation }) => {
   const [text, setText] = useState('');
   const [people, setPeople] = useState([]);
   const { goBack } = useNavigation();
-
+  const bottomsheetlist = [
+    {
+      iconname: 'camera'
+    }
+  ]
   const options = {
     keys: [
       "username",
@@ -66,8 +72,23 @@ const Messages = ({ route, navigation }) => {
     }
   }, [text])
 
-
-  
+  const renderBottomSheet = (props) => {
+    return(
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        // add bottom inset to elevate the sheet
+        bottomInset={46}
+        // set `detached` to true
+        detached={true}
+        style={styles.sheetContainer}
+      >
+        <View style={styles.contentContainer}>
+          <Text>Awesome 🎉</Text>
+        </View>
+      </BottomSheet>
+    )
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ marginBottom: 5 }}>
@@ -139,6 +160,17 @@ const Messages = ({ route, navigation }) => {
                 paddingVertical: 5,
                 marginHorizontal: 10,
               }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    bottomSheetRef.current?.expand();
+                  }}
+                >
+                  <Ionicons 
+                    name='add-outline'
+                    size={30}
+                    color='#379770'
+                  />
+                </TouchableOpacity>
                 <TextInput
                   style={{
                     flex: 1,
@@ -206,8 +238,8 @@ const Messages = ({ route, navigation }) => {
                     paddingHorizontal: 5,
                     alignItems: 'center',
                     justifyContent: 'center',
-
                   }}
+                  
                 >
                   <Text style={{ color: 'white', fontWeight: 'bold' }}>
                     @{person.username}
@@ -218,6 +250,21 @@ const Messages = ({ route, navigation }) => {
           )
         )}
       />
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        bottomInset={20}
+        index={-1}
+        handleComponent={null}
+        detached={true}
+        enablePanDownToClose
+        backdropComponent={BottomSheetBackdrop}
+        style={styles.sheetContainer}
+      >
+        <View style={styles.contentContainer}>
+          
+        </View>
+      </BottomSheet>
     </SafeAreaView>
   );
 };
@@ -248,5 +295,14 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     maxWidth: 200,
+  },
+  sheetContainer: {
+    // add horizontal space
+    marginHorizontal: 14,
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 20,
+    // backgroundColor: "blue"
   },
 });
