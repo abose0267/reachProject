@@ -42,7 +42,7 @@ const Contacts = ({navigation}) => {
       }
     }
     sectionedList = [
-      {title: 'ADMIN', data: adminList},
+      {title: 'REACH Staff', data: adminList},
       {title: 'MEMBER', data: memberList},
     ];
   }

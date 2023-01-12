@@ -14,11 +14,11 @@ const SelectUsers = ({onChange, showCurrentUser = true}) => {
   const sectionedList = useMemo(
     () => [
       {
-        title: 'ADMIN',
+        title: 'REACH Staff',
         data: filteredUsers?.filter(u => u.role.toLowerCase() == 'admin'),
       },
       {
-        title: 'MEMBER',
+        title: 'Member',
         data: filteredUsers?.filter(u => u.role.toLowerCase() == 'member'),
       },
     ],
