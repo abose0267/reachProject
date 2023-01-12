@@ -23,8 +23,11 @@ import {
   ControlledInputProps,
   Divider,
 } from '@app/components';
-import { PinnedMessageData, useGroupedPins } from '@app/lib/pinned';
+import { PinnedMessageData, unpinMessage, useGroupedPins } from '@app/lib/pinned';
+import * as Haptics from 'expo-haptics';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 const Pinned = ({ route, navigation }) => {
     const {pins} = useGroupedPins(route.params.id)
@@ -45,18 +48,40 @@ const Pinned = ({ route, navigation }) => {
             />
           </View>
           <FlatList 
-            data={pins}
+            data={pins.sort((a,b) => b.createdAt - a.createdAt)}
             keyExtractor={item => item.message_id}
             renderItem={(item) => {
                 // console.log(item.item.createdAt.)
                 return(
-                    <View
+                    <TouchableOpacity
                         style={{
+                            width: Dimensions.get("window").width,
                             borderTopWidth: item.index == 0 ? 0.5 : 0,
                             borderBottomWidth: 0.5,
                             borderTopColor: "lightgray",
                             borderBottomColor: "lightgray",
-                            marginHorizontal: 20,
+                            // marginHorizontal: 20,
+                            paddingHorizontal: 20,
+                        }}
+                        onLongPress={() => {
+                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                            Alert.alert(
+                                "Unpin message",
+                                "Are you sure you want to unpin this message?",
+                                [
+                                    {
+                                        text: "Cancel",
+                                        onPress: () => console.log("Cancel Pressed"),
+                                        style: "cancel"
+                                    },
+                                    { text: "OK", onPress: () => {
+                                        console.log(item.item.message_id)
+                                        unpinMessage(item.item.document_id)
+                                        // unpinMessage(item.item.message_id)
+                                    }, style: 'destructive' }
+                                ],
+                                { cancelable: false }
+                            );
                         }}
                     >
                         <View
@@ -66,11 +91,12 @@ const Pinned = ({ route, navigation }) => {
                         >
                         {item.item.image != null &&
                             <Image 
-                                source={item.item.image}
+                                source={{uri: item.item.image}}
                                 style={{
                                     height: 250,
                                     width: 250,
-                                    borderRadius: 10
+                                    borderRadius: 10,
+                                    backgroundColor: '#E5E5EA',
                                 }}
                             />
                         }
@@ -108,7 +134,7 @@ const Pinned = ({ route, navigation }) => {
                             {item.item.createdAt.toDate().toLocaleString()}
                         </Text>
                     </View>
-                    </View>
+                    </TouchableOpacity>
                 )
             }}
             style={{
