@@ -25,28 +25,25 @@ import {
 import * as Haptics from 'expo-haptics';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera, CameraType } from 'expo-camera';
-import {
-  Message,
-  storage, useAuth,
-  useAuthenticatedUser,
-  useRightHeaderIconButton,
-  UserLoginInput,
-} from '@app/lib';
-import {useForm} from 'react-hook-form';
-import {GiftedChat, Bubble, Send, IMessage, MessageImageProps} from 'react-native-gifted-chat';
-import {useMessageGroup} from '../useMessaging';
-import {addDoc} from 'firebase/firestore';
-import {Ionicons, FontAwesome5} from '@expo/vector-icons';
-import {useNavigation} from '@react-navigation/native';
+import { Message, storage, useAuth, useAuthenticatedUser, UserLoginInput } from '@app/lib';
+import { useForm } from 'react-hook-form';
+import { GiftedChat, Bubble, Send, IMessage, MessageImageProps } from 'react-native-gifted-chat';
+import { useMessageGroup } from '../useMessaging';
+import { addDoc } from 'firebase/firestore';
+import { Ionicons, FontAwesome5, AntDesign} from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import Fuse from 'fuse.js';
 import { getDownloadURL, ref, uploadBytes, uploadString } from '@firebase/storage';
 import { Video, AVPlaybackStatus } from 'expo-av';
 import * as DocumentPicker from 'expo-document-picker';
-import { pinMessage } from '@app/lib/pinned';
+import { pinMessage, useGroupedPins } from '@app/lib/pinned';
 
-const Messages = ({route, navigation}) => {
-  const {group, messages, sendMessage} = useMessageGroup(route.params.id);
+
+const Messages = ({ route, navigation }) => {
+  const { group, messages, sendMessage } = useMessageGroup(route.params.id);
+  const {pins} = useGroupedPins(route.params.id);
+  const pinids = pins.map(pin => pin.message_id);
   const [file, setFile] = useState(null);
   const [image, setImage] = useState('');
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -178,6 +175,13 @@ const Messages = ({route, navigation}) => {
 
   function renderBubble(props) {
     return(
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          // justifyContent: 'space-between',
+        }}
+      >
       <Bubble 
         {...props}
         wrapperStyle={{
@@ -190,9 +194,63 @@ const Messages = ({route, navigation}) => {
           
         }}
       />
+      {props.currentMessage?._id && pinids.includes(props.currentMessage._id) && (
+        <AntDesign 
+          name="pushpin"
+          size={20}
+          color="#379770"
+          style={{
+            marginHorizontal: 2,
+          }}
+        />
+      )}
+      </View>
     )
   }
+  function renderMessageImage(props) {
+    return(
+      <TouchableOpacity
+        onPress={() => {
+          // props.imageProps.openImageViewer(props.currentMessage.image)
+          // props.imageProps.onPress(props.currentMessage.image)
+        }}
+        onLongPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+          Alert.alert(
+            'Pin this message?',
+            "This will show up on everyone's pin in this group chat",
+            [
+              {
+                text: "Yes",
+                onPress: () => {
+                  pinMessage({
+                    chat_id: route.params.id,
+                    //@ts-ignore
+                    message_id: props.currentMessage._id,
+                    text: props.currentMessage?.text,
+                    image: props.currentMessage?.image ? props.currentMessage?.image : null,
+                    file: props.currentMessage?.file ? props.currentMessage?.file : null,
+                    createdAt: props.currentMessage?.createdAt
+                  })
+                }
+              },
+              {
+                text: "No",
+                onPress: () => {
 
+                },
+              }
+            ]
+        )
+        }}
+      >
+        <Image 
+          source={{uri: props.currentMessage.image}}
+          style={{width: 200, height: 200, borderRadius: 10, margin: 5}}
+        />
+      </TouchableOpacity>
+    )
+  }
   function renderCustomView(props) {
     // render files
     return (
@@ -244,7 +302,7 @@ const Messages = ({route, navigation}) => {
       </>
     )
   }
-  const renderBottomSheet = props => {
+  const renderBottomSheet = (props) => {
     return (
       <BottomSheet
         ref={bottomSheetRef}
@@ -310,7 +368,7 @@ const Messages = ({route, navigation}) => {
         <Divider /> */}
       {/* </View> */}
       <GiftedChat
-        bottomOffset={people.length == 0 ? 130 : 80}
+        bottomOffset={80}
         onLongPress={(context, message) => {
           // send id of message to pin conversation along with text and id of chat
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
@@ -353,20 +411,22 @@ const Messages = ({route, navigation}) => {
             // match all strings starting with @
             pattern: /@(\w+)/,
             style: {
-              fontWeight: '800',
+              fontWeight: "800",
               color: 'white',
             },
-            onPress: user => {
-              alert(`Pressed on username: ${user}`);
+            onPress: (user) => {
+              if(group.members.map(mem => mem.username).includes(user.slice(1))) {
+                navigation.navigate('Profile', { username: user.slice(1) })
+              }
             },
           },
         ]}
-        // renderMessageImage={() => renderMessageImage()}
-        imageStyle={{
-          width: 250,
-          height: 250,
-          borderRadius: 10,
-        }}
+        renderMessageImage={props => renderMessageImage(props)}
+        // imageStyle={{
+        //   width: 250,
+        //   height: 250,
+        //   borderRadius: 10,
+        // }}
         renderCustomView={props => renderCustomView(props)}
         renderComposer={props => (
           <View
