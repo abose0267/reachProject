@@ -78,7 +78,7 @@ const Messages = ({route, navigation}) => {
       }
     },
     {
-      iconname: 'folder-outline',,
+      iconname: 'folder-outline',
       text: "Upload a file",
       onPress: () => {
         browseFiles();
@@ -579,49 +579,4 @@ const Messages = ({route, navigation}) => {
 
 export default Messages;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'space-between',
-  },
-  text: {
-    fontSize: 25,
-    color: 'black',
-    fontWeight: '500',
-    paddingTop: 20,
-    textAlign: 'center',
-  },
-  banner: {
-    flex: 1,
-  },
-  image: {
-    width: '100%',
-    height: undefined,
-    aspectRatio: 1,
-  },
-  imageContainer: {
-    maxWidth: 200,
-  },
-  sheetContainer: {
-    // add horizontal space
-    marginHorizontal: 14,
-  },
-  contentContainer: {
-    flex: 1,
-    padding: 20,
-    // alignItems: "center",
-    // backgroundColor: "blue"
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-});
+
