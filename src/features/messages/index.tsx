@@ -10,6 +10,7 @@ import CreateBlast from '../blast/CreateBlast';
 import DraftBlast from '../blast/DraftBlast';
 import Pinned from './screens/Pinned';
 import { AppHeader } from '@app/components';
+import MemberInfo from './screens/MemberInfo';
 // import { Settings } from 'react-native';
 
 
@@ -54,6 +55,14 @@ const MessagesStack = ({}) => {
           options={{
             headerShown: false,
             presentation: 'modal'
+          }}
+        />
+        <Stack.Screen 
+          name="MemberInfo"
+          component={MemberInfo}
+          options={{
+            headerShown: false,
+            presentation: "modal",
           }}
         />
         {/* <Stack.Screen 

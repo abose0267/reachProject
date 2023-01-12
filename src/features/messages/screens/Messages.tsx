@@ -324,6 +324,15 @@ const Messages = ({ route, navigation }) => {
   });
   return (
     <SafeAreaView style={{flex: 1}}>
+      <Ionicons
+              name="file-tray-full"
+              size={28}
+              color="black"
+              style={{ marginLeft: 'auto' }}
+              onPress={() =>
+                navigation.navigate('Pinned', { id: route?.params?.id })
+              }
+          />
       {/* <View style={{marginBottom: 5}}> */}
         {/* <View
           style={{
@@ -415,7 +424,14 @@ const Messages = ({ route, navigation }) => {
             },
             onPress: (user) => {
               if(group.members.map(mem => mem.username).includes(user.slice(1))) {
-                navigation.navigate('Profile', { username: user.slice(1) })
+                // find user in group members
+                const member = group.members.find(mem => mem.username == user.slice(1))
+                navigation.navigate("MemberInfo", {user: member})
+              } else {
+                Alert.alert(
+                  'User not found',
+                  "This user is not in this group",
+                )
               }
             },
           },
