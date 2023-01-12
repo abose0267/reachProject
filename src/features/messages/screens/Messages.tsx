@@ -11,6 +11,7 @@ import {
   TextInput,
   Keyboard,
   TouchableOpacity,
+  ImagePropTypes,
 } from 'react-native';
 import {
   BlockButton,
@@ -20,22 +21,28 @@ import {
   ControlledInputProps,
   Divider,
 } from '@app/components';
-import { Message, useAuth, useAuthenticatedUser, UserLoginInput } from '@app/lib';
+import * as ImagePicker from 'expo-image-picker';
+import { Camera, CameraType } from 'expo-camera';
+import { Message, storage, useAuth, useAuthenticatedUser, UserLoginInput } from '@app/lib';
 import { useForm } from 'react-hook-form';
-import { GiftedChat, Bubble, Send, IMessage } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, Send, IMessage, MessageImageProps } from 'react-native-gifted-chat';
 import { useMessageGroup } from '../useMessaging';
 import { addDoc } from 'firebase/firestore';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import Fuse from 'fuse.js'
+import { getDownloadURL, ref, uploadBytes, uploadString } from '@firebase/storage';
 
 
 const Messages = ({ route, navigation }) => {
   const { group, messages, sendMessage } = useMessageGroup(route.params.id);
+  const [image, setImage] = useState('');
+  const [permission, requestPermission] = Camera.useCameraPermissions();
   const { user, loading } = useAuthenticatedUser();
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => [200, 400], []);
+  const cameraRef = useRef(null);
+  const snapPoints = useMemo(() => [200, 200], []);
   const onSend = useCallback((messages: Message[] = []) => {
     sendMessage(messages[0]);
   }, []);
@@ -46,7 +53,25 @@ const Messages = ({ route, navigation }) => {
   const { goBack } = useNavigation();
   const bottomsheetlist = [
     {
-      iconname: 'camera'
+      iconname: 'camera-outline',
+      text: "Take a photo or video",
+      onPress: () => {
+        launchCamera();
+      }
+    },
+    {
+      iconname: 'image-outline',
+      text: "Upload a photo or video",
+      onPress: () => {
+        pickImage();
+      }
+    },
+    {
+      iconname: 'folder-outline',
+      text: "Upload a file",
+      onPress: () => {
+        console.log("picky pic 3")
+      }
     }
   ]
   const options = {
@@ -55,8 +80,68 @@ const Messages = ({ route, navigation }) => {
       "firstname"
     ]
   }
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
+    console.log(result);
+
+    if (!result.canceled) {
+      bottomSheetRef.current?.close();
+      const url = await uploadImage(result.assets[0].uri)
+      setImage(url);
+    }
+  };
+
+  const launchCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      aspect: [4, 3],
+      quality: 1,
+    })
+
+    if (!result.canceled) {
+      bottomSheetRef.current?.close();
+      const url = await uploadImage(result.assets[0].uri)
+      setImage(url);
+    }
+  }
+  const uploadImage = async(uri) => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+    const filename = Math.random().toString(36).substring(2, 7)
+    const storageRef = ref(storage, 'images/'+filename)
+    await uploadBytes(storageRef, blob, { contentType: 'image/jpeg'})
+    .then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+
+    const url = await getDownloadURL(storageRef)
+    // blob.close()
+    return url
+  }
   const fuse = new Fuse(group?.members, options)
+
 
   useEffect(() => {
     const textmatch = text.match(/@(\w+)/)
@@ -72,21 +157,19 @@ const Messages = ({ route, navigation }) => {
     }
   }, [text])
 
-  const renderBottomSheet = (props) => {
+  function renderBubble(props) {
     return(
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={snapPoints}
-        // add bottom inset to elevate the sheet
-        bottomInset={46}
-        // set `detached` to true
-        detached={true}
-        style={styles.sheetContainer}
-      >
-        <View style={styles.contentContainer}>
-          <Text>Awesome 🎉</Text>
-        </View>
-      </BottomSheet>
+      <Bubble 
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: props.currentMessage?.image ? 'transparent' : '#2B68E6'
+          },
+          left: {
+            backgroundColor: props.currentMessage?.image ? 'transparent' : '#E5E5EA'
+          }
+        }}
+      />
     )
   }
   return (
@@ -124,8 +207,9 @@ const Messages = ({ route, navigation }) => {
         <Divider />
       </View>
       <GiftedChat
-        bottomOffset={80}
+        bottomOffset={people.length == 0 ? 130 : 80}
         messages={messages.sort((a, b) => b.createdAt - a.createdAt)}
+        renderBubble={props => renderBubble(props)}
         onSend={messages => onSend(messages)}
         user={{
           _id: user?.uid,
@@ -145,9 +229,37 @@ const Messages = ({ route, navigation }) => {
             },
           }
         ]}
-        
+        // renderMessageImage={() => renderMessageImage()}
+        imageStyle={{
+          width: 250,
+          height: 250,
+          borderRadius: 10,
+        }}
         renderComposer={props => (
-          <>
+          <View
+            style={{
+              flexDirection: "column",
+              width: "100%",
+            }}
+          >
+            {image != '' && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginLeft: 20,
+                  marginTop: 20
+                }}
+              >
+                <Image 
+                  source={{uri: image}}
+                  style={{
+                    width: 200,
+                    height: 150,
+                    borderRadius: 10,
+                  }}
+                />
+              </View>
+            )}
             <View
               style={{
                 flexDirection: 'row',
@@ -199,8 +311,9 @@ const Messages = ({ route, navigation }) => {
                     const messages = JSON.parse(JSON.stringify(props.messages))
                     messages.unshift({
                       // generate a random id
-                      _id: Math.random().toString(36).substr(2, 9),
+                      _id: Math.random().toString(36).substring(2, 9),
                       text: props.text,
+                      image: image === '' ? null : image,
                       createdAt: new Date(),
                       user: {
                         _id: user?.uid,
@@ -214,7 +327,7 @@ const Messages = ({ route, navigation }) => {
                   <Ionicons name="send" size={24} color="#379770" />
                 </TouchableOpacity>
             </View>
-          </>
+          </View>
         )}
         renderAccessory={() => (
           (people.length > 0) && (
@@ -250,6 +363,7 @@ const Messages = ({ route, navigation }) => {
           )
         )}
       />
+      <KeyboardAvoidingView behavior='height'/>
       <BottomSheet
         ref={bottomSheetRef}
         snapPoints={snapPoints}
@@ -262,7 +376,41 @@ const Messages = ({ route, navigation }) => {
         style={styles.sheetContainer}
       >
         <View style={styles.contentContainer}>
-          
+          {bottomsheetlist.map((item) => (
+            <>
+            {/* Make a divider */}
+              <TouchableOpacity
+                onPress={item.onPress}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <Ionicons 
+                  name={item.iconname}
+                  size={30}
+                  color='#379770'
+                />
+                <Text 
+                  style={{ 
+                    fontSize: 15, 
+                    marginLeft: 10 
+                  }}
+                >
+                  {item.text}
+                </Text>
+              </TouchableOpacity>
+              <View
+                style={{
+                  height: 1,
+                  width: "100%",
+                  backgroundColor: "#e0e0e0",
+                  marginVertical: 10,
+                }}
+              />
+            </>
+          ))}
         </View>
       </BottomSheet>
     </SafeAreaView>
@@ -303,6 +451,18 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     padding: 20,
+    // alignItems: "center",
     // backgroundColor: "blue"
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    margin: 64,
+  },
+  button: {
+    flex: 1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
   },
 });
