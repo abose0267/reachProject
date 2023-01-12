@@ -31,7 +31,6 @@ const EditProfile = ({ navigation }: Props) => {
     email: user?.email,
     username: user?.username,
     title: user?.title,
-
   }});
   
 
@@ -67,11 +66,13 @@ const EditProfile = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Header label="Edit Profile" />
+        {/* <Header label="Edit Profile" /> */}
         <RegisterTextInput name="firstname" control={control} label="First Name" textContentType="givenName" />
         <RegisterTextInput name="lastname" control={control} label="Last Name" textContentType="familyName" />
         <Spacer />
         <RegisterTextInput name="username" control={control} label="Username" />
+        <Spacer />
+        <RegisterTextInput name="title" control={control} label="Title" />
       </View>
       <ActionContainer>
         <BlockButton onPress={handleSubmit(onSubmit)}>
