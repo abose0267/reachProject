@@ -8,6 +8,7 @@ import ReadAnnouncements from './screens/ReadAnnouncements';
 import GroupInfo from './screens/GroupInfo';
 import CreateBlast from '../blast/CreateBlast';
 import DraftBlast from '../blast/DraftBlast';
+import Pinned from './screens/Pinned';
 import { AppHeader } from '@app/components';
 // import { Settings } from 'react-native';
 
@@ -44,7 +45,15 @@ const MessagesStack = () => {
         <Stack.Screen
           name="messages"
           component={Messages}
-          options={{title: "Messages"}}
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="Pinned"
+          component={Pinned}
+          options={{
+            headerShown: false,
+            presentation: 'modal'
+          }}
         />
         {/* <Stack.Screen 
           name="readannouncements"
