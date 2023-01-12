@@ -25,7 +25,7 @@ import {
 import * as Haptics from 'expo-haptics';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera, CameraType } from 'expo-camera';
-import { Message, storage, useAuth, useAuthenticatedUser, UserLoginInput } from '@app/lib';
+import { Message, storage, useAuth, useAuthenticatedUser, useRightHeaderIconButton, UserLoginInput } from '@app/lib';
 import { useForm } from 'react-hook-form';
 import { GiftedChat, Bubble, Send, IMessage, MessageImageProps } from 'react-native-gifted-chat';
 import { useMessageGroup } from '../useMessaging';
@@ -318,7 +318,6 @@ const Messages = ({ route, navigation }) => {
       </BottomSheet>
     );
   };
-
   useRightHeaderIconButton({
     icon: 'information-outline',
     onPress: () => navigation.navigate('GroupInfo', {id: route?.params?.id}),
