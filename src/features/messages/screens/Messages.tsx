@@ -318,7 +318,6 @@ const Messages = ({ route, navigation }) => {
       </BottomSheet>
     );
   };
-
   useRightHeaderIconButton({
     icon: 'information-outline',
     onPress: () => navigation.navigate('GroupInfo', {id: route?.params?.id}),
