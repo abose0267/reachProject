@@ -9,6 +9,7 @@ import GroupInfo from './screens/GroupInfo';
 import CreateBlast from '../blast/CreateBlast';
 import DraftBlast from '../blast/DraftBlast';
 import Pinned from './screens/Pinned';
+import { AppHeader } from '@app/components';
 // import { Settings } from 'react-native';
 
 
@@ -19,7 +20,7 @@ const MessagesStack = ({}) => {
     <>
       {/*// @ts-ignore */}
       <Stack.Navigator initialRouteName='landing'
-              screenOptions={{header: props => <AppHeader {...props} />}}>
+              screenOptions={{header: props => <AppHeader {...props} />}}
       >
         <Stack.Screen
           name="Messages"
@@ -67,3 +68,4 @@ const MessagesStack = ({}) => {
     </>
   )
 }
+export default MessagesStack;
