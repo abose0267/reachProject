@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef, useMemo} from 'react';
+import React, {useEffect, useState, useCallback, useRef, useMemo} from 'react';
 import {
   View,
   Image,
@@ -33,7 +33,7 @@ import { addDoc } from 'firebase/firestore';
 import { Ionicons, FontAwesome5, AntDesign} from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
-import Fuse from 'fuse.js'
+import Fuse from 'fuse.js';
 import { getDownloadURL, ref, uploadBytes, uploadString } from '@firebase/storage';
 import { Video, AVPlaybackStatus } from 'expo-av';
 import * as DocumentPicker from 'expo-document-picker';
@@ -47,7 +47,7 @@ const Messages = ({ route, navigation }) => {
   const [file, setFile] = useState(null);
   const [image, setImage] = useState('');
   const [permission, requestPermission] = Camera.useCameraPermissions();
-  const { user, loading } = useAuthenticatedUser();
+  const {user, loading} = useAuthenticatedUser();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const cameraRef = useRef(null);
   const snapPoints = useMemo(() => [200, 200], []);
@@ -58,7 +58,7 @@ const Messages = ({ route, navigation }) => {
   const [height, setHeight] = useState(50);
   const [text, setText] = useState('');
   const [people, setPeople] = useState([]);
-  const { goBack } = useNavigation();
+  const {goBack} = useNavigation();
   const bottomsheetlist = [
     {
       iconname: 'camera-outline',
@@ -75,19 +75,16 @@ const Messages = ({ route, navigation }) => {
       }
     },
     {
-      iconname: 'folder-outline',
+      iconname: 'folder-outline',,
       text: "Upload a file",
       onPress: () => {
         browseFiles();
       }
-    }
-  ]
+    },
+  ];
   const options = {
-    keys: [
-      "username",
-      "firstname"
-    ]
-  }
+    keys: ['username', 'firstname'],
+  };
   const browseFiles = async () => {
     const result = await DocumentPicker.getDocumentAsync({});
     bottomSheetRef.current?.close();
@@ -159,22 +156,22 @@ const Messages = ({ route, navigation }) => {
     // blob.close()
     return url
   }
-  const fuse = new Fuse(group?.members, options)
+  const fuse = new Fuse(group?.members, options);
 
 
   useEffect(() => {
-    const textmatch = text.match(/@(\w+)/)
-    if(text.length == 0) {
-      setPeople([])
+    const textmatch = text.match(/@(\w+)/);
+    if (text.length == 0) {
+      setPeople([]);
     }
     if (textmatch != null) {
       // console.log(textmatch)
       // console.log(JSON.stringify(group.members, null, 2))
-      const result = fuse.search(textmatch[1])
-      console.log(result)
-      setPeople(result.map(r => r.item))
+      const result = fuse.search(textmatch[1]);
+      console.log(result);
+      setPeople(result.map(r => r.item));
     }
-  }, [text])
+  }, [text]);
 
   function renderBubble(props) {
     return(
@@ -305,10 +302,31 @@ const Messages = ({ route, navigation }) => {
       </>
     )
   }
+  const renderBottomSheet = (props) => {
+    return (
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        // add bottom inset to elevate the sheet
+        bottomInset={46}
+        // set `detached` to true
+        detached={true}
+        style={styles.sheetContainer}>
+        <View style={styles.contentContainer}>
+          <Text>Awesome 🎉</Text>
+        </View>
+      </BottomSheet>
+    );
+  };
+
+  useRightHeaderIconButton({
+    icon: 'information-outline',
+    onPress: () => navigation.navigate('GroupInfo', {id: route?.params?.id}),
+  });
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ marginBottom: 5 }}>
-        <View
+    <SafeAreaView style={{flex: 1}}>
+      {/* <View style={{marginBottom: 5}}> */}
+        {/* <View
           style={{
             marginHorizontal: 20,
             flexDirection: 'row',
@@ -347,8 +365,8 @@ const Messages = ({ route, navigation }) => {
           )}
 
         </View>
-        <Divider />
-      </View>
+        <Divider /> */}
+      {/* </View> */}
       <GiftedChat
         bottomOffset={80}
         onLongPress={(context, message) => {
@@ -401,7 +419,7 @@ const Messages = ({ route, navigation }) => {
                 navigation.navigate('Profile', { username: user.slice(1) })
               }
             },
-          }
+          },
         ]}
         renderMessageImage={props => renderMessageImage(props)}
         // imageStyle={{
@@ -534,8 +552,8 @@ const Messages = ({ route, navigation }) => {
             </View>
           </View>
         )}
-        renderAccessory={() => (
-          (people.length > 0) && (
+        renderAccessory={() =>
+          people.length > 0 && (
             <View
               style={{
                 flexDirection: 'row',
@@ -543,8 +561,7 @@ const Messages = ({ route, navigation }) => {
                 flexWrap: 'wrap',
                 top: 20,
                 left: 5,
-              }}
-            >
+              }}>
               {people.map(person => (
                 <TouchableOpacity
                   style={{
@@ -556,17 +573,15 @@ const Messages = ({ route, navigation }) => {
                     paddingHorizontal: 5,
                     alignItems: 'center',
                     justifyContent: 'center',
-                  }}
-                  
-                >
-                  <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                  }}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
                     @{person.username}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
           )
-        )}
+        }
       />
       <KeyboardAvoidingView behavior='height'/>
       <BottomSheet

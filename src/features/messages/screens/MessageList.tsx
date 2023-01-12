@@ -72,7 +72,7 @@ const MessageList = ({navigation}) => {
   return (
     <>
       <SafeAreaView style={[styles.container]}>
-        <Header label="Messages" containerStyle={{marginBottom: 5}} />
+        {/* <Header label="Messages" containerStyle={{marginBottom: 5}} /> */}
         <StatusBar style="dark" />
         {/* <AnnouncementCard 
         title={"Announcements"}

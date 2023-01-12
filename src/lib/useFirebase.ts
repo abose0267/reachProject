@@ -24,7 +24,7 @@ export const useCollection = <T>(
 
   useEffect(() => {
     const q = (() => {
-      const validWhere = options?.where.filter(s => s.length > 0).length == 3
+      const validWhere = options?.where.filter(s => s.length > 0).length == 3;
       if (validWhere) {
         return fb.query(
           fb.collection(db, collectionName),
@@ -89,19 +89,37 @@ export const useDoc = <T>(collectionName: string, docId?: string) => {
     fb.updateDoc(docRef, data as UpdateData<T>);
   };
 
+  // useEffect(() => {
+  //   fetchDoc()
+  //     .then(data => {
+  //       setError(null);
+  //       setData(data);
+  //       setLoading(false);
+  //     })
+  //     .catch(err => {
+  //       setError(err);
+  //       console.error(err);
+  //       setLoading(false);
+  //     });
+  // }, [collectionName]);
+
   useEffect(() => {
-    fetchDoc()
-      .then(data => {
+    const unsub = fb.onSnapshot(
+      docRef,
+      doc => {
+        const data = doc.data();
         setError(null);
         setData(data);
         setLoading(false);
-      })
-      .catch(err => {
+      },
+      err => {
         setError(err);
         console.error(err);
         setLoading(false);
-      });
-  }, [collectionName]);
+      },
+    );
+    return unsub;
+  }, []);
 
   return {data, error, loading, updateDoc};
 };
