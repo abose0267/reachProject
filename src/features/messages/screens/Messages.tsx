@@ -22,6 +22,7 @@ import {
   ControlledInputProps,
   Divider,
 } from '@app/components';
+import * as Haptics from 'expo-haptics';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera, CameraType } from 'expo-camera';
 import { Message, storage, useAuth, useAuthenticatedUser, UserLoginInput } from '@app/lib';
@@ -36,6 +37,7 @@ import Fuse from 'fuse.js'
 import { getDownloadURL, ref, uploadBytes, uploadString } from '@firebase/storage';
 import { Video, AVPlaybackStatus } from 'expo-av';
 import * as DocumentPicker from 'expo-document-picker';
+import { pinMessage } from '@app/lib/pinned';
 
 
 const Messages = ({ route, navigation }) => {
@@ -181,8 +183,9 @@ const Messages = ({ route, navigation }) => {
             backgroundColor: props.currentMessage?.image || props.currentMessage?.file ? 'transparent' : '#2B68E6'
           },
           left: {
-            backgroundColor: props.currentMessage?.image || props.currentMessage?.file ? 'transparent' : '#E5E5EA'
-          }
+            backgroundColor: props.currentMessage?.image || props.currentMessage?.file ? 'transparent' : '#E5E5EA',
+          },
+          
         }}
       />
     )
@@ -196,6 +199,35 @@ const Messages = ({ route, navigation }) => {
         <TouchableOpacity 
           style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 10, backgroundColor: '#E5E5EA', borderRadius: 10, margin: 5}}
           onPress={() => Linking.openURL(props.currentMessage?.file?.file)}
+          onLongPress = {() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+            Alert.alert(
+              'Pin this message?',
+              "This will show up on everyone's pin in this group chat",
+              [
+                {
+                  text: "Yes",
+                  onPress: () => {
+                    pinMessage({
+                      chat_id: route.params.id,
+                      //@ts-ignore
+                      message_id: props.currentMessage._id,
+                      text: props.currentMessage?.text,
+                      image: props.currentMessage?.image ? props.currentMessage?.image : null,
+                      file: props.currentMessage?.file ? props.currentMessage?.file : null,
+                      createdAt: props.currentMessage?.createdAt
+                    })
+                  }
+                },
+                {
+                  text: "No",
+                  onPress: () => {
+  
+                  },
+                }
+              ]
+          )
+          }}
         >
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Ionicons 
@@ -230,6 +262,15 @@ const Messages = ({ route, navigation }) => {
             label={group?.members?.length > 2 ? group?.name : 'Messages'}
             containerStyle={{ marginBottom: 5, marginLeft: 20 }}
           />
+          <Ionicons
+              name="file-tray-full"
+              size={28}
+              color="black"
+              style={{ marginLeft: 'auto' }}
+              onPress={() =>
+                navigation.navigate('Pinned', { id: route?.params?.id })
+              }
+          />
           {user?.role == 'Admin' && (
             <Ionicons
               name="information-circle-outline"
@@ -241,11 +282,41 @@ const Messages = ({ route, navigation }) => {
               }
             />
           )}
+
         </View>
         <Divider />
       </View>
       <GiftedChat
         bottomOffset={people.length == 0 ? 130 : 80}
+        onLongPress={(context, message) => {
+          // send id of message to pin conversation along with text and id of chat
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+          Alert.alert(
+            'Pin this message?',
+            "This will show up on everyone's pin in this group chat",
+            [
+              {
+                text: "Yes",
+                onPress: () => {
+                  pinMessage({
+                    chat_id: route.params.id,
+                    //@ts-ignore
+                    message_id: message._id,
+                    text: message.text,
+                    image: message.image ? message.image : null,
+                    file: message.file ? message.file : null,
+                    createdAt: message.createdAt
+                  })
+                }
+              },
+              {
+                text: "No",
+                onPress: () => {
+
+                },
+              }
+            ]
+        )}}
         messages={messages.sort((a, b) => b.createdAt - a.createdAt)}
         renderBubble={props => renderBubble(props)}
         onSend={messages => onSend(messages)}
@@ -492,7 +563,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-
     justifyContent: 'space-between',
   },
   text: {
