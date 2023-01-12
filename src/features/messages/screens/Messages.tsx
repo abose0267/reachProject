@@ -12,6 +12,7 @@ import {
   Keyboard,
   TouchableOpacity,
   ImagePropTypes,
+  Linking
 } from 'react-native';
 import {
   BlockButton,
@@ -33,10 +34,13 @@ import { useNavigation } from '@react-navigation/native';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import Fuse from 'fuse.js'
 import { getDownloadURL, ref, uploadBytes, uploadString } from '@firebase/storage';
+import { Video, AVPlaybackStatus } from 'expo-av';
+import * as DocumentPicker from 'expo-document-picker';
 
 
 const Messages = ({ route, navigation }) => {
   const { group, messages, sendMessage } = useMessageGroup(route.params.id);
+  const [file, setFile] = useState(null);
   const [image, setImage] = useState('');
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const { user, loading } = useAuthenticatedUser();
@@ -70,7 +74,7 @@ const Messages = ({ route, navigation }) => {
       iconname: 'folder-outline',
       text: "Upload a file",
       onPress: () => {
-        console.log("picky pic 3")
+        browseFiles();
       }
     }
   ]
@@ -80,6 +84,16 @@ const Messages = ({ route, navigation }) => {
       "firstname"
     ]
   }
+  const browseFiles = async () => {
+    const result = await DocumentPicker.getDocumentAsync({});
+    bottomSheetRef.current?.close();
+    const url = await uploadImage(result.uri, "files/")
+    setFile({
+      name: result.name,
+      file: url
+    });
+  }
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -89,7 +103,7 @@ const Messages = ({ route, navigation }) => {
       quality: 1,
     });
 
-    console.log(result);
+    console.log("RESULT", result);
 
     if (!result.canceled) {
       bottomSheetRef.current?.close();
@@ -112,7 +126,8 @@ const Messages = ({ route, navigation }) => {
       setImage(url);
     }
   }
-  const uploadImage = async(uri) => {
+  const uploadImage = async(uri, directory="images/") => {
+    console.log(uri[0].uri)
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -127,8 +142,8 @@ const Messages = ({ route, navigation }) => {
       xhr.send(null);
     });
     const filename = Math.random().toString(36).substring(2, 7)
-    const storageRef = ref(storage, 'images/'+filename)
-    await uploadBytes(storageRef, blob, { contentType: 'image/jpeg'})
+    const storageRef = ref(storage, directory+filename)
+    await uploadBytes(storageRef, blob)
     .then((snapshot) => {
       console.log('Uploaded a blob or file!');
     })
@@ -163,13 +178,36 @@ const Messages = ({ route, navigation }) => {
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: props.currentMessage?.image ? 'transparent' : '#2B68E6'
+            backgroundColor: props.currentMessage?.image || props.currentMessage?.file ? 'transparent' : '#2B68E6'
           },
           left: {
-            backgroundColor: props.currentMessage?.image ? 'transparent' : '#E5E5EA'
+            backgroundColor: props.currentMessage?.image || props.currentMessage?.file ? 'transparent' : '#E5E5EA'
           }
         }}
       />
+    )
+  }
+
+  function renderCustomView(props) {
+    // render files
+    return (
+      <>
+      {props.currentMessage.file &&
+        <TouchableOpacity 
+          style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 10, backgroundColor: '#E5E5EA', borderRadius: 10, margin: 5}}
+          onPress={() => Linking.openURL(props.currentMessage?.file?.file)}
+        >
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Ionicons 
+              name="document-text" 
+              size={24} 
+              color="#379770"
+            />
+            <Text style={{marginLeft: 10}}>{props.currentMessage?.file?.name}</Text>
+          </View>
+        </TouchableOpacity>
+      }
+      </>
     )
   }
   return (
@@ -235,6 +273,7 @@ const Messages = ({ route, navigation }) => {
           height: 250,
           borderRadius: 10,
         }}
+        renderCustomView={props => renderCustomView(props)}
         renderComposer={props => (
           <View
             style={{
@@ -258,6 +297,32 @@ const Messages = ({ route, navigation }) => {
                     borderRadius: 10,
                   }}
                 />
+              </View>
+            )}
+            {file != null && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginLeft: 10,
+                  marginTop: 20,
+                  backgroundColor: "#f2f2f2",
+                  alignItems: 'center',
+                  height: 50,
+                  width: 120,
+                  borderRadius: 10,
+                }}
+              >
+                <Ionicons 
+                  name="document-attach"
+                  size={25}
+                  color="#379770"
+                  style={{
+                    marginHorizontal: 5,
+                  }}
+                />
+                <Text>
+                  {file?.name}
+                </Text>
               </View>
             )}
             <View
@@ -314,6 +379,7 @@ const Messages = ({ route, navigation }) => {
                       _id: Math.random().toString(36).substring(2, 9),
                       text: props.text,
                       image: image === '' ? null : image,
+                      file: file === null ? null : file,
                       createdAt: new Date(),
                       user: {
                         _id: user?.uid,
@@ -322,6 +388,9 @@ const Messages = ({ route, navigation }) => {
                     })
                     onSend(messages) // send the message
                     props.onTextChanged('') // clear the input
+                    setFile(null)
+                    setImage('')
+                  
                   }}
                   >
                   <Ionicons name="send" size={24} color="#379770" />
