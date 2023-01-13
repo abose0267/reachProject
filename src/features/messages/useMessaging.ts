@@ -17,7 +17,7 @@ export const computeMessageGroupId = (members: Pick<UserProfile, 'uid'>[], name?
 
 
 // gets the message group based on list of uids, if one doesn't exist, create a new one.
-export const getMessageGroup = async (members: Pick<UserProfile, 'uid'>[], name?: string) => {
+export const getMessageGroup = async (members: Pick<UserProfile, 'uid'>[], name?: string, pfp?: string, isProgramChat?: Boolean) => {
     const messageGroupId = computeMessageGroupId(members, name);
     const ref = doc(db, 'messageGroups', messageGroupId);
     const snap =  await getDoc(ref);
@@ -32,6 +32,9 @@ export const getMessageGroup = async (members: Pick<UserProfile, 'uid'>[], name?
     const groupData: MessageGroup = {
         name: name ? name : memberData.map(member => member.firstname).join(', '),
         members: memberData,
+        //@ts-ignore
+        pfp: pfp ? pfp : "",
+        isProgramChat: isProgramChat,
     }
 
     await setDoc(ref, groupData);

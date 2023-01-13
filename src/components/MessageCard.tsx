@@ -15,9 +15,12 @@ export interface MessageCardProps {
 export const MessageCard = ({ data, onPress }: MessageCardProps) => {
     const { user } = useAuthenticatedUser();
 
-    const initials = data.members[1].firstname[0] + data.members[1].lastname[0];
+    const initials = data?.members[1]?.firstname[0] + data?.members[1]?.lastname[0];
     const otherUsers = data?.members?.filter(p => p.uid != user?.uid);
-    const chatName = otherUsers?.length <= 1 ? `${otherUsers[0]?.firstname} ${otherUsers[0]?.lastname}` : data?.name;
+    const chatName = otherUsers?.length <= 1 && !data?.isProgramChat ? 
+        `${otherUsers[0]?.firstname} ${otherUsers[0]?.lastname}` 
+        : 
+        data?.name;
 
     return (
         <>

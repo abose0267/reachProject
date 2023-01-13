@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DirectoryStack from '@app/features/directory';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { colors } from '@app/constants';
 import Settings from '../settings/settings';
 import MessageList from '../messages/screens/MessageList';
@@ -25,8 +26,8 @@ const MemberNavigator = () => {
 
           if (route.name === 'Directory') {
             iconName = focused
-              ? 'home'
-              : 'home-outline';
+              ? 'contacts'
+              : 'contacts-outline';
           } else if (route.name === 'Settings') {
             iconName = focused ? 'settings' : 'settings-outline';
           } else if (route.name === 'Messages') {
@@ -36,7 +37,8 @@ const MemberNavigator = () => {
           }
 
           // You can return any component that you like here!
-          return <Ionicons style={{marginTop:10}} name={iconName} size={size} color={color} />;
+          // return a MaterialCommunityIcons only if the iconName is 'contacts'. Otherwise, return an Ionicons
+          return iconName == 'contacts' || iconName == 'contacts-outline' ? <MaterialCommunityIcons name={iconName} size={size} color={color} /> : <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: colors.green,
         tabBarInactiveTintColor: colors.black,
