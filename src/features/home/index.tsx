@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // import { Settings } from 'react-native';
 import Home from './screens/Home';
 import { AppHeader } from '@app/components';
+import Announcements from '../directory/screens/Announcements';
+import ReadAnnouncements from '../directory/screens/ReadAnnouncements';
 
 const Stack = createNativeStackNavigator();
 const HomeStack = ({}) => {
@@ -13,8 +15,19 @@ const HomeStack = ({}) => {
                 screenOptions={{header: props => <AppHeader {...props} />}}
             >
                 <Stack.Screen
-                    name="Home"
+                    name="Potato"
                     component={Home}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen 
+                    component={ReadAnnouncements}
+                    name="Announcements"
+                    options={{
+                        headerShown: false,
+                    }}
+
                 />
             </Stack.Navigator>
         </>

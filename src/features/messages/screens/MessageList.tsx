@@ -69,6 +69,13 @@ const MessageList = ({navigation}) => {
     if (user.uid)
       registerForPushNotificationsAsync()
   }, [user])
+  // sort groups such that program chats are first
+  groups.sort((a, b) => {
+    if (a.program_id && !b.program_id) return -1;
+    if (!a.program_id && b.program_id) return 1;
+    return 0;
+  });
+
   return (
     <>
       <SafeAreaView style={[styles.container]}>
@@ -86,7 +93,11 @@ const MessageList = ({navigation}) => {
         onPress={() => navigation.navigate("readannouncements", {isAnnouncement: false, data: blasts})}
       /> */}
         <FlatList
-          data={groups}
+          data={groups.sort((a, b) => {
+            if (a.program_id && !b.program_id) return -1;
+            if (!a.program_id && b.program_id) return 1;
+            return 0;
+          })}
           renderItem={({item}) => (
             <MessageCard
               data={item}
@@ -99,7 +110,7 @@ const MessageList = ({navigation}) => {
                     .then(id => navigation.navigate('messages', {id}))
                     .catch(err => console.error(err))
                 } else {
-                  navigation.navigate('messages', {id: item.program_id})
+                  navigation.navigate('messages', {id: item.program_id, isProgramChat: true})
                 }
               }}
             />

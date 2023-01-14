@@ -61,7 +61,7 @@ export const MessageCard = ({ data, onPress }: MessageCardProps) => {
                 <View style={styles.textContainer}>
                     <Text style={styles.name}>{chatName}</Text>
                     {data?.program_id != null &&
-                        <Text style={{fontSize: 12, color: "gray", fontWeight: "700"}}>PROGRAM CHAT</Text>
+                        <Text style={{fontSize: 12, color: "gray", fontWeight: "500"}}>PROGRAM CHAT</Text>
                     }
                 </View>
             </TouchableOpacity>
