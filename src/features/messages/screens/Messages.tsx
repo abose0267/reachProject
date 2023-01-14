@@ -38,10 +38,11 @@ import { getDownloadURL, ref, uploadBytes, uploadString } from '@firebase/storag
 import { Video, AVPlaybackStatus } from 'expo-av';
 import * as DocumentPicker from 'expo-document-picker';
 import { pinMessage, useGroupedPins } from '@app/lib/pinned';
+import { useProgramChatGroup } from '@app/lib/programchat';
 
 
 const Messages = ({ route, navigation }) => {
-  const { group, messages, sendMessage } = useMessageGroup(route.params.id);
+  const { group, messages, sendMessage } = route.params.isProgramChat ? useProgramChatGroup(route.params.id) : useMessageGroup(route.params.id);
   const {pins} = useGroupedPins(route.params.id);
   const pinids = pins.map(pin => pin.message_id);
   const [file, setFile] = useState(null);

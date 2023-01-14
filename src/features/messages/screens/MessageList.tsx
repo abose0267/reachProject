@@ -90,14 +90,18 @@ const MessageList = ({navigation}) => {
           renderItem={({item}) => (
             <MessageCard
               data={item}
-              onPress={() =>
-                getMessageGroup(
-                  item.members.map(m => ({uid: m.uid})),
-                  item.members.length > 2 ? item.name : null,
-                )
-                  .then(id => navigation.navigate('messages', {id}))
-                  .catch(err => console.error(err))
-              }
+              onPress={() => {
+                if(item.program_id == null) {
+                  getMessageGroup(
+                    item.members.map(m => ({uid: m.uid})),
+                    item.members.length > 2 ? item.name : null,
+                  )
+                    .then(id => navigation.navigate('messages', {id}))
+                    .catch(err => console.error(err))
+                } else {
+                  navigation.navigate('messages', {id: item.program_id})
+                }
+              }}
             />
           )}
         />

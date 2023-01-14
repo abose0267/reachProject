@@ -4,7 +4,7 @@ import Messages from './screens/Messages';
 import MessageList from './screens/MessageList';
 import Settings from '../settings/settings';
 import CreateGroup from './screens/CreateGroup';
-import ReadAnnouncements from './screens/ReadAnnouncements';
+// import ReadAnnouncements from './screens/ReadAnnouncements';
 import GroupInfo from './screens/GroupInfo';
 import CreateBlast from '../blast/CreateBlast';
 import DraftBlast from '../blast/DraftBlast';

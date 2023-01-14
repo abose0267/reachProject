@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AdminPanel from './screens/AdminPanel';
 import SendAnnouncement from './screens/Announcement';
-import Blasts from './screens/Blasts';
+import CreateProgramChat from './screens/CreateProgramChat';
 
 
 const Stack = createNativeStackNavigator();
@@ -23,7 +23,7 @@ const AdminStack = () => (
             />
             <Stack.Screen 
                 name="blasts"
-                component={Blasts}
+                component={CreateProgramChat}
                 options={{headerShown: false}}
             />
         </Stack.Navigator>

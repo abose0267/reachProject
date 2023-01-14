@@ -11,6 +11,7 @@ import { useAuthenticatedUser } from '@app/lib';
 import AdminStack from '../admin';
 import { Portal, Provider } from 'react-native-paper';
 import SettingsStack from '../settings';
+import HomeStack from '../home';
 
 const Tab = createBottomTabNavigator();
 // 
@@ -34,6 +35,8 @@ const MemberNavigator = () => {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           } else if (route.name === "Admin") {
             iconName = focused ? "shield" : "shield-outline";
+          } else if(route.name === "Home") {
+            iconName = focused ? "home" : "home-outline";
           }
 
           // You can return any component that you like here!
@@ -47,6 +50,7 @@ const MemberNavigator = () => {
       
     }
       >
+        <Tab.Screen name="Home" component={HomeStack} options={{headerShown: false}}/>
         <Tab.Screen name="Messages" component={MessagesStack} options={{ headerShown: false }}/>
         <Tab.Screen name="Directory" component={DirectoryStack} options={{ headerShown: false }} />
         {user?.role == "Admin" && <Tab.Screen name="Admin" component={AdminStack} options={{ headerShown: false }}/>}

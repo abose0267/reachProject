@@ -1,7 +1,6 @@
 import { BlockButton, ControlledTextInput, Header,ControlledInputProps} from '@app/components';
 import BigButton from '@app/components/BigButton';
 import { storage, useAuthenticatedUser } from '@app/lib';
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, SafeAreaView, StyleSheet, SectionList, Text, FlatList, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard, Alert, Image, KeyboardAvoidingView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -12,13 +11,16 @@ import { getMessageGroup } from '@app/features/messages/useMessaging';
 import QRCode from 'react-native-qrcode-svg';
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import * as MediaLibrary from 'expo-media-library';
+import { addMember, createProgramChat } from '@app/lib/programchat';
+import { captureRef } from 'react-native-view-shot';
 
-const Blasts = ({ navigation, route }) => {
+const CreateProgramChat = ({ navigation, route }) => {
     const [pfp, setPfp] = useState("");
     const [name, setName] = useState("");
     const bottomSheetRef = useRef<BottomSheet>(null);
     const svgRef = useRef(null);
-    const snapPoints = useMemo(() => [300, 300], []);
+    
+    const snapPoints = useMemo(() => [350, 350], []);
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -63,6 +65,40 @@ const Blasts = ({ navigation, route }) => {
         return url
       }
       const {user} = useAuthenticatedUser();
+
+      const [status, requestPermission] = MediaLibrary.usePermissions();
+      const camerashot = async() => {
+        try {
+            const localUri = await captureRef(svgRef, {
+                height: 440,
+                quality: 1,
+            });
+        
+            await MediaLibrary.saveToLibraryAsync(localUri);
+            if (localUri) {
+                Alert.alert("Success", "QR Code saved to gallery")
+            }
+            return localUri;
+        } catch (e) {
+            console.log(e);
+        }  
+      }
+      const screenshot = async() => {
+        console.log("SCREENSHOT", status)
+        if (status.status === "undetermined") {
+            requestPermission().then(async (res) => {
+                console.log("RES", res)
+                if (res.status === "granted") {
+                    await camerashot(); 
+                }
+            })
+        } else if (status.status === "denied") {
+            alert("Please grant permission to save to gallery")
+            requestPermission();
+        } else if (status.status === "granted") {
+            await camerashot();
+        }
+      }
     return (
         <SafeAreaView style={styles.container}>
             <TouchableOpacity
@@ -122,8 +158,23 @@ const Blasts = ({ navigation, route }) => {
                         Alert.alert("Please upload a profile picture for your chat!")
                     } else {
                         // do something
-                        getMessageGroup([{uid: user.uid}, {uid: 'Dd9IteOnjVcuuXdMnIoWtADwSH52'}], name, pfp, true)
-                        .then(id => {
+                        let program_id = Math.random().toString(36).substring(2, 7);
+                        var minm = 100000;
+                        var maxm = 999999;
+                        let joinCode = Math.floor(Math.random() * (maxm - minm + 1)) + minm;
+                        let qrCode = `reach://join?program_id=${program_id}&join_code=${joinCode}`
+                        let program = {
+                            name: name,
+                            pfp: pfp,
+                            program_id: program_id,
+                            joinCode: joinCode,
+                            qrCode: qrCode,
+                        
+                        }
+                        createProgramChat(program).then(() => {
+                            addMember(user, program)
+                        })
+                        .then(() => {
                             bottomSheetRef.current?.expand();
                         })
                     }
@@ -152,11 +203,16 @@ const Blasts = ({ navigation, route }) => {
                 <View
                     style={styles.contentContainer}
                 >
-                    <QRCode 
-                        value='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-                        size={175}
-                        getRef={(c) => (this.svg = c)}
-                    />
+                    <View
+                        ref={svgRef}
+                        collapsable={false}
+                    >
+                        <QRCode 
+                            value='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                            size={175}
+                            // getRef={(c) => (this.svg = c)}
+                        />
+                    </View>
                     <TouchableOpacity
                         style={{
                             borderWidth: 1,
@@ -164,23 +220,13 @@ const Blasts = ({ navigation, route }) => {
                             borderRadius: 10,
                             padding: 10,
                             marginTop: 20,
-                            width: "90%",
+                            width: "100%",
                             alignItems: "center",
                         }}
                         onPress={() => {
-                            console.log(svgRef.current)
-                            if (svgRef.current) {
-                                svgRef.current.toDataURL(data => {
-                                    console.log(data)
-                                    // MediaLibrary.saveToLibraryAsync(data, )
-                                    // .then(() => {
-                                    //     Alert.alert("Saved to camera roll!")
-                                    // })
-                                    // .catch(err => {
-                                    //     Alert.alert("Error saving to camera roll!")
-                                    // })
-                                })
-                            }
+                            screenshot()
+                            bottomSheetRef.current?.close();
+                            navigation.navigate("adminpanel");
                         }}
                     >
                         <Text
@@ -192,6 +238,30 @@ const Blasts = ({ navigation, route }) => {
                             Save to camera roll
                         </Text>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{
+                            borderWidth: 1,
+                            borderColor: "red",
+                            borderRadius: 10,
+                            padding: 10,
+                            marginTop: 15,
+                            width: "100%",
+                            alignItems: "center",
+                        }}
+                        onPress={() => {
+                            bottomSheetRef.current?.close();
+                            navigation.navigate("adminpanel");
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: "red",
+                                fontSize: 15,
+                            }}
+                        >
+                            No thanks, I'll save it later
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </BottomSheet>
             <KeyboardAvoidingView behavior='height' />
@@ -199,7 +269,7 @@ const Blasts = ({ navigation, route }) => {
     )
 }
 
-export default Blasts;
+export default CreateProgramChat;
 
 
 const styles = StyleSheet.create({

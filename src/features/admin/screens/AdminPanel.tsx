@@ -18,7 +18,7 @@ const AdminPanel = ({navigation}) => {
         {
             title: "Create a program chat",
             icon: "apps-outline",
-            description: "Create a group chat with additional privileges best suited for specific programs within the REACH Project",
+            description: "Create a group chat for a specific program within REACH",
             onPress: () => navigation.navigate('blasts', {isAnnouncement: false})
         }
     ]

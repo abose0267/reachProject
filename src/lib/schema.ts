@@ -15,7 +15,7 @@ export interface Message extends IMessage {}
 
 export interface MessageGroup {
     name: string
-    members?: UserProfile[]
+    members?: UserProfile[],
 }
 
 export interface BlastGroup {
