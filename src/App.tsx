@@ -1,15 +1,15 @@
-import React, { ComponentType, useEffect } from 'react';
-import { registerRootComponent } from 'expo';
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import React, {ComponentType, useEffect} from 'react';
+import {registerRootComponent} from 'expo';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import AuthStack from '@app/features/auth';
 import MemberNavigator from '@app/features/memberNavigator';
 import '@app/lib/firebase';
-import { ProvideAuth, useAuth } from './lib';
-import { Linking, LogBox } from 'react-native';
+import {ProvideAuth, useAuth} from './lib';
+import {LogBox} from 'react-native';
+import * as Linking from 'expo-linking';
 
 LogBox.ignoreLogs([/AsyncStorage has been extracted from react-native core/]);
 LogBox.ignoreLogs(['Require Cycle']);
-
 
 const navTheme = {
   ...DefaultTheme,
@@ -19,17 +19,33 @@ const navTheme = {
   },
 };
 
+const prefix = Linking.createURL('/');
+
 const App = () => {
-  const handleDeepLink = (event: any) => {};
-  useEffect(() => {
-    Linking.addEventListener('url', handleDeepLink);
-    return(() => {
-      Linking.removeAllListeners('url');
-    })
-  })
+  // const handleDeepLink = (event: any) => {};
+  // useEffect(() => {
+  //   Linking.addEventListener('url', handleDeepLink);
+  //   return(() => {
+  //     Linking.removeAllListeners('url');
+  //   })
+  // })
+
+  const linking = {
+    prefixes: [prefix],
+    config: {
+      screens: {
+        Home: {
+          screens: {
+            JoinProgram: 'join/:id'
+          }
+        }
+      },
+    },
+  };
+
   return (
     <ProvideAuth>
-      <NavigationContainer theme={navTheme}>
+      <NavigationContainer theme={navTheme} linking={linking}>
         <Navigator />
       </NavigationContainer>
     </ProvideAuth>
@@ -37,13 +53,10 @@ const App = () => {
 };
 
 const Navigator = () => {
-  const { user } = useAuth();
-   //TODO: check user role and render MemberNavigator or AdminNavigator
-  if (user)
-    return <MemberNavigator />;
-  else 
-    return <AuthStack />;
- }
+  const {user} = useAuth();
+  //TODO: check user role and render MemberNavigator or AdminNavigator
+  if (user) return <MemberNavigator />;
+  else return <AuthStack />;
+};
 
-export default App; 
-
+export default App;

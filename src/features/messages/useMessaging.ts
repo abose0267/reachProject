@@ -34,7 +34,7 @@ export const getMessageGroup = async (members: Pick<UserProfile, 'uid'>[], name?
         members: memberData,
         //@ts-ignore
         pfp: pfp ? pfp : "",
-        isProgramChat: isProgramChat,
+        isProgramChat: !!isProgramChat,
     }
 
     await setDoc(ref, groupData);

@@ -30,24 +30,28 @@ const MessagesStack = ({}) => {
         <Stack.Screen
           name="CreateGroup"
           component={CreateGroup}
+          options={{title: "Create Group"}}
         />
         <Stack.Screen
           name="CreateBlast"
           component={CreateBlast}
+          options={{title: "Members"}}
+
         />
          <Stack.Screen
           name="DraftBlast"
           component={DraftBlast}
-          options={{ headerShown: false }}
-        />
+          options={{title: "Draft Blast"}}
+          />
         <Stack.Screen
           name="GroupInfo"
           component={GroupInfo}
-          options={{ presentation: 'modal' }}
+          options={{ presentation: 'modal', title: 'Group' }}
         />
         <Stack.Screen
           name="messages"
           component={Messages}
+          options={{title: "Messages"}}
         />
         <Stack.Screen 
           name="Pinned"

@@ -43,11 +43,12 @@ export const AppHeader = ({navigation, route, options, back}: NativeStackHeaderP
     <View
       style={{
         flexDirection: 'row',
-        marginHorizontal: 20,
-        marginTop: 40,
-        height: 60,
+        paddingHorizontal: 20,
+        paddingTop: 40,
+        height: 100,
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        backgroundColor: '#fff'
       }}>
       {back && (
         <IconButton

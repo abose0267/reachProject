@@ -6,6 +6,7 @@ import { AppHeader } from '@app/components';
 import Announcements from '../directory/screens/Announcements';
 import ReadAnnouncements from '../directory/screens/ReadAnnouncements';
 import ProgramChat from './screens/ProgramChat';
+import JoinProgram from '../joinProgram';
 
 const Stack = createNativeStackNavigator();
 const HomeStack = ({}) => {
@@ -36,6 +37,7 @@ const HomeStack = ({}) => {
                         headerShown: false,
                     }}
                 />
+                <Stack.Screen name="JoinProgram" component={JoinProgram} options={{presentation: 'modal', title:'Join Program'}}/>
             </Stack.Navigator>
         </>
     )
