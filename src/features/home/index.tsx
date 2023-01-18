@@ -5,6 +5,7 @@ import Home from './screens/Home';
 import { AppHeader } from '@app/components';
 import Announcements from '../directory/screens/Announcements';
 import ReadAnnouncements from '../directory/screens/ReadAnnouncements';
+import ProgramChat from './screens/ProgramChat';
 
 const Stack = createNativeStackNavigator();
 const HomeStack = ({}) => {
@@ -27,7 +28,13 @@ const HomeStack = ({}) => {
                     options={{
                         headerShown: false,
                     }}
-
+                />
+                <Stack.Screen 
+                    component={ProgramChat}
+                    name="ProgramChat"
+                    options={{
+                        headerShown: false,
+                    }}
                 />
             </Stack.Navigator>
         </>

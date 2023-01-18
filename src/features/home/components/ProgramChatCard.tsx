@@ -21,9 +21,10 @@ export const ProgramChatCard = ({ data, onPress }: ProgramChatProps) => {
               style={{
                 // backgroundColor: '/black',
                 marginTop: 10,
-                width: 200,
+                width: 150,
                 borderRadius: 10,
-                height: 200,
+                marginRight: 10,
+                height: 150,
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
@@ -52,7 +53,7 @@ export const ProgramChatCard = ({ data, onPress }: ProgramChatProps) => {
                     borderBottomRightRadius: 10,
                     justifyContent: 'center',
                     width: '100%',
-                    height: 50,
+                    height: 45,
                   }}
                 >
                   <Text

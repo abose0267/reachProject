@@ -12,6 +12,8 @@ export interface CreateAnnouncementData {
   title?: string;
   isAnnouncement?: boolean;
   users?: string[];
+  programcode?: number;
+  programname?: string;
 }
 
 export const createAnnouncement = async (data: CreateAnnouncementData) => {

@@ -35,6 +35,7 @@ import { MessageGroup, updateUser, useAuth, useAuthenticatedUser, UserProfile } 
 import { ProgramChatCard } from '../components/ProgramChatCard';
 import { ProgramChat } from '@app/lib/programchat';
 import { useAnnouncements } from '@app/lib/announcement';
+import { HomeBubble } from '../components/HomeBubble';
 
 const Home = ({ route, navigation }) => {
   const { user } = useAuthenticatedUser();
@@ -82,48 +83,14 @@ const Home = ({ route, navigation }) => {
             keyExtractor={(item, index) => index.toString()}
           />
         </View>
-        <View
-          style={{
-            marginTop: 10,
-            height: 200,
-            width: "92.5%",
-            backgroundColor: "#E8E8E8",
-            borderRadius: 10,
-            padding: 15,
-            alignSelf: "center",
+        <HomeBubble 
+          data={{
+            title: "Announcements"
           }}
+          first
         >
-          <Text
-            style={{
-              fontSize: 17,
-              color: '#000000',
-            }}
-          >
-            Upcoming Dates
-          </Text>
-        </View>
-        <View
-          style={{
-            marginTop: 10,
-            height: 200,
-            width: "95%",
-            backgroundColor: "#E8E8E8",
-            borderRadius: 10,
-            padding: 15,
-            alignSelf: "center",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 17,
-              color: '#000000',
-
-            }}
-          >
-            Announcements
-          </Text>
           <FlatList
-            data={announcements.sort((a, b) => b.createdAt - a.createdAt).slice(0, 3)}
+            data={announcements.filter((item) => item.programcode == null).sort((a, b) => b.createdAt - a.createdAt).slice(0, 3)}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => (
               <TouchableOpacity
@@ -166,28 +133,21 @@ const Home = ({ route, navigation }) => {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
-        </View>
-        <View
-          style={{
-            marginTop: 10,
-            marginBottom: 30,
-            height: 140,
-            width: "95%",
-            backgroundColor: "#E8E8E8",
-            borderRadius: 10,
-            padding: 15,
-            alignSelf: "center",
+        </HomeBubble>
+        <HomeBubble
+          data={{
+            title: "Upcoming Dates"
           }}
         >
-          <Text
-            style={{
-              fontSize: 17,
-              color: '#000000',
-            }}
-          >
-            Reminders
-          </Text>
-        </View>
+          
+        </HomeBubble>
+        <HomeBubble
+          data={{
+            title: "Reminders"
+          }}
+        >
+
+        </HomeBubble>
       </ScrollView>
     </SafeAreaView>
   )

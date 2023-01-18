@@ -33,7 +33,10 @@ export const removeMember = async(data: UserProfile, program: ProgramChat) => {
     await deleteDoc(doc(programRef));
 }
 
-
+export const useProgramChats = () => {
+    const {data: programs} = useCollection<ProgramChat>("programs");
+    return {programs};
+}
 export const useProgramChatGroup = (groupId?: string) => {
     const { data: group } = useDoc<ProgramChat>('programs', groupId);
     const { data: messages, addDoc: addMessage } = useCollection<Message>(`programs/${groupId}/messages`);

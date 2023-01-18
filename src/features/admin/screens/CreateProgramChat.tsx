@@ -17,6 +17,7 @@ import { captureRef } from 'react-native-view-shot';
 const CreateProgramChat = ({ navigation, route }) => {
     const [pfp, setPfp] = useState("");
     const [name, setName] = useState("");
+    const [link, setLink] = useState("www.google.com");
     const bottomSheetRef = useRef<BottomSheet>(null);
     const svgRef = useRef(null);
     
@@ -162,7 +163,7 @@ const CreateProgramChat = ({ navigation, route }) => {
                         var minm = 100000;
                         var maxm = 999999;
                         let joinCode = Math.floor(Math.random() * (maxm - minm + 1)) + minm;
-                        let qrCode = `reach://join?program_id=${program_id}&join_code=${joinCode}`
+                        let qrCode = `reach://join/${joinCode}`
                         let program = {
                             name: name,
                             pfp: pfp,
@@ -171,6 +172,7 @@ const CreateProgramChat = ({ navigation, route }) => {
                             qrCode: qrCode,
                         
                         }
+                        setLink(qrCode)
                         createProgramChat(program).then(() => {
                             addMember(user, program)
                         })
@@ -208,7 +210,7 @@ const CreateProgramChat = ({ navigation, route }) => {
                         collapsable={false}
                     >
                         <QRCode 
-                            value='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                            value={link}
                             size={175}
                             // getRef={(c) => (this.svg = c)}
                         />
