@@ -98,6 +98,7 @@ const MessageList = ({navigation}) => {
             if (!a.program_id && b.program_id) return 1;
             return 0;
           })}
+          contentContainerStyle={{marginHorizontal: 20}}
           renderItem={({item}) => (
             <MessageCard
               data={item}
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginHorizontal: 20,
+    // paddingHorizontal: 20,
     marginBottom: 20,
   },
   padding: {

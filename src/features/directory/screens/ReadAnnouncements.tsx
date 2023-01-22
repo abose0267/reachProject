@@ -33,10 +33,11 @@ const ReadAnnouncements = ({navigation, route}) => {
           return (
             <View
               style={{
-                borderTopWidth: 1,
+                // borderTopWidth: 1,
                 borderBottomWidth: 1,
                 borderColor: 'lightgray',
                 paddingHorizontal: 20,
+                paddingBottom: 10,
               }}>
               <Text
                 style={{
@@ -79,6 +80,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
   },
 });
