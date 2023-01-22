@@ -21,7 +21,7 @@ export const useRightHeaderIconButton = ({icon, onPress, show = true, watch}) =>
   }, [navigation, show, watch]);
 };
 
-export const useRightHeaderComponent = ({ component, show = true}) => {
+export const useRightHeaderComponent = ({ component, show = true, watch}) => {
   const navigation = useNavigation();
   useEffect(() => {
     // Use `setOptions` to update the button that we previously specified
@@ -32,5 +32,5 @@ export const useRightHeaderComponent = ({ component, show = true}) => {
           component
         ),
     });
-  }, [navigation, show]);
+  }, [navigation, show, watch]);
 };

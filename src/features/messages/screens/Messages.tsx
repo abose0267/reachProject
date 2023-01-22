@@ -19,6 +19,7 @@ import {
   storage,
   useAuth,
   useAuthenticatedUser,
+  useRightHeaderComponent,
   useRightHeaderIconButton,
   UserLoginInput,
 } from '@app/lib';
@@ -321,22 +322,44 @@ const Messages = ({route, navigation}) => {
     );
   }
 
-  const openGroupInfo =  useCallback(() =>  navigation.navigate('GroupInfo', {id: route?.params?.id, members: group?.members}), [group])
-  
-  useRightHeaderIconButton({
-    icon: 'information-outline',
-    onPress: openGroupInfo,
-    watch: group,
+  const openGroupInfo = useCallback(
+    () =>
+      navigation.navigate('GroupInfo', {
+        id: route?.params?.id,
+        members: group?.members,
+      }),
+    [group],
+  );
+
+  // useRightHeaderIconButton({
+  //   icon: 'information-outline',
+  //   onPress: openGroupInfo,
+  //   watch: group,
+  // });
+
+  useRightHeaderComponent({
+    component: (
+      <>
+        <Ionicons
+          name="file-tray-full"
+          size={28}
+          color="black"
+          style={{marginLeft: 'auto'}}
+          onPress={() => navigation.navigate('Pinned', {id: route?.params?.id})}
+        />
+         <Ionicons
+          name="information-circle-outline"
+          size={30}
+          color="black"
+          style={{marginLeft: 18}}
+          onPress={openGroupInfo}
+        />
+      </>
+    ),
+    watch: {group, route}
   });
   return (
     <SafeAreaView style={{flex: 1}}>
-      <Ionicons
-        name="file-tray-full"
-        size={28}
-        color="black"
-        style={{marginLeft: 'auto'}}
-        onPress={() => navigation.navigate('Pinned', {id: route?.params?.id})}
-      />
       <GiftedChat
         bottomOffset={80}
         onLongPress={(context, message) => {
