@@ -31,6 +31,8 @@ const JoinProgram = ({navigation}) => {
   const {params} = useRoute();
   console.log(params);
 
+  
+
   const {data} = useDoc<ProgramChat>(`programs/${params.id}`);
   return (
     <SafeAreaView style={[styles.container]}>

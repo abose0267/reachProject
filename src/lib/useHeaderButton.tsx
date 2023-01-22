@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useEffect} from 'react';
 import {IconButton} from 'react-native-paper';
 
-export const useRightHeaderIconButton = ({icon, onPress, show = true}) => {
+export const useRightHeaderIconButton = ({icon, onPress, show = true, watch}) => {
   const navigation = useNavigation();
   useEffect(() => {
     // Use `setOptions` to update the button that we previously specified
@@ -16,6 +16,20 @@ export const useRightHeaderIconButton = ({icon, onPress, show = true}) => {
             onPress={onPress}
             style={{position: 'relative', marginLeft: 'auto', left: 18}}
           />
+        ),
+    });
+  }, [navigation, show, watch]);
+};
+
+export const useRightHeaderComponent = ({ component, show = true}) => {
+  const navigation = useNavigation();
+  useEffect(() => {
+    // Use `setOptions` to update the button that we previously specified
+    // Now the button includes an `onPress` handler to update the count
+    navigation.setOptions({
+      headerRight: () =>
+        show && (
+          component
         ),
     });
   }, [navigation, show]);
