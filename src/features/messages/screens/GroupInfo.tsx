@@ -5,25 +5,14 @@ import {FlatList} from 'react-native-gesture-handler';
 import {useMessageGroup} from '../useMessaging';
 
 const GroupInfo = ({route}) => {
-  const {id} = route?.params;
-  const {group} = useMessageGroup(id);
+  const {id, members} = route?.params;
 
   return (
     <View>
-        <View style={{marginHorizontal: 20, marginTop: 20}}>
-        <Header label={group?.name} />
-
-        </View>
       <View>
         <FlatList
-          data={group?.members}
-          renderItem={({item}) => (
-            <ContactCard
-              //   onSelect={uid => toggleSelection(uid)}
-              data={item}
-              //   selected={selected[item.uid] ?? false}
-            />
-          )}
+          data={members}
+          renderItem={({item}) => <ContactCard data={item} />}
         />
       </View>
     </View>

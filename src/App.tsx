@@ -33,11 +33,14 @@ const App = () => {
   const linking = {
     prefixes: [prefix],
     config: {
+      initialRouteName: 'Home',
       screens: {
+        initialRouteName: 'Potato',
         Home: {
           screens: {
             JoinProgram: 'join/:id'
-          }
+          },
+          
         }
       },
     },

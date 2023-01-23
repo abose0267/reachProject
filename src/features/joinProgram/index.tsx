@@ -22,32 +22,36 @@ import {useAuthenticatedUser, UserProfile} from '@app/lib';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Button, Card} from 'react-native-paper';
 import {useCollection, useDoc} from '@app/lib/useFirebase';
-import {ProgramChat} from '@app/lib/programchat';
+import {addMember, ProgramChat, useProgramChatGroup} from '@app/lib/programchat';
 
-const JoinProgram = ({navigation}) => {
+const JoinProgram = ({navigation, route}) => {
   const {signout} = useAuth();
   const {user} = useAuthenticatedUser();
   const {navigate} = useNavigation();
-  const {params} = useRoute();
-  console.log(params);
+  // const {params} = useRoute();
+  // console.log(params);
 
-  const {data} = useDoc<ProgramChat>(`programs/${params.id}`);
+  const {group} = useProgramChatGroup(route?.params?.id);
+
+  console.log(route?.params?.id)
+
+
   return (
     <SafeAreaView style={[styles.container]}>
-      <Card mode="outlined">
+      <Card mode="outlined" style={{borderRadius: 12}}>
         <Card.Title
-          title={data?.name}
-          subtitle="5 Members"
+          title={group?.name}
+          subtitle={`${group?.members?.length} members`}
           // left={LeftContent}
         />
         {/* <Card.Content>
           <Text variant="titleLarge">{data?.name}</Text>
           <Text variant="bodyMedium">Card content</Text>
         </Card.Content> */}
-        <Card.Cover source={{uri: data?.pfp}} />
+        <Card.Cover source={{uri: group?.pfp}} />
         <Card.Actions>
-          <View style={{flex: 1, margin: 5, marginBottom: -5,}}>
-            <BlockButton outlined> Join</BlockButton>
+          <View style={{flex: 1, margin: 5, marginBottom: -5}}>
+            <BlockButton outlined onPress={() => addMember(user, group)}> Join </BlockButton>
           </View>
         </Card.Actions>
       </Card>
@@ -57,37 +61,14 @@ const JoinProgram = ({navigation}) => {
 
 export default JoinProgram;
 
-const ImageContainer = ({children}: ComponentProps<typeof View>) => (
-  <View style={styles.imageContainer}>{children}</View>
-);
-const Divider = () => (
-  <View
-    style={{
-      flexDirection: 'row',
-      height: 1,
-      backgroundColor: colors.grey,
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 1,
-      shadowRadius: 1,
-      marginTop: 10,
-      marginHorizontal: 20,
-    }}
-  />
-);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // paddingHorizontal: 20,
     marginHorizontal: 20,
     marginTop: 20,
-    // marginBottom: 20,
-    // padding: 75,
-    // flexDirection: 'column-reverse',
+    justifyContent: 'center',
   },
   padding: {
     paddingHorizontal: 20,
@@ -98,5 +79,4 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   actionContainer: {},
-  // nameText: ,
 });

@@ -38,11 +38,14 @@ export const useProgramChats = () => {
 export const useProgramChatGroup = (groupId?: string) => {
     const { data: group } = useDoc<ProgramChat>('programs', groupId);
     const { data: messages, addDoc: addMessage } = useCollection<Message>(`programs/${groupId}/messages`);
+    const { data: members } = useCollection<UserProfile>(`programs/${groupId}/members`);
     const { user } = useAuthenticatedUser();
     const sendMessage = useCallback(async (message: Message) => {
         await addMessage(message);
     }, [user])
 
+    if (group) group.members = members;
+    
     // @ts-ignore
     return { group, messages: messages.map(m => ({...m, createdAt: m.createdAt.toDate()})), sendMessage };
 }
