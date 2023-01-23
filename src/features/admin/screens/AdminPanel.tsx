@@ -12,7 +12,7 @@ const AdminPanel = ({navigation}) => {
         {
             title: "Create an announcement",
             icon: "megaphone-outline",
-            description: "Send a quick message to all users",
+            description: "Send a quick message to all users of REACH or a program.",
             onPress: () => navigation.navigate('sendannouncement', {isAnnouncement: true})
         },
         {
@@ -20,6 +20,11 @@ const AdminPanel = ({navigation}) => {
             icon: "apps-outline",
             description: "Create a group chat for a specific program within REACH",
             onPress: () => navigation.navigate('blasts', {isAnnouncement: false})
+        },
+        {
+            title: "Create an event",
+            icon: "calendar-outline",
+            description: "Let REACH members know about an upcoming event or activity."
         }
     ]
     return(
