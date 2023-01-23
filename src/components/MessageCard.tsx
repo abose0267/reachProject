@@ -23,6 +23,7 @@ export const MessageCard = ({ data, onPress }: MessageCardProps) => {
         : 
         data?.name;
 
+    // console.log()
     return (
         <>
             <TouchableOpacity style={styles.container} onPress={onPress}>
@@ -59,7 +60,7 @@ export const MessageCard = ({ data, onPress }: MessageCardProps) => {
 
                 
                 <View style={styles.textContainer}>
-                    <Text style={styles.name}>{chatName}</Text>
+                    <Text style={styles.name}>{data?.program_id ? data.name : chatName}</Text>
                     {data?.program_id != null &&
                         <Text style={{fontSize: 12, color: "gray", fontWeight: "500"}}>PROGRAM CHAT</Text>
                     }
