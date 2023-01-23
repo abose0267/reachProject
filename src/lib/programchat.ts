@@ -7,8 +7,6 @@ export interface ProgramChat {
     program_id: string;
     name: string;
     pfp: string;
-    joinCode: number;
-    qrCode: string;
 }
 
 export const createProgramChat = async (data: ProgramChat) => {
