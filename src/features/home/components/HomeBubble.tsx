@@ -47,7 +47,7 @@ export const HomeBubble = ({ data, onPress, children, first, last}: ProgramChatP
             marginBottom: last ? 10 : 0,
             height: 200,
             width: "95%",
-            backgroundColor: "#E8E8E8",
+            backgroundColor: "#0000000d",
             borderRadius: 10,
             padding: 15,
             alignSelf: "center",

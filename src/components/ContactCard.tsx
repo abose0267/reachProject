@@ -1,23 +1,35 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Avatar } from 'react-native-paper';
-import { UserProfile } from '@app/lib';
-import { colors } from '@app/constants';
-import { Ionicons } from '@expo/vector-icons';
-
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Avatar} from 'react-native-paper';
+import {UserProfile} from '@app/lib';
+import {colors} from '@app/constants';
+import {Ionicons} from '@expo/vector-icons';
 
 export interface ContactCardProps {
-  data: Pick<UserProfile, 'firstname' | 'lastname' | 'role' | 'uid' | 'email' | 'username'>;
+  data: Pick<
+    UserProfile,
+    'firstname' | 'lastname' | 'role' | 'uid' | 'email' | 'username'
+  >;
   onPress?: () => void;
   onSelect?: (uid) => void;
-  selected?: boolean
+  selected?: boolean;
+  renderRight?: (UserProfile) => JSX.Element;
 }
 
-export const ContactCard = ({ data, onPress, onSelect, selected = false }: ContactCardProps) => {
+export const ContactCard = ({
+  data,
+  onPress,
+  onSelect,
+  selected = false,
+  renderRight,
+}: ContactCardProps) => {
   const initials = data.firstname[0] + data.lastname[0];
   return (
     <>
-      <TouchableOpacity style={styles.container} onPress={onPress} disabled={onPress == null}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={onPress}
+        disabled={onPress == null}>
         {/* @ts-ignore */}
         <View style={{flex: 1, flexDirection: 'row'}}>
           <Avatar.Text
@@ -29,17 +41,28 @@ export const ContactCard = ({ data, onPress, onSelect, selected = false }: Conta
               },
             }}
           />
-        <View style={styles.textContainer}>
-          <Text style={styles.name}>{data.firstname} {data.lastname}</Text>
-          <Text style={styles.role}>{data.role == "Admin" || data.role =="admin" ? "REACH Staff":"Member"}</Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.name}>
+              {data.firstname} {data.lastname}
+            </Text>
+            <Text style={styles.role}>
+              {data.role == 'Admin' || data.role == 'admin'
+                ? 'REACH Staff'
+                : 'Member'}
+            </Text>
           </View>
         </View>
-        {onSelect &&
+        {onSelect && (
           <TouchableOpacity onPress={() => onSelect(data.uid)}>
-            <Ionicons name={selected ? 'checkmark-circle' : 'checkmark-circle-outline'} size={30} color="black" />
+            <Ionicons
+              name={selected ? 'checkmark-circle' : 'checkmark-circle-outline'}
+              size={30}
+              color="black"
+            />
           </TouchableOpacity>
-        }
+        )}
 
+        {renderRight && renderRight(data)}
       </TouchableOpacity>
     </>
   );
@@ -65,10 +88,10 @@ const styles = StyleSheet.create({
   role: {
     fontSize: 15,
     fontWeight: '300',
-    color: 'gray'
+    color: 'gray',
   },
   textContainer: {
     paddingHorizontal: 15,
     flex: 1,
-  }
+  },
 });

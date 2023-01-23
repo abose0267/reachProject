@@ -27,8 +27,10 @@ export const addMember = async(data: UserProfile, program: ProgramChat) => {
 }
 
 export const removeMember = async(data: UserProfile, program: ProgramChat) => {
-    const programRef = collection(db, "programs", program.program_id, "members", data.uid);
-    await deleteDoc(doc(programRef));
+    const programRef = doc(db, "programs", program.program_id, "members", data.uid);
+    const profileRef = doc(db, "users", data.uid, "groups", program.program_id);
+    await deleteDoc(profileRef);
+    await deleteDoc(programRef);
 }
 
 export const useProgramChats = () => {

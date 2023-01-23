@@ -50,7 +50,6 @@ const Messages = ({route, navigation}) => {
     ? useProgramChatGroup(route.params.id)
     : useMessageGroup(route.params.id);
 
-  console.log(group?.members);
   const {pins} = useGroupedPins(route.params.id);
   const pinids = pins.map(pin => pin.message_id);
   const [file, setFile] = useState(null);
@@ -327,6 +326,8 @@ const Messages = ({route, navigation}) => {
       navigation.navigate('GroupInfo', {
         id: route?.params?.id,
         members: group?.members,
+        admin: user.role == 'Admin',
+        program: group,
       }),
     [group],
   );
