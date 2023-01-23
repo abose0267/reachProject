@@ -2481,6 +2481,13 @@
     prompts "^2.4.0"
     semver "^6.3.0"
 
+"@react-native-community/datetimepicker@6.5.2":
+  version "6.5.2"
+  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-6.5.2.tgz#d2c0df9f2c6acce39f7e957743dd811547656098"
+  integrity sha512-9K3zhIH1zmpIGSG3GJTWLIoAx+sR4kJ1wqpGKMwWJ5IYXBsFxMdvGw023t0pz2CQStlnNbbNhnZY/HMYFBCsCg==
+  dependencies:
+    invariant "^2.2.4"
+
 "@react-native-picker/picker@2.4.8":
   version "2.4.8"
   resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.4.8.tgz#a1a21f3d6ecadedbc3f0b691a444ddd7baa081f8"
@@ -5749,6 +5756,11 @@ expo-av@~13.0.2:
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/expo-av/-/expo-av-13.0.2.tgz#06c2c5140b334319ed2844823181f7b88092da13"
   integrity sha512-u+y9wUBodp08UjRZYckNWzr9zEQHK6eScRBkhdTd9Rq48SEZ7eN6xXn79hubvk0P5nj7lFS+hdKjmx9T5XHGww==
+
+expo-calendar@~11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/expo-calendar/-/expo-calendar-11.0.1.tgz#c580f4d5f0c9f7038919c3e05ab44067cc825c7d"
+  integrity sha512-I+vpz8O01vjdmYKyFom7etODwj1WDtimMIAy8q4k3AvU/8RdC12PoMu9WjT2EPJ4aAvpNIU7CBLzsgc3nRiKPw==
 
 expo-camera@~13.1.0:
   version "13.1.0"

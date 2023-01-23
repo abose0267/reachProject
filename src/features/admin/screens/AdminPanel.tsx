@@ -24,11 +24,15 @@ const AdminPanel = ({navigation}) => {
         {
             title: "Create an event",
             icon: "calendar-outline",
-            description: "Let REACH members know about an upcoming event or activity."
+            description: "Let REACH members know about an upcoming event or activity.",
+            onPress: () => navigation.navigate('events')
         }
     ]
     return(
         <SafeAreaView style={[styles.container]}>
+            <StatusBar 
+                style="auto"
+            />
             <View style={styles.topContainer}>
                 <Header label="The REACH Control Center" containerStyle={{ marginBottom: 5 }} />
             </View>
@@ -51,8 +55,9 @@ const AdminPanel = ({navigation}) => {
                                 // borderColor: "red",
                                 width: "100%",
                                 height: 60,
+                                paddingVertical:10,
                                 alignItems: "center",
-                                borderBottomWidth: index == 0 ? 1 : 0,
+                                borderTopWidth: index == 0 ? 0 : 1,
                                 borderBottomColor: "lightgray",
                                 marginVertical: 5,
                                 // paddingHorizontal: 10,

@@ -12,6 +12,7 @@
   "dependencies": {
     "@firebase/storage": "^0.9.12",
     "@gorhom/bottom-sheet": "^4",
+    "@react-native-community/datetimepicker": "6.5.2",
     "@react-native-picker/picker": "2.4.8",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
@@ -19,6 +20,7 @@
     "babel-plugin-module-resolver": "^4.1.0",
     "expo": "^47.0.6",
     "expo-av": "~13.0.2",
+    "expo-calendar": "~11.0.1",
     "expo-camera": "~13.1.0",
     "expo-cli": "^5.4.12",
     "expo-document-picker": "~11.0.1",
