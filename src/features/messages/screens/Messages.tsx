@@ -179,6 +179,7 @@ const Messages = ({route, navigation}) => {
   }, [text]);
 
   function renderBubble(props) {
+    console.log({foo: Object.keys(props)})
     return (
       <View
         style={{
@@ -203,17 +204,7 @@ const Messages = ({route, navigation}) => {
             },
           }}
         />
-        {props.currentMessage?._id &&
-          pinids.includes(props.currentMessage._id) && (
-            <AntDesign
-              name="pushpin"
-              size={20}
-              color="#379770"
-              style={{
-                marginHorizontal: 2,
-              }}
-            />
-          )}
+       
       </View>
     );
   }
@@ -266,6 +257,20 @@ const Messages = ({route, navigation}) => {
     // render files
     return (
       <>
+       {props.currentMessage?._id &&
+          pinids.includes(props.currentMessage._id) && (
+            <AntDesign
+              name="pushpin"
+              size={25}
+              color="#379770"
+              style={{
+                // marginLeft: 0,
+                position: 'absolute',
+                left: -13,
+                top: -13
+              }}
+            />
+           )}
         {props.currentMessage.file && (
           <TouchableOpacity
             style={{
@@ -392,6 +397,7 @@ const Messages = ({route, navigation}) => {
         }}
         messages={messages.sort((a, b) => b.createdAt - a.createdAt)}
         renderBubble={props => renderBubble(props)}
+        // renderCustomView={() => }
         onSend={messages => onSend(messages)}
         user={{
           _id: user?.uid,

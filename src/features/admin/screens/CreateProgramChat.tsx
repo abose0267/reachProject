@@ -163,7 +163,7 @@ const CreateProgramChat = ({ navigation, route }) => {
                         var minm = 100000;
                         var maxm = 999999;
                         let joinCode = Math.floor(Math.random() * (maxm - minm + 1)) + minm;
-                        let qrCode = `reach://join/${joinCode}`
+                        let qrCode = `reach://join/${program_id}`
                         let program = {
                             name: name,
                             pfp: pfp,

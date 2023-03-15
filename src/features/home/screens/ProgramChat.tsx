@@ -35,6 +35,8 @@ import {useAnnouncements} from '@app/lib/announcement';
 import {useCollection} from '@app/lib/useFirebase';
 
 const ProgramChat = ({route, navigation}) => {
+  if (!route?.params?.data) return <></>;
+  console.log(route);
   const {data} = route.params;
   const {announcements} = useAnnouncements();
 
@@ -144,7 +146,7 @@ const ProgramChat = ({route, navigation}) => {
               flexDirection: 'row',
               flexWrap: 'wrap',
             }}>
-            {images.map((doc) => (
+            {images.map(doc => (
               <Image
                 source={{
                   uri: doc.image,

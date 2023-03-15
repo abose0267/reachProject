@@ -1,13 +1,12 @@
 {
   "expo": {
-    // "entryPoint": "src/App.js",
     "name": "reachProject",
     "slug": "reachProject",
-    "version": "1.1.0",
-    "scheme": "reach",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "reach",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -21,7 +20,11 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.reach4home.reachapp"
+      "bundleIdentifier": "org.reach4home.reachapp",
+      "infoPlist": {
+        "MinimumOSVersion": "13.0"
+      },
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
@@ -43,7 +46,7 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends.",
-          "cameraPermission": "The app accesses your camera to let you take photos and videos.",
+          "cameraPermission": "The app accesses your camera to let you take photos and videos."
         }
       ],
       [
@@ -52,6 +55,8 @@
           "iCloudContainerEnvironment": "Production"
         }
       ]
-    ]
-  }
+    ],
+    "sdkVersion": "47.0.0"
+  },
+  "name": "reachproject"
 }

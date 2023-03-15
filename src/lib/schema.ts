@@ -14,6 +14,7 @@ export interface UserProfile {
 export interface Message extends IMessage {}
 
 export interface MessageGroup {
+    program_id?: number;
     name: string
     members?: UserProfile[],
 }

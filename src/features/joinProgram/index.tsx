@@ -51,7 +51,7 @@ const JoinProgram = ({navigation, route}) => {
         <Card.Cover source={{uri: group?.pfp}} />
         <Card.Actions>
           <View style={{flex: 1, margin: 5, marginBottom: -5}}>
-            <BlockButton outlined onPress={() => addMember(user, group)}> Join </BlockButton>
+            <BlockButton outlined onPress={() => addMember(user, group).finally(() => navigation.navigate('Potato'))}> Join </BlockButton>
           </View>
         </Card.Actions>
       </Card>

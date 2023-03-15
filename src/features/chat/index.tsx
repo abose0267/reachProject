@@ -1,33 +1,347 @@
-import {pinMessage} from '@app/lib/pinned';
-import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
-import React from 'react';
+import React, {useEffect, useState, useCallback, useRef, useMemo} from 'react';
 import {
-  SafeAreaView,
-  Alert,
   View,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
+  Image,
   StyleSheet,
+  SafeAreaView,
   Text,
+  Alert,
+  KeyboardAvoidingView,
+  TextInput,
+  TouchableOpacity,
+  Linking,
 } from 'react-native';
-import {GiftedChat} from 'react-native-gifted-chat';
+
+import * as Haptics from 'expo-haptics';
+import * as ImagePicker from 'expo-image-picker';
+import {
+  Message,
+  storage,
+  useAuth,
+  useAuthenticatedUser,
+  useRightHeaderComponent,
+  useRightHeaderIconButton,
+  UserLoginInput,
+} from '@app/lib';
+import {
+  GiftedChat,
+  Bubble,
+  Send,
+  IMessage,
+  MessageImageProps,
+} from 'react-native-gifted-chat';
+import {useMessageGroup} from '@app/features/messages/useMessaging';
 import {Ionicons, FontAwesome5, AntDesign} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/native';
+import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
+import Fuse from 'fuse.js';
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  uploadString,
+} from '@firebase/storage';
+import * as DocumentPicker from 'expo-document-picker';
+import {pinMessage, useGroupedPins} from '@app/lib/pinned';
+import {useProgramChatGroup} from '@app/lib/programchat';
+import { renderBubble } from './components';
 
-const Chat = () => {
-  const navigation = useNavigation();
+const Messages = ({route, navigation}) => {
+  const {group, messages, sendMessage} = route.params.isProgramChat
+    ? useProgramChatGroup(route.params.id)
+    : useMessageGroup(route.params.id);
+
+  const {pins} = useGroupedPins(route.params.id);
+  const pinids = pins.map(pin => pin.message_id);
+  const [file, setFile] = useState(null);
+  const [image, setImage] = useState('');
+  const {user, loading} = useAuthenticatedUser();
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => [200, 200], []);
+  const onSend = useCallback((messages: Message[] = []) => {
+    sendMessage(messages[0]);
+  }, []);
+
+  const [height, setHeight] = useState(50);
+  const [text, setText] = useState('');
+  const [people, setPeople] = useState([]);
+  const {goBack} = useNavigation();
+  const bottomsheetlist = [
+    {
+      iconname: 'camera-outline',
+      text: 'Take a photo or video',
+      onPress: () => {
+        launchCamera();
+      },
+    },
+    {
+      iconname: 'image-outline',
+      text: 'Upload a photo or video',
+      onPress: () => {
+        pickImage();
+      },
+    },
+    {
+      iconname: 'folder-outline',
+      text: 'Upload a file',
+      onPress: () => {
+        browseFiles();
+      },
+    },
+  ];
+  const options = {
+    keys: ['username', 'firstname'],
+  };
+  const browseFiles = async () => {
+    const result = await DocumentPicker.getDocumentAsync({});
+    bottomSheetRef.current?.close();
+    const url = await uploadImage(result.uri, 'files/');
+    setFile({
+      name: result.name,
+      file: url,
+    });
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log('RESULT', result);
+
+    if (!result.canceled) {
+      bottomSheetRef.current?.close();
+      const url = await uploadImage(result.assets[0].uri);
+      setImage(url);
+    }
+  };
+
+  const launchCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      bottomSheetRef.current?.close();
+      const url = await uploadImage(result.assets[0].uri);
+      setImage(url);
+    }
+  };
+  const uploadImage = async (uri, directory = 'images/') => {
+    console.log(uri[0].uri);
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+    const filename = Math.random().toString(36).substring(2, 7);
+    const storageRef = ref(storage, directory + filename);
+    await uploadBytes(storageRef, blob)
+      .then(snapshot => {
+        console.log('Uploaded a blob or file!');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    const url = await getDownloadURL(storageRef);
+    // blob.close()
+    return url;
+  };
+  const fuse = new Fuse(group?.members, options);
+
+  useEffect(() => {
+    const textmatch = text.match(/@(\w+)/);
+    if (text.length == 0) {
+      setPeople([]);
+    }
+    if (textmatch != null) {
+      // console.log(textmatch)
+      // console.log(JSON.stringify(group.members, null, 2))
+      const result = fuse.search(textmatch[1]);
+      console.log(result);
+      setPeople(result.map(r => r.item));
+    }
+  }, [text]);
+
+  
+  function renderMessageImage(props) {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          // props.imageProps.openImageViewer(props.currentMessage.image)
+          // props.imageProps.onPress(props.currentMessage.image)
+        }}
+        onLongPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+          Alert.alert(
+            'Pin this message?',
+            "This will show up on everyone's pin in this group chat",
+            [
+              {
+                text: 'Yes',
+                onPress: () => {
+                  pinMessage({
+                    chat_id: route.params.id,
+                    //@ts-ignore
+                    message_id: props.currentMessage._id,
+                    text: props.currentMessage?.text,
+                    image: props.currentMessage?.image
+                      ? props.currentMessage?.image
+                      : null,
+                    file: props.currentMessage?.file
+                      ? props.currentMessage?.file
+                      : null,
+                    createdAt: props.currentMessage?.createdAt,
+                  });
+                },
+              },
+              {
+                text: 'No',
+                onPress: () => {},
+              },
+            ],
+          );
+        }}>
+        <Image
+          source={{uri: props.currentMessage.image}}
+          style={{width: 200, height: 200, borderRadius: 10, margin: 5}}
+        />
+      </TouchableOpacity>
+    );
+  }
+  function renderCustomView(props) {
+    // render files
+    return (
+      <>
+       {props.currentMessage?._id &&
+          pinids.includes(props.currentMessage._id) && (
+            <AntDesign
+              name="pushpin"
+              size={25}
+              color="#379770"
+              style={{
+                // marginLeft: 0,
+                position: 'absolute',
+                left: -13,
+                top: -13
+              }}
+            />
+           )}
+        {props.currentMessage.file && (
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: 10,
+              backgroundColor: '#E5E5EA',
+              borderRadius: 10,
+              margin: 5,
+            }}
+            onPress={() => Linking.openURL(props.currentMessage?.file?.file)}
+            onLongPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+              Alert.alert(
+                'Pin this message?',
+                "This will show up on everyone's pin in this group chat",
+                [
+                  {
+                    text: 'Yes',
+                    onPress: () => {
+                      pinMessage({
+                        chat_id: route.params.id,
+                        //@ts-ignore
+                        message_id: props.currentMessage._id,
+                        text: props.currentMessage?.text,
+                        image: props.currentMessage?.image
+                          ? props.currentMessage?.image
+                          : null,
+                        file: props.currentMessage?.file
+                          ? props.currentMessage?.file
+                          : null,
+                        createdAt: props.currentMessage?.createdAt,
+                      });
+                    },
+                  },
+                  {
+                    text: 'No',
+                    onPress: () => {},
+                  },
+                ],
+              );
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Ionicons name="document-text" size={24} color="#379770" />
+              <Text style={{marginLeft: 10}}>
+                {props.currentMessage?.file?.name}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
+      </>
+    );
+  }
+
+  const openGroupInfo = useCallback(
+    () =>
+      navigation.navigate('GroupInfo', {
+        id: route?.params?.id,
+        members: group?.members,
+        admin: user.role == 'Admin',
+        program: group,
+      }),
+    [group],
+  );
+
+  // useRightHeaderIconButton({
+  //   icon: 'information-outline',
+  //   onPress: openGroupInfo,
+  //   watch: group,
+  // });
+
+  useRightHeaderComponent({
+    component: (
+      <>
+        <Ionicons
+          name="file-tray-full"
+          size={28}
+          color="black"
+          style={{marginLeft: 'auto'}}
+          onPress={() => navigation.navigate('Pinned', {id: route?.params?.id})}
+        />
+         <Ionicons
+          name="information-circle-outline"
+          size={30}
+          color="black"
+          style={{marginLeft: 18}}
+          onPress={openGroupInfo}
+        />
+      </>
+    ),
+    watch: {group, route}
+  });
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <Ionicons
-        name="file-tray-full"
-        size={28}
-        color="black"
-        style={{marginLeft: 'auto'}}
-        onPress={() => navigation.navigate('Pinned', {id: route?.params?.id})}
-      />
+    <View style={{flex: 1}}>
       <GiftedChat
         bottomOffset={80}
+        // alignTop={false}
+
         onLongPress={(context, message) => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
           Alert.alert(
@@ -56,7 +370,8 @@ const Chat = () => {
           );
         }}
         messages={messages.sort((a, b) => b.createdAt - a.createdAt)}
-        renderBubble={props => renderBubble(props)}
+        renderBubble={renderBubble}
+        // renderCustomView={() => }
         onSend={messages => onSend(messages)}
         user={{
           _id: user?.uid,
@@ -86,7 +401,7 @@ const Chat = () => {
             },
           },
         ]}
-        renderMessageImage={props => renderMessageImage(props)}
+        // renderMessageImage={props => renderMessageImage(props)}
         renderCustomView={props => renderCustomView(props)}
         renderComposer={props => (
           <View
@@ -207,7 +522,7 @@ const Chat = () => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 flexWrap: 'wrap',
-                top: 20,
+                // top: 20,
                 left: 5,
               }}>
               {people.map(person => (
@@ -273,9 +588,11 @@ const Chat = () => {
           ))}
         </View>
       </BottomSheet>
-    </SafeAreaView>
+    </View>
   );
 };
+
+export default Messages;
 
 const styles = StyleSheet.create({
   container: {
@@ -308,6 +625,8 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     padding: 20,
+    // alignItems: "center",
+    // backgroundColor: "blue"
   },
   buttonContainer: {
     flex: 1,

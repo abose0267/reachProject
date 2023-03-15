@@ -1,8 +1,8 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import { Settings } from 'react-native';
 import Home from './screens/Home';
-import {AppHeader} from '@app/components';
+import { AppHeader } from '@app/components';
 import Announcements from '../directory/screens/Announcements';
 import ReadAnnouncements from '../directory/screens/ReadAnnouncements';
 import ProgramChat from './screens/ProgramChat';
@@ -10,15 +10,16 @@ import JoinProgram from '../joinProgram';
 import Messages from '../messages/screens/Messages';
 import GroupInfo from '../messages/screens/GroupInfo';
 import Pinned from '../messages/screens/Pinned';
+import Program from '../program';
 
 const Stack = createNativeStackNavigator();
-const HomeStack = ({}) => {
+const HomeStack = ({ }) => {
   return (
     <>
       {/*// @ts-ignore */}
       <Stack.Navigator
         initialRouteName="Potato"
-        screenOptions={{header: props => <AppHeader {...props} />}}>
+        screenOptions={{ header: props => <AppHeader {...props} /> }}>
         <Stack.Screen
           name="Potato"
           component={Home}
@@ -34,26 +35,26 @@ const HomeStack = ({}) => {
           }}
         />
         <Stack.Screen
-          component={ProgramChat}
+          component={Program}
           name="ProgramChat"
           options={{
-            headerShown: false,
+            title: 'Program',
           }}
         />
         <Stack.Screen
           name="JoinProgram"
           component={JoinProgram}
-          options={{title: 'Join Program', presentation: 'modal'}}
+          options={{ title: 'Join Program', presentation: 'modal' }}
         />
         <Stack.Screen
           name="messages"
           component={Messages}
-          options={{title: 'Messages'}}
+          options={{ title: 'Messages' }}
         />
         <Stack.Screen
           name="GroupInfo"
           component={GroupInfo}
-          options={{presentation: 'modal', title: 'Group'}}
+          options={{ presentation: 'modal', title: 'Group' }}
         />
         <Stack.Screen
           name="Pinned"
