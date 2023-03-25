@@ -45,17 +45,21 @@ export const HomeBubble = ({ data, onPress, children, first, last}: ProgramChatP
           style={{
             marginTop: first ? 0: 10,
             marginBottom: last ? 10 : 0,
-            height: 200,
-            width: "95%",
+            // minHeight: 200,
+            width: Dimensions.get("window").width - 30,
+            // flex: 1,
+            // marginHorizontal: 15,
             backgroundColor: "#0000000d",
             borderRadius: 10,
             padding: 15,
+            paddingBottom: 15,
             alignSelf: "center",
           }}
         >
             <Text
             style={{
               fontSize: 17,
+              fontWeight: "600",
               color: '#000000',
 
             }}

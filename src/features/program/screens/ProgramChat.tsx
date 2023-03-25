@@ -28,26 +28,92 @@ const ProgramChat = ({ route, navigation }) => {
     <SafeAreaView
       style={{
         flex: 1,
+        marginTop: 15,
       }}>
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <HomeBubble data={{ title: 'Attachments' }} last>
+      {/* <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}> */}
+        <HomeBubble data={{ title: 'Attachments' }} first>
           <View
             style={{
-              paddingVertical: 5,
+              paddingTop: images.filter(im => im.image).length > 0 ? 10 : 0,
               flexDirection: 'row',
               flexWrap: 'wrap',
             }}>
-            {images.map(doc => (
+            {images.filter(im => im.image).map(doc => (
               <Image
                 source={{
                   uri: doc.image,
                 }}
-                style={{ height: 80, width: 80, marginRight: 5, marginBottom: 5 }}
+                style={{ height: 80, width: 80, marginRight: 10, marginBottom: 10, borderRadius: 10  }}
               />
             ))}
           </View>
         </HomeBubble>
-      </ScrollView>
+        <HomeBubble data={{ title: 'Announcements' }} last>
+         
+        <FlatList
+            data={announcements
+              .filter(item => item.program_id == data?.program_id)
+              .sort((a, b) => b.createdAt - a.createdAt)
+              // .slice(0, 3)
+            }
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}) => (
+              <TouchableOpacity
+                style={{
+                  marginTop: 10,
+                }}
+                onPress={() =>
+                  navigation.navigate('Announcements', {data: item})
+                }>
+                <>
+                  <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: '500',
+                      color: '#000000',
+                      marginBottom: 3,
+                    }}
+                    numberOfLines={1}
+                    >
+                    {item.title}
+                  </Text>
+                 {item.program_id &&  <Text
+                    style={{
+                      fontSize: 15,
+                      // fontWeight: '500',
+                      color: '#000000',
+                    }}
+                    numberOfLines={1}
+                    >
+                    {`(${item.program_name})`}
+                  </Text>}
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      marginBottom: 5,
+                      color: '#666',
+                    }}
+                    numberOfLines={2}
+                    >
+                    {item.message}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: 'gray',
+                    }}>
+                    {/* @ts-ignore */}
+                    {item.createdAt.toDate().toDateString().toUpperCase()}
+                  </Text>
+                </>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </HomeBubble>
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 };

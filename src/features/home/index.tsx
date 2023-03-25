@@ -31,7 +31,7 @@ const HomeStack = ({ }) => {
           component={ReadAnnouncements}
           name="Announcements"
           options={{
-            headerShown: false,
+            // headerShown: false,
           }}
         />
         <Stack.Screen

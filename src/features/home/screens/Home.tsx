@@ -20,6 +20,9 @@ const Home = ({route, navigation}) => {
   const {data: groups} = useCollection<ProgramChat>(
     `users/${user?.uid}/groups`,
   );
+
+  const userPrograms = groups?.filter(group => group?.program_id != null).map(g => g.program_id);
+
   const {announcements} = useAnnouncements();
   return (
     <SafeAreaView
@@ -61,49 +64,61 @@ const Home = ({route, navigation}) => {
         </View>
         <HomeBubble
           data={{
-            title: 'Announcements',
+            title: 'Recent Announcements',
           }}
           first>
           <FlatList
             data={announcements
-              .filter(item => item.programcode == null)
+              .filter(item => item.program_id == null || userPrograms.includes(item.program_id))
               .sort((a, b) => b.createdAt - a.createdAt)
               .slice(0, 3)}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => (
               <TouchableOpacity
                 style={{
-                  height: 50,
-                  width: '100%',
-                  marginTop: index == 0 ? 5 : 0,
-                  // alignSelf: "center",
+                  marginTop: 10,
                 }}
                 onPress={() =>
                   navigation.navigate('Announcements', {data: item})
                 }>
                 <>
-                  {index > 0 && (
-                    <View
-                      style={{
-                        height: 1,
-                        width: '100%',
-                        backgroundColor: 'gray',
-                      }}
-                    />
-                  )}
+                  <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                   <Text
                     style={{
                       fontSize: 15,
-                      marginTop: 7.5,
+                      fontWeight: '500',
                       color: '#000000',
-                    }}>
+                      marginBottom: 3,
+                    }}
+                    numberOfLines={1}
+                    >
                     {item.title}
+                  </Text>
+                 {item.program_id &&  <Text
+                    style={{
+                      fontSize: 15,
+                      // fontWeight: '500',
+                      color: '#000000',
+                    }}
+                    numberOfLines={1}
+                    >
+                    {`(${item.program_name})`}
+                  </Text>}
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      marginBottom: 5,
+                      color: '#666',
+                    }}
+                    numberOfLines={2}
+                    >
+                    {item.message}
                   </Text>
                   <Text
                     style={{
                       fontSize: 12,
                       color: 'gray',
-                      fontWeight: 'bold',
                     }}>
                     {/* @ts-ignore */}
                     {item.createdAt.toDate().toDateString().toUpperCase()}
