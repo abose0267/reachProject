@@ -133,10 +133,6 @@ const Home = ({route, navigation}) => {
           data={{
             title: 'Upcoming Dates',
           }}></HomeBubble>
-        <HomeBubble
-          data={{
-            title: 'Reminders',
-          }}></HomeBubble>
       </ScrollView>
     </SafeAreaView>
   );

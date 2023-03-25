@@ -84,7 +84,7 @@ const ProgramChat = ({ route, navigation }) => {
                       // fontWeight: '500',
                       color: '#000000',
                     }}
-                    numberOfLines={1}
+                    // numberOfLines={1}
                     >
                     {`(${item.program_name})`}
                   </Text>}
