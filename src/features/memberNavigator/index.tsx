@@ -14,49 +14,77 @@ import SettingsStack from '../settings';
 import HomeStack from '../home';
 
 const Tab = createBottomTabNavigator();
-// 
+//
 const MemberNavigator = () => {
-  const {user} = useAuthenticatedUser();
-  return(
+  const { user } = useAuthenticatedUser();
+  return (
     <Provider>
       {/*// @ts-ignore */}
-      <Tab.Navigator 
-       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
 
-          if (route.name === 'Directory') {
-            iconName = focused
-              ? 'contacts'
-              : 'contacts-outline';
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'settings' : 'settings-outline';
-          } else if (route.name === 'Messages') {
-            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
-          } else if (route.name === "Admin") {
-            iconName = focused ? "shield" : "shield-outline";
-          } else if(route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
-          }
+            if (route.name === 'Directory') {
+              iconName = focused ? 'contacts' : 'contacts-outline';
+            } else if (route.name === 'Settings') {
+              iconName = focused ? 'settings' : 'settings-outline';
+            } else if (route.name === 'Messages') {
+              iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+            } else if (route.name === 'Admin') {
+              iconName = focused ? 'shield' : 'shield-outline';
+            } else if (route.name === 'Home') {
+              iconName = focused ? 'home' : 'home-outline';
+            }
 
-          // You can return any component that you like here!
-          // return a MaterialCommunityIcons only if the iconName is 'contacts'. Otherwise, return an Ionicons
-          return iconName == 'contacts' || iconName == 'contacts-outline' ? <MaterialCommunityIcons name={iconName} size={size} color={color} /> : <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: colors.green,
-        tabBarInactiveTintColor: colors.black,
-        initialRouteName: 'Directory',
-        })
-      
-    }
-      >
-        <Tab.Screen name="Home" component={HomeStack} options={{headerShown: false}}/>
-        <Tab.Screen name="Messages" component={MessagesStack} options={{ headerShown: false }}/>
-        <Tab.Screen name="Directory" component={DirectoryStack} options={{ headerShown: false }} />
-        {user?.role == "Admin" && <Tab.Screen name="Admin" component={AdminStack} options={{ headerShown: false }}/>}
-        <Tab.Screen name="Settings" component={SettingsStack} options={{ headerShown: false }}/>
+            // You can return any component that you like here!
+            // return a MaterialCommunityIcons only if the iconName is 'contacts'. Otherwise, return an Ionicons
+            return iconName == 'contacts' || iconName == 'contacts-outline' ? (
+              <MaterialCommunityIcons
+                name={iconName}
+                size={size * 0.8}
+                color={color}
+              />
+            ) : (
+              <Ionicons name={iconName} size={size} color={color} />
+            );
+          },
+          tabBarActiveTintColor: colors.green,
+          tabBarInactiveTintColor: colors.black,
+          initialRouteName: 'Directory',
+
+          // tabBarStyle: { paddding: 50 },
+        })}>
+        <Tab.Screen
+          name="Home"
+          component={HomeStack}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
+          name="Messages"
+          component={MessagesStack}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen
+          name="Directory"
+          component={DirectoryStack}
+          options={{ headerShown: false }}
+        />
+        {user?.role == 'Admin' && (
+          <Tab.Screen
+            name="Admin"
+            component={AdminStack}
+            options={{ headerShown: false }}
+          />
+        )}
+        <Tab.Screen
+          name="Settings"
+          component={SettingsStack}
+          options={{ headerShown: false }}
+        />
       </Tab.Navigator>
     </Provider>
-  )}
+  );
+};
 
 export default MemberNavigator;

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   SafeAreaView,
@@ -15,17 +15,17 @@ import {
   TextInput,
   BigButton,
 } from '@app/components';
-import {colors} from '@app/constants';
-import {useAuth, useAuthenticatedUser, UserProfile} from '@app/lib';
-import {useCollection} from '@app/lib/useFirebase';
-import {useAnnouncements, useBlasts} from '@app/lib/announcement';
-import {AnnouncementCard} from '@app/components/Announcements';
+import { colors } from '@app/constants';
+import { useAuth, useAuthenticatedUser, UserProfile } from '@app/lib';
+import { useCollection } from '@app/lib/useFirebase';
+import { useAnnouncements, useBlasts } from '@app/lib/announcement';
+import { AnnouncementCard } from '@app/components/Announcements';
 
-const Directory_New = ({navigation}) => {
-  const {signout} = useAuth();
-  const {data: users} = useCollection<UserProfile>('users');
-  const {user} = useAuthenticatedUser();
-  const {announcements} = useAnnouncements();
+const Directory_New = ({ navigation }) => {
+  const { signout } = useAuth();
+  const { data: users } = useCollection<UserProfile>('users');
+  const { user } = useAuthenticatedUser();
+  const { announcements } = useAnnouncements();
   const sortedAnnounce = announcements
     ?.filter(item => item.isAnnouncement == true)
     .sort((a, b) => b.createdAt - a.createdAt);
@@ -42,22 +42,14 @@ const Directory_New = ({navigation}) => {
       }
     }
     sectionedList = [
-      {title: 'REACH Staff', data: adminList},
-      {title: 'Members', data: memberList},
+      { title: 'REACH Staff', data: adminList },
+      { title: 'Members', data: memberList },
     ];
   }
 
-  useEffect(() => {
-    // console.log("section list changed")
-    // console.log(sectionedList)
-  }, [sectionedList]);
   return (
     <SafeAreaView style={[styles.container]}>
       <View style={[styles.padding]}>
-        {/* <Header label="The REACH Directory" containerStyle={{ marginBottom: 5 }} />
-      <TextInput label="Search" dense style={{ height: 35 }} disabled />
-    </View>
-    <Divider /> */}
         <View>
           {/* <AnnouncementCard 
         title={"Announcements"}
@@ -79,8 +71,8 @@ const Directory_New = ({navigation}) => {
      */}
 
           <SectionList
-            renderSectionHeader={({section: {title}}) => (
-              <View style={{backgroundColor: '#dedede', width: '100%'}}>
+            renderSectionHeader={({ section: { title } }) => (
+              <View style={{ backgroundColor: '#dedede', width: '100%' }}>
                 <Text
                   style={{
                     fontSize: 15,
@@ -94,7 +86,7 @@ const Directory_New = ({navigation}) => {
               </View>
             )}
             sections={sectionedList}
-            renderItem={({item}) => (
+            renderItem={({ item }) => (
               <ContactCard
                 data={item}
                 onPress={() => navigation.navigate('profile', item)}
@@ -131,7 +123,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     // marginHorizontal: 20,
-    marginBottom: 75,
+    // marginBottom: 75,
   },
   padding: {
     // paddingHorizontal: 20,

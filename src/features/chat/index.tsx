@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useRef, useMemo} from 'react';
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import {
   View,
   Image,
@@ -30,10 +30,10 @@ import {
   IMessage,
   MessageImageProps,
 } from 'react-native-gifted-chat';
-import {useMessageGroup} from '@app/features/messages/useMessaging';
-import {Ionicons, FontAwesome5, AntDesign} from '@expo/vector-icons';
-import {useNavigation} from '@react-navigation/native';
-import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
+import { useMessageGroup } from '@app/features/messages/useMessaging';
+import { Ionicons, FontAwesome5, AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import Fuse from 'fuse.js';
 import {
   getDownloadURL,
@@ -42,20 +42,20 @@ import {
   uploadString,
 } from '@firebase/storage';
 import * as DocumentPicker from 'expo-document-picker';
-import {pinMessage, useGroupedPins} from '@app/lib/pinned';
-import {useProgramChatGroup} from '@app/lib/programchat';
+import { pinMessage, useGroupedPins } from '@app/lib/pinned';
+import { useProgramChatGroup } from '@app/lib/programchat';
 import { renderBubble } from './components';
 
-const Messages = ({route, navigation}) => {
-  const {group, messages, sendMessage} = route.params.isProgramChat
+const Messages = ({ route, navigation }) => {
+  const { group, messages, sendMessage } = route.params.isProgramChat
     ? useProgramChatGroup(route.params.id)
     : useMessageGroup(route.params.id);
 
-  const {pins} = useGroupedPins(route.params.id);
+  const { pins } = useGroupedPins(route.params.id);
   const pinids = pins.map(pin => pin.message_id);
   const [file, setFile] = useState(null);
   const [image, setImage] = useState('');
-  const {user, loading} = useAuthenticatedUser();
+  const { user, loading } = useAuthenticatedUser();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => [200, 200], []);
   const onSend = useCallback((messages: Message[] = []) => {
@@ -65,7 +65,7 @@ const Messages = ({route, navigation}) => {
   const [height, setHeight] = useState(50);
   const [text, setText] = useState('');
   const [people, setPeople] = useState([]);
-  const {goBack} = useNavigation();
+  const { goBack } = useNavigation();
   const bottomsheetlist = [
     {
       iconname: 'camera-outline',
@@ -138,10 +138,10 @@ const Messages = ({route, navigation}) => {
     console.log(uri[0].uri);
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
+      xhr.onload = function() {
         resolve(xhr.response);
       };
-      xhr.onerror = function (e) {
+      xhr.onerror = function(e) {
         console.log(e);
         reject(new TypeError('Network request failed'));
       };
@@ -179,7 +179,6 @@ const Messages = ({route, navigation}) => {
     }
   }, [text]);
 
-  
   function renderMessageImage(props) {
     return (
       <TouchableOpacity
@@ -213,14 +212,14 @@ const Messages = ({route, navigation}) => {
               },
               {
                 text: 'No',
-                onPress: () => {},
+                onPress: () => { },
               },
             ],
           );
         }}>
         <Image
-          source={{uri: props.currentMessage.image}}
-          style={{width: 200, height: 200, borderRadius: 10, margin: 5}}
+          source={{ uri: props.currentMessage.image }}
+          style={{ width: 200, height: 200, borderRadius: 10, margin: 5 }}
         />
       </TouchableOpacity>
     );
@@ -229,7 +228,7 @@ const Messages = ({route, navigation}) => {
     // render files
     return (
       <>
-       {props.currentMessage?._id &&
+        {props.currentMessage?._id &&
           pinids.includes(props.currentMessage._id) && (
             <AntDesign
               name="pushpin"
@@ -239,10 +238,10 @@ const Messages = ({route, navigation}) => {
                 // marginLeft: 0,
                 position: 'absolute',
                 left: -13,
-                top: -13
+                top: -13,
               }}
             />
-           )}
+          )}
         {props.currentMessage.file && (
           <TouchableOpacity
             style={{
@@ -281,14 +280,14 @@ const Messages = ({route, navigation}) => {
                   },
                   {
                     text: 'No',
-                    onPress: () => {},
+                    onPress: () => { },
                   },
                 ],
               );
             }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Ionicons name="document-text" size={24} color="#379770" />
-              <Text style={{marginLeft: 10}}>
+              <Text style={{ marginLeft: 10 }}>
                 {props.currentMessage?.file?.name}
               </Text>
             </View>
@@ -322,26 +321,25 @@ const Messages = ({route, navigation}) => {
           name="file-tray-full"
           size={28}
           color="black"
-          style={{marginLeft: 'auto'}}
-          onPress={() => navigation.navigate('Pinned', {id: route?.params?.id})}
+          style={{ marginLeft: 'auto' }}
+          onPress={() => navigation.navigate('Pinned', { id: route?.params?.id })}
         />
-         <Ionicons
+        <Ionicons
           name="information-circle-outline"
           size={30}
           color="black"
-          style={{marginLeft: 18}}
+          style={{ marginLeft: 18 }}
           onPress={openGroupInfo}
         />
       </>
     ),
-    watch: {group, route}
+    watch: { group, route },
   });
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <GiftedChat
         bottomOffset={80}
-        // alignTop={false}
-
+        alignTop
         onLongPress={(context, message) => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
           Alert.alert(
@@ -364,7 +362,7 @@ const Messages = ({route, navigation}) => {
               },
               {
                 text: 'No',
-                onPress: () => {},
+                onPress: () => { },
               },
             ],
           );
@@ -394,7 +392,7 @@ const Messages = ({route, navigation}) => {
                 const member = group.members.find(
                   mem => mem.username == user.slice(1),
                 );
-                navigation.navigate('MemberInfo', {user: member});
+                navigation.navigate('MemberInfo', { user: member });
               } else {
                 Alert.alert('User not found', 'This user is not in this group');
               }
@@ -417,7 +415,7 @@ const Messages = ({route, navigation}) => {
                   marginTop: 20,
                 }}>
                 <Image
-                  source={{uri: image}}
+                  source={{ uri: image }}
                   style={{
                     width: 200,
                     height: 150,
@@ -537,7 +535,7 @@ const Messages = ({route, navigation}) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                  <Text style={{ color: 'white', fontWeight: 'bold' }}>
                     @{person.username}
                   </Text>
                 </TouchableOpacity>
@@ -598,7 +596,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   text: {
     fontSize: 25,
@@ -608,7 +606,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   banner: {
-    flex: 1,
+    // flex: 1,
   },
   image: {
     width: '100%',
@@ -623,8 +621,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 14,
   },
   contentContainer: {
-    flex: 1,
-    padding: 20,
+    // flex: 1,
+    // padding: 20,
     // alignItems: "center",
     // backgroundColor: "blue"
   },

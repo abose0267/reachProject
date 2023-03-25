@@ -1,3 +1,4 @@
+import { colors } from '@app/constants';
 import React, { ComponentProps } from 'react';
 import { TouchableOpacity, StyleSheet, Text, TextStyle } from 'react-native';
 
@@ -6,9 +7,17 @@ interface BlockButtonProps extends ComponentProps<typeof TouchableOpacity> {
   textStyle?: TextStyle;
 }
 
-export const BlockButton = ({ children, style, outlined = false, textStyle, ...rest }: BlockButtonProps) => {
+export const BlockButton = ({
+  children,
+  style,
+  outlined = false,
+  textStyle,
+  ...rest
+}: BlockButtonProps) => {
   return (
-    <TouchableOpacity {...rest} style={[styles.button, (outlined && styles.outlined), style]}>
+    <TouchableOpacity
+      {...rest}
+      style={[styles.button, outlined && styles.outlined, style]}>
       <Text style={[styles.text, textStyle]}>{children}</Text>
     </TouchableOpacity>
   );
@@ -17,7 +26,7 @@ export const BlockButton = ({ children, style, outlined = false, textStyle, ...r
 export default BlockButton;
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#379770',
+    backgroundColor: colors.green,
     minHeight: 50,
     borderWidth: 1,
     alignItems: 'center',
@@ -27,10 +36,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 17,
-    fontWeight: "500"
+    fontWeight: '500',
+    // color: '#fff',
   },
   outlined: {
     backgroundColor: 'transparent',
     borderColor: '#000',
-  }
+  },
 });

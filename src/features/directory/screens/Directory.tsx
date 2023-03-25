@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   SafeAreaView,
@@ -15,22 +15,22 @@ import {
   TextInput,
   BigButton,
 } from '@app/components';
-import {colors} from '@app/constants';
-import {useAuth, useAuthenticatedUser, UserProfile} from '@app/lib';
-import {useCollection} from '@app/lib/useFirebase';
-import {useAnnouncements, useBlasts} from '@app/lib/announcement';
-import {AnnouncementCard} from '@app/components/Announcements';
+import { colors } from '@app/constants';
+import { useAuth, useAuthenticatedUser, UserProfile } from '@app/lib';
+import { useCollection } from '@app/lib/useFirebase';
+import { useAnnouncements, useBlasts } from '@app/lib/announcement';
+import { AnnouncementCard } from '@app/components/Announcements';
 
-const Contacts = ({navigation}) => {
-  const {signout} = useAuth();
-  const {data: users} = useCollection<UserProfile>('users');
-  const {user} = useAuthenticatedUser();
-  const {announcements} = useAnnouncements();
+const Contacts = ({ navigation }) => {
+  const { signout } = useAuth();
+  const { data: users } = useCollection<UserProfile>('users');
+  const { user } = useAuthenticatedUser();
+  const { announcements } = useAnnouncements();
   const sortedAnnounce = announcements
     ?.filter(item => item.isAnnouncement == true)
     .sort((a, b) => b.createdAt - a.createdAt);
   var sectionedList = [];
-  var adminList = [];
+  // var adminList = [];
   var memberList = [];
 
   if (users) {
@@ -42,8 +42,8 @@ const Contacts = ({navigation}) => {
       }
     }
     sectionedList = [
-      {title: 'REACH Staff', data: adminList},
-      {title: 'MEMBER', data: memberList},
+      { title: 'REACH Staff', data: adminList },
+      { title: 'MEMBER', data: memberList },
     ];
   }
 
@@ -54,7 +54,7 @@ const Contacts = ({navigation}) => {
   return (
     <SafeAreaView style={[styles.container]}>
       <View style={[styles.padding]}>
-        <Header label="The REACH Project" containerStyle={{marginBottom: 5}} />
+        <Header label="The REACH Project" containerStyle={{ marginBottom: 5 }} />
 
         {/* <View>
         <TouchableOpacity style={{ height: Dimensions.get('window').height / 2.6, backgroundColor: '#379770', borderRadius: 10, padding: 20, justifyContent:'center' }} onPress={() => { navigation.navigate("announcements") }}>
@@ -71,9 +71,22 @@ const Contacts = ({navigation}) => {
       </View> */}
       </View>
       <Divider />
-      <View style={[styles.padding, {flex: 1, justifyContent: 'center'}]}>
-        <BlockButton style={{height: 80}} onPress={() => {navigation.navigate("announcements")}} >Announcements</BlockButton>
-        <BlockButton style={{height: 80, marginTop:20}} outlined onPress={() => {navigation.navigate("directory2")}}>Directory</BlockButton>
+      <View style={[styles.padding, { flex: 1, justifyContent: 'center' }]}>
+        <BlockButton
+          style={{ height: 80 }}
+          onPress={() => {
+            navigation.navigate('announcements');
+          }}>
+          Announcements
+        </BlockButton>
+        <BlockButton
+          style={{ height: 80, marginTop: 20 }}
+          outlined
+          onPress={() => {
+            navigation.navigate('directory2');
+          }}>
+          Directory
+        </BlockButton>
       </View>
     </SafeAreaView>
   );
