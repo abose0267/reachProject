@@ -4,11 +4,11 @@
     "slug": "reachProject",
     "version": "1.2.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo2.png",
     "userInterfaceStyle": "light",
     "scheme": "reach",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
