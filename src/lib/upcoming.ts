@@ -16,8 +16,10 @@ export interface UpcomingEventData {
 
 
 export const createEvent = async (data: UpcomingEventData) => {
+    const event_id = Math.random().toString(36).substring(2, 15);
     await setDoc(doc(db, "events", data.event_id), {
         ...data,
+        event_id,
     });
 }
 

@@ -2,7 +2,7 @@
   "expo": {
     "name": "reachProject",
     "slug": "reachProject",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "orientation": "portrait",
     "icon": "./assets/logo2.png",
     "userInterfaceStyle": "light",
@@ -13,7 +13,7 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 1
     },
     "assetBundlePatterns": [
       "**/*"
@@ -24,14 +24,15 @@
       "infoPlist": {
         "MinimumOSVersion": "13.0"
       },
-      "buildNumber": "2"
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF",
         "googleServicesFile": "./google-services.json"
-      }
+      },
+      "package": "org.reach4home.reachapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -335,6 +335,7 @@ const Messages = ({ route, navigation }) => {
     ),
     watch: { group, route },
   });
+  
   return (
     <View style={{ flex: 1 }}>
       <GiftedChat

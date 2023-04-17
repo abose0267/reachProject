@@ -15,6 +15,8 @@ export const TextInput = ({ style, ...rest }: TextInputProps) => {
       <PaperTextInput
         mode="outlined"
         // outlineColor={colors.black}
+        // contentStyle={{  }}
+        // contentStyle={{  }}
         activeOutlineColor={colors.green}
         theme={{ roundness: 10 }}
         style={[{ height: 45 }, style]}

@@ -2,7 +2,6 @@ const functions = require("firebase-functions");
 const {Expo} = require("expo-server-sdk");
 const admin = require("firebase-admin");
 
-
 admin.initializeApp();
 const db = admin.firestore();
 // // Create and Deploy Your First Cloud Functions
@@ -18,14 +17,12 @@ exports.sendMessageNotifications = functions.firestore
     .document("messageGroups/{groupId}/messages/{messageId}")
     .onWrite(async (change, context) => {
       const {groupId} = context.params;
-      const {text: message} = change.after.data();
-      console.log(message);
+      const {text: message, user} = change.after.data();
       try {
         const {members} = (
           await db.collection("messageGroups").doc(groupId).get()
         ).data();
 
-        console.log(JSON.stringify(members, null, 2));
         const tokenPromises = members.map((member) =>
           db.collection("users").doc(member.uid).get(),
         );
@@ -34,26 +31,70 @@ exports.sendMessageNotifications = functions.firestore
             (item) => item.data().token,
         );
 
-        console.log(tokens);
-
         const notifications = tokens
             .filter((t) => Expo.isExpoPushToken(t))
             .map((t) => ({
               to: t,
               sound: "default",
+              title: user?.name,
               body: message,
             }));
 
         const chunks = expo.chunkPushNotifications(notifications);
         const tickets = [];
         (async () => {
-        // Send the chunks to the Expo push notification service. There are
-
-          // time, which nicely spreads the load out over time:
           for (const chunk of chunks) {
             try {
               const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-              console.log(ticketChunk);
+              tickets.push(...ticketChunk);
+            } catch (error) {
+              console.error(error);
+            }
+          }
+        })();
+      } catch (err) {
+        console.log("Error getting documents", err);
+        throw err;
+      }
+    });
+
+exports.sendProgramMessageNotifications = functions.firestore
+    .document("programs/{groupId}/messages/{messageId}")
+    .onWrite(async (change, context) => {
+      const {groupId} = context.params;
+      const {text: message, user} = change.after.data();
+
+      try {
+        const group = (await db.collection("programs").doc(groupId).get())
+            .data();
+
+        const members = (await db.collection(`programs/${groupId}/members`)
+            .get()).docs.map((doc) => doc.data());
+
+
+        const tokenPromises = members.map((member) =>
+          db.collection("users").doc(member.uid).get(),
+        );
+
+        const tokens = (await Promise.all(tokenPromises)).map(
+            (item) => item.data().token,
+        );
+
+        const notifications = tokens
+            .filter((t) => Expo.isExpoPushToken(t))
+            .map((t) => ({
+              to: t,
+              sound: "default",
+              title: `Reach Project - ${group.name}`,
+              body: `${user?.name}: ${message}`,
+            }));
+
+        const chunks = expo.chunkPushNotifications(notifications);
+        const tickets = [];
+        (async () => {
+          for (const chunk of chunks) {
+            try {
+              const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
               tickets.push(...ticketChunk);
             } catch (error) {
               console.error(error);
@@ -67,3 +108,52 @@ exports.sendMessageNotifications = functions.firestore
     });
 
 
+exports.sendAnnouncementNotifications = functions.firestore
+    .document("announcements/{id}")
+    .onWrite(async (change, context) => {
+      const {id} = context.params;
+      // eslint-disable-next-line camelcase
+      const {title, message, program_name} = change.after.data();
+      try {
+        const users = (await
+        db.collectionGroup("groups")
+            .where("program_id", "==", id)
+            .get()).map((doc) => doc.data());
+
+
+        console.log(users);
+        const tokenPromises = users.map((user) =>
+          db.collection("users").doc(user.uid).get(),
+        );
+
+        const tokens = (await Promise.all(tokenPromises)).map(
+            (item) => item.data().token,
+        );
+
+        const notifications = tokens
+            .filter((t) => Expo.isExpoPushToken(t))
+            .map((t) => ({
+              to: t,
+              sound: "default",
+              // eslint-disable-next-line camelcase
+              title: `Reach Project - ${title} (${program_name}) `,
+              body: message,
+            }));
+
+        const chunks = expo.chunkPushNotifications(notifications);
+        const tickets = [];
+        (async () => {
+          for (const chunk of chunks) {
+            try {
+              const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+              tickets.push(...ticketChunk);
+            } catch (error) {
+              console.error(error);
+            }
+          }
+        })();
+      } catch (err) {
+        console.log("Error getting documents", err);
+        throw err;
+      }
+    });

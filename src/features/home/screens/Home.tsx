@@ -69,9 +69,10 @@ const Home = ({route, navigation}) => {
           first>
           <FlatList
             data={announcements
-              .filter(item => item.program_id == null || userPrograms.includes(item.program_id))
+              .filter(item => item.program_id == null || userPrograms.includes(item.program_id) || item.program_id == '0')
               .sort((a, b) => b.createdAt - a.createdAt)
-              .slice(0, 3)}
+              .slice(0, 5)
+            }
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => (
               <TouchableOpacity
@@ -94,7 +95,7 @@ const Home = ({route, navigation}) => {
                     >
                     {item.title}
                   </Text>
-                 {item.program_id &&  <Text
+                 {item.program_id != '0' &&  <Text
                     style={{
                       fontSize: 15,
                       // fontWeight: '500',

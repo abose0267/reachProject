@@ -1,208 +1,174 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, SafeAreaView, StyleSheet, SectionList, Text, FlatList, TouchableOpacity, Dimensions, TextInput, TouchableWithoutFeedback, Keyboard, Alert, Image, KeyboardAvoidingView } from 'react-native';
-import * as Calendar from 'expo-calendar';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Picker } from '@react-native-picker/picker';
-import { ProgramChat, useProgramChats } from '@app/lib/programchat';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { createEvent } from '@app/lib/upcoming';
+import { useAuthenticatedUser } from "@app/lib";
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useState } from "react";
+import { View, SafeAreaView, StyleSheet } from "react-native";
+import { createAnnouncement } from "@app/lib/announcement";
+import { ProgramChat, useProgramChats } from "@app/lib/programchat";
+import { Controller, useForm } from "react-hook-form";
+import DropDownPicker from "react-native-dropdown-picker";
+import { colors } from "@app/constants";
+import {
+  BlockButton,
+  ControlledInputProps,
+  ControlledTextInput,
+} from "@app/components";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
-const CreateUpcomingEvent = ({ navigation }) => {
-    const [name, setName] = useState("");
-    const [date, setDate] = useState(new Date());
-    const [height, setHeight] = useState(140);
-    const [message, setMessage] = useState("");
-    const [selectedProgram, setSelectedProgram] = React.useState<ProgramChat>(null);
-    const [visible, setVisible] = React.useState(false);
-    const { programs } = useProgramChats();
-
-    function open() {
-        setVisible(true)
-        console.log(visible)
-        // pickerRef.current.focus();
-    }
-    function close() {
-        setVisible(false);
-        // pickerRef.current.blur();
-    }
-    return (
-        <SafeAreaView
-            style={{
-                flex: 1,
-                alignItems: "center",
-            }}
-        >
-            <StatusBar style="auto" />
-            <View
-                style={{
-                    marginTop: 20,
-                    marginHorizontal: 15,
-                    width: "90%",
-                }}
-            >
-                <Text
-                    style={{
-                        fontSize: 20,
-                        textAlign: "left"
-                    }}
-                >
-                    Create Upcoming Event
-                </Text>
-            </View>
-            <TextInput
-                placeholder="Name"
-                style={{ marginBottom: 5, marginTop: 20, borderWidth: 1, borderColor: "#379770", padding: 10, borderRadius: 5, width: 350, height: 50, backgroundColor: "white" }}
-                onChangeText={text => setName(text)}
-                value={name}
-            />
-            <TextInput
-                style={{
-                    borderWidth: 1,
-                    borderColor: "#379770",
-                    borderRadius: 5,
-                    padding: 10,
-                    marginTop: 10,
-                    width: 350,
-                    // paddingLeft: 20,
-                    paddingTop: 15,
-                    minHeight: 140,
-                    height: height,
-                    fontSize: 15,
-                    backgroundColor: "white",
-                }}
-                placeholder="Description"
-                multiline
-                onContentSizeChange={(event) => {
-                    setHeight(event.nativeEvent.contentSize.height)
-                }}
-                value={message}
-                onChangeText={(text) => setMessage(text)}
-            />
-            <View
-                style={{
-                    marginTop: 20,
-                    width: '100%',
-                    paddingHorizontal: 15,
-                    alignItems: "center",
-                }}
-            >
-                <Text
-                    style={{
-                        fontSize: 17,
-                        textAlign: "left",
-                        fontWeight: '300',
-                        marginVertical: 10,
-                        color: "gray",
-                        width: "100%",
-                    }}
-                >
-                    Date and Time of Event
-                </Text>
-                <DateTimePicker
-                    mode="datetime"
-                    display='calendar'
-                    value={date}
-                    onChange={(event, selectedDate) => {
-                        const currentDate = selectedDate || date;
-                        setDate(currentDate);
-                    }}
-                    minimumDate={new Date()}
-                    // minimumDateMessage="Date must be in the future"
-                    themeVariant="light"
-                >
-
-                </DateTimePicker>
-            </View>
-            {/* <TouchableOpacity
-                style={{
-                    borderWidth: 1,
-                    borderColor: "#379770",
-                    borderRadius: 5,
-                    padding: 10,
-                    width: "90%",
-                    marginTop: 20,
-                    marginBottom: 10,
-                    height: 45,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                }}
-                onPress={() => {
-                    if (visible) {
-                        close();
-                    } else {
-                        open();
-                    }
-                }}
-            >
-                <Text
-                    style={{
-                        color: selectedProgram === null ? "lightgray" : "black"
-                    }}
-                >
-                    {selectedProgram === null ? "Send to program (Optional)" : selectedProgram.name}
-                </Text>
-                <Ionicons
-                    name='chevron-down-outline'
-                    color={"lightgray"}
-                    size={24}
-                />
-            </TouchableOpacity>
-            {visible &&
-                <Picker
-                    selectedValue={selectedProgram?.name}
-                    onValueChange={(itemValue, itemIndex) => {
-                        setSelectedProgram(programs[itemIndex]);
-                    }}>
-                    {programs.map((item) => (
-                        <Picker.Item label={item.name} value={item.name} />
-                    ))}
-                </Picker>
-            } */}
-            <TouchableOpacity
-                style={{
-                    backgroundColor: "#379770",
-                    width: 350,
-                    height: 50,
-                    position: "absolute",
-                    bottom: 20,
-                    borderRadius: 5,
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-                onPress={() => {
-                    const randomId = Math.random().toString(36).substring(2, 15)
-                    if(name === "" || message === "") {
-                        Alert.alert("Please fill out all fields")
-                        return;
-                    } else {
-                        createEvent({
-                            name: name,
-                            description: message,
-                            date: date,
-                            event_id: randomId,
-                        }).then(() => {
-                            Alert.alert("Event created!")
-                        })
-                        .then(() => {
-                            navigation.navigate("adminpanel")
-                        })
-                    }
-                }}
-            >
-                <Text
-                    style={{
-                        color: "white",
-                        fontSize: 15,
-                    }}
-                >
-                    Create event!
-                </Text>
-            </TouchableOpacity>
-            <KeyboardAvoidingView behavior="padding" />
-        </SafeAreaView>
-    )
+interface CreateEventInput {
+  name: string;
+  description: string;
+  program_id?: string;
+  program_name?: string;
+  date: Date;
 }
 
+const Input = (props: ControlledInputProps<CreateEventInput>) => (
+  <ControlledTextInput {...props} />
+);
+
+const CreateUpcomingEvent = ({ navigation, route }) => {
+  const { user } = useAuthenticatedUser();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateEventInput>({
+    defaultValues: {
+      program_id: "0",
+      date: new Date(),
+      description: " ",
+    },
+  });
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const onSubmit = (data) => {
+    const program_name =
+      data.program_id == 0
+        ? "All"
+        : programs.find((p) => p.program_id == data.program_id).name;
+    createAnnouncement({
+      ...data,
+      program_name,
+    });
+  };
+  const { programs } = useProgramChats();
+
+  return (
+    <SafeAreaView style={[styles.container]}>
+      <View
+        style={{
+          marginTop: 10,
+        }}
+      >
+        <Input name="name" label="Event Name" control={control} />
+        <Input
+          name="description"
+          control={control}
+          label="Description"
+          // accessibilityElementsHidden
+          multiline
+          style={{ height: 100, marginBottom: 5 }}
+        />
+        <Controller
+          name="program_id"
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <DropDownPicker
+              schema={{ label: "name", value: "program_id" }}
+              open={dropdownOpen}
+              value={value}
+              items={[{ name: "All Members", program_id: "0" }, ...programs]}
+              setOpen={setDropdownOpen}
+              setValue={(v) => onChange(v(value))}
+              dropDownContainerStyle={{ backgroundColor: "#f6f6f6" }}
+              style={{ borderColor: "#777", backgroundColor: "#f6f6f6" }}
+            />
+          )}
+        />
+        <Controller
+          name="date"
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            // <DropDownPicker
+            //   schema={{ label: 'name', value: 'program_id' }}
+            //   open={dropdownOpen}
+            //   value={value}
+            //   items={[{ name: 'All Members', program_id: '0' }, ...programs]}
+            //   setOpen={setDropdownOpen}
+            //   setValue={v => onChange(v(value))}
+            //   dropDownContainerStyle={{ backgroundColor: '#f6f6f6' }}
+            //   style={{ borderColor: '#777', backgroundColor: '#f6f6f6' }}
+            // />
+            <TimePicker value={new Date(value)} onChange={(e) => e} />
+          )}
+        />
+
+        <View style={{ marginTop: 30 }}>
+          <BlockButton onPress={handleSubmit(onSubmit)}>Send</BlockButton>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
+  },
+});
+
 export default CreateUpcomingEvent;
+
+interface TimePickerProps {
+  value: Date;
+  onChange: (date: Date) => void;
+}
+
+const TimePicker = ({ value, onChange }: TimePickerProps) => {
+  
+  return (
+    <View style={{ flexDirection: "row", height: 40, marginTop: 10 }}>
+      <RNDateTimePicker
+        mode="date"
+        maximumDate={new Date(2030, 10, 20)}
+        value={new Date()}
+        onChange={(e) => e}
+        accentColor={colors.green}
+        style={{marginRight: 10}}
+      />
+      <RNDateTimePicker
+        mode="time"
+        maximumDate={new Date(2030, 10, 20)}
+        value={new Date()}
+        onChange={(e) => console.log(new Date(e.nativeEvent.timestamp))}
+        accentColor={colors.green}
+        // textColor="red"
+      />
+    </View>
+  );
+};
+
+// onPress={() => {
+//           const randomId = Math.random().toString(36).substring(2, 15);
+//           if (name === "" || message === "") {
+//             Alert.alert("Please fill out all fields");
+//             return;
+//           } else {
+//             createEvent({
+//               name: name,
+//               description: message,
+//               date: date,
+//               event_id: randomId,
+//             })
+//               .then(() => {
+//                 Alert.alert("Event created!");
+//               })
+//               .then(() => {
+//                 navigation.navigate("adminpanel");
+//               });
+//           }
+//         }}

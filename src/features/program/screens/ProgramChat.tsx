@@ -11,6 +11,9 @@ import {
 import { HomeBubble } from '../../../features/home/components/HomeBubble';
 import { useAnnouncements } from '@app/lib/announcement';
 import { useCollection } from '@app/lib/useFirebase';
+import { useGroupedPins } from '@app/lib/pinned';
+import { renderBubble } from '@app/features/chat/components';
+import { Bubble } from 'react-native-gifted-chat';
 
 const ProgramChat = ({ route, navigation }) => {
   if (!route?.params?.data) return <></>;
@@ -22,6 +25,10 @@ const ProgramChat = ({ route, navigation }) => {
     `programs/${data?.program_id}/messages`,
     { where: ['image', '!=', 'null'] },
   );
+
+
+  const { pins } = useGroupedPins(data?.program_id)
+  console.log(pins);
 
   console.log(images);
   return (
@@ -48,7 +55,7 @@ const ProgramChat = ({ route, navigation }) => {
             ))}
           </View>
         </HomeBubble>
-        <HomeBubble data={{ title: 'Announcements' }} last>
+        <HomeBubble data={{ title: 'Announcements' }}>
          
         <FlatList
             data={announcements
@@ -113,6 +120,52 @@ const ProgramChat = ({ route, navigation }) => {
             keyExtractor={(item, index) => index.toString()}
           />
         </HomeBubble>
+
+        <HomeBubble data={{ title: 'Pinned' }} last>
+         
+        <FlatList
+            data={pins
+              .sort((a, b) => b.createdAt - a.createdAt)
+              // .slice(0, 3)
+            }
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}) => (
+              <TouchableOpacity
+                style={{
+                  marginTop: 10,
+                }}
+                onPress={() =>
+                  navigation.navigate('Announcements', {data: item})
+                }>
+                <>
+                  <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      marginBottom: 5,
+                      // color: '#666',
+                    }}
+                    numberOfLines={2}
+                    >
+                    {item.text}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: 'gray',
+                    }}>
+                    {/* @ts-ignore */}
+                    {item.createdAt.toDate().toDateString().toUpperCase()}
+                  </Text>
+                </>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </HomeBubble>
+
+
       {/* </ScrollView> */}
     </SafeAreaView>
   );
