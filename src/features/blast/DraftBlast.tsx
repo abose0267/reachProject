@@ -39,9 +39,13 @@ const DraftBlast = ({}) => {
   const [name, setName] = useState('');
 
   const {addDoc: addBlastGroup} = useCollection<BlastGroup>(`blastGroups`);
+  console.log({bar: params.selected});
   const handlePress = async () => {
     const users: UserProfile[] = [];
+    // console.log(params.selected)
+    // console.log(params.selected.length)
     for (const uid of params.selected) {
+      console.log(uid);
       const userRef = fb.doc(db, `users/${uid}`);
       const data = (await fb.getDoc(userRef)).data() as UserProfile;
       users.push(data);
@@ -51,6 +55,7 @@ const DraftBlast = ({}) => {
         `messageGroups/${id}/messages`,
       ) as fb.CollectionReference<Message>;
       const text = message.replaceAll('$firstname', data.firstname).replaceAll('$lastname', data.lastname)
+      console.log(data.firstname, data.lastname, text)
       const m: Message = {
         _id: (Math.random() + 1).toString(36).substring(2),
         createdAt: new Date(),
@@ -60,7 +65,7 @@ const DraftBlast = ({}) => {
           name: `${user.firstname} ${user.lastname}`,
         },
       };
-      console.log({id, m})
+      // console.log({id, m})
       await fb.addDoc(collectionRef, m);
     }
 
@@ -84,7 +89,7 @@ const DraftBlast = ({}) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Header label="Draft Message" containerStyle={{marginBottom: 5}} />
+          {/* <Header label="Draft Message" containerStyle={{marginBottom: 5}} /> */}
           {/* {selected.length > 0 && (
             <MaterialCommunityIcons
               name="message-arrow-right"

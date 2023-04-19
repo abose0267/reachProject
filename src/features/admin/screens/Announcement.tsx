@@ -21,7 +21,7 @@ interface CreateAnnouncementInput {
 }
 
 const Input = (props: ControlledInputProps<CreateAnnouncementInput>) => (
-  <ControlledTextInput {...props} />
+  <ControlledTextInput required {...props} />
 );
 
 const SendAnnouncement = ({ navigation, route }) => {
@@ -45,7 +45,7 @@ const SendAnnouncement = ({ navigation, route }) => {
     createAnnouncement({
       ...data,
       program_name,
-    });
+    }).then(() =>  navigation.goBack()).catch(() => {});
   };
   const { programs } = useProgramChats();
 

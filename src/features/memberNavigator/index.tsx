@@ -52,8 +52,8 @@ const MemberNavigator = () => {
           tabBarActiveTintColor: colors.green,
           tabBarInactiveTintColor: colors.black,
           initialRouteName: 'Directory',
-
-          // tabBarStyle: { paddding: 50 },
+          // tabBarStyle: { paddingTop: 10 },
+          tabBarIconStyle: { marginTop: 10 },
         })}>
         <Tab.Screen
           name="Home"

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "reachProject",
+    "name": "Reach Project",
     "slug": "reachProject",
     "version": "1.3.0",
     "orientation": "portrait",
@@ -24,15 +24,17 @@
       "infoPlist": {
         "MinimumOSVersion": "13.0"
       },
-      "buildNumber": "1"
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF",
-        "googleServicesFile": "./google-services.json"
+        // "googleServicesFile": "./google-services.json"
       },
-      "package": "org.reach4home.reachapp"
+      "package": "org.reach4home.reachapp",
+      
+      "versionCode": 10
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -46,9 +46,12 @@ export const ContactCard = ({
               {data.firstname} {data.lastname}
             </Text>
             <Text style={styles.role}>
-              {data.role == 'Admin' || data.role == 'admin'
-                ? 'REACH Staff'
-                : 'Member'}
+              {(() => {
+                if (data.role == 'Admin' || data.role == 'admin') {
+                  return data.title ?? 'REACH Staff';
+                }
+                return 'Member'
+              })()}
             </Text>
           </View>
         </View>

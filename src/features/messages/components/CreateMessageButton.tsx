@@ -26,11 +26,11 @@ export const CreateMessageButton = () => {
       label: 'Group Chat',
       onPress: () => navigate('CreateGroup'),
     },
-    {
-      icon: 'bell',
-      label: 'Direct Message',
-      onPress: () => console.log('Pressed notifications'),
-    },
+    // {
+    //   icon: 'bell',
+    //   label: 'Direct Message',
+    //   onPress: () => console.log('Pressed notifications'),
+    // },
   ] : 
   [
     // { icon: 'plus', onPress: () => console.log('Pressed add') },
@@ -40,11 +40,11 @@ export const CreateMessageButton = () => {
       label: 'Group Chat',
       onPress: () => navigate('CreateGroup'),
     },
-    {
-      icon: 'bell',
-      label: 'Direct Message',
-      onPress: () => console.log('Pressed notifications'),
-    },
+    // {
+    //   icon: 'bell',
+    //   label: 'Direct Message',
+    //   onPress: () => console.log('Pressed notifications'),
+    // },
   ]
   return (
     // <Provider>

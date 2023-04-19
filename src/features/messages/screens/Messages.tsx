@@ -80,13 +80,13 @@ const Messages = ({route, navigation}) => {
         pickImage();
       },
     },
-    {
-      iconname: 'folder-outline',
-      text: 'Upload a file',
-      onPress: () => {
-        browseFiles();
-      },
-    },
+    // {
+    //   iconname: 'folder-outline',
+    //   text: 'Upload a file',
+    //   onPress: () => {
+    //     browseFiles();
+    //   },
+    // },
   ];
   const options = {
     keys: ['username', 'firstname'],
@@ -110,7 +110,7 @@ const Messages = ({route, navigation}) => {
       quality: 1,
     });
 
-    console.log('RESULT', result);
+    // console.log('RESULT', result);
 
     if (!result.canceled) {
       bottomSheetRef.current?.close();

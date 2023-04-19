@@ -111,7 +111,7 @@ const Messages = ({ route, navigation }) => {
       quality: 1,
     });
 
-    console.log('RESULT', result);
+    // console.log('RESULT', result);
 
     if (!result.canceled) {
       bottomSheetRef.current?.close();
@@ -135,14 +135,14 @@ const Messages = ({ route, navigation }) => {
     }
   };
   const uploadImage = async (uri, directory = 'images/') => {
-    console.log(uri[0].uri);
+    // console.log(uri[0].uri);
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function() {
         resolve(xhr.response);
       };
       xhr.onerror = function(e) {
-        console.log(e);
+        // console.log(e);
         reject(new TypeError('Network request failed'));
       };
       xhr.responseType = 'blob';
@@ -551,13 +551,14 @@ const Messages = ({ route, navigation }) => {
         snapPoints={snapPoints}
         bottomInset={20}
         index={-1}
-        handleComponent={null}
+        // handleComponent={null}
         detached={true}
         enablePanDownToClose
+        // detached={true}
         backdropComponent={BottomSheetBackdrop}
         style={styles.sheetContainer}>
         <View style={styles.contentContainer}>
-          {bottomsheetlist.map(item => (
+          {bottomsheetlist.map((item, i, arr) => (
             <>
               <TouchableOpacity
                 onPress={item.onPress}
@@ -570,19 +571,19 @@ const Messages = ({ route, navigation }) => {
                 <Text
                   style={{
                     fontSize: 15,
-                    marginLeft: 10,
+                    marginLeft: 15,
                   }}>
                   {item.text}
                 </Text>
               </TouchableOpacity>
-              <View
+              {i != arr.length - 1 && <View
                 style={{
                   height: 1,
-                  width: '100%',
+                  // width: '100%',
                   backgroundColor: '#e0e0e0',
                   marginVertical: 10,
                 }}
-              />
+              />}
             </>
           ))}
         </View>
@@ -619,6 +620,7 @@ const styles = StyleSheet.create({
   },
   sheetContainer: {
     // add horizontal space
+    paddingHorizontal: 15,
     marginHorizontal: 14,
   },
   contentContainer: {

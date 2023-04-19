@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   SafeAreaView,
@@ -42,8 +42,13 @@ const CreateBlast = ({ navigation }) => {
     icon: "message-arrow-right",
     onPress: () => navigation.navigate("DraftBlast", { selected }),
     show: selected.length > 0,
+    watch: [selected],
   });
 
+
+  useEffect(() => {
+    console.log({selected})
+  }, [selected])
   return (
     <SafeAreaView style={[styles.container]}>
       <View style={[styles.padding]}>

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  Share
 } from 'react-native';
 import { HomeBubble } from '../../../features/home/components/HomeBubble';
 import { useAnnouncements } from '@app/lib/announcement';
@@ -14,12 +15,19 @@ import { useCollection } from '@app/lib/useFirebase';
 import { useGroupedPins } from '@app/lib/pinned';
 import { renderBubble } from '@app/features/chat/components';
 import { Bubble } from 'react-native-gifted-chat';
+import { useProgramChatGroup } from '@app/lib/programchat';
+import * as Sharing from 'expo-sharing';
+import QRCode from 'react-native-qrcode-svg';
+import { Button, IconButton } from 'react-native-paper';
+import { colors } from '@app/constants';
 
 const ProgramChat = ({ route, navigation }) => {
   if (!route?.params?.data) return <></>;
-  console.log(route);
+  // console.log(route);
   const { data } = route.params;
   const { announcements } = useAnnouncements();
+
+  const {group} = useProgramChatGroup(data?.program_id);
 
   const { data: images } = useCollection(
     `programs/${data?.program_id}/messages`,
@@ -28,16 +36,16 @@ const ProgramChat = ({ route, navigation }) => {
 
 
   const { pins } = useGroupedPins(data?.program_id)
-  console.log(pins);
+  // console.log(pins);
 
-  console.log(images);
+  // console.log(images);
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        marginTop: 15,
+        // marginTop: 15,
       }}>
-      {/* <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}> */}
+      <ScrollView style={{ flex: 1 }} contentInset={{top: 15, bottom: 30}} showsVerticalScrollIndicator={false}>
         <HomeBubble data={{ title: 'Attachments' }} first>
           <View
             style={{
@@ -93,7 +101,7 @@ const ProgramChat = ({ route, navigation }) => {
                     }}
                     // numberOfLines={1}
                     >
-                    {`(${item.program_name})`}
+                    {/* {`(${item.program_name})`} */}
                   </Text>}
                   </View>
                   <Text
@@ -134,9 +142,7 @@ const ProgramChat = ({ route, navigation }) => {
                 style={{
                   marginTop: 10,
                 }}
-                onPress={() =>
-                  navigation.navigate('Announcements', {data: item})
-                }>
+               >
                 <>
                   <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                   </View>
@@ -165,8 +171,23 @@ const ProgramChat = ({ route, navigation }) => {
           />
         </HomeBubble>
 
+        <HomeBubble data={{ title: 'Share' }} last>
+          <View style={{marginTop: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
+            {/* <View style={{flex: 1}}> */}
+              <QRCode value={group?.qrCode} size={130}/>
+            {/* </View> */}
+            <View style={{flex: 1, justifyContent: 'center', 'maxWidth': 180}}>
+            <Button icon="send" mode='contained' buttonColor={colors.green} onPress={() => Share.share({url: group?.qrCode, message: `Join ${group?.name}!`})}>
+   Share Link
+  </Button>
+            </View>
+          </View>
+         
+          {/* <Text>{group.qrCode}</Text> */}
+        </HomeBubble>
 
-      {/* </ScrollView> */}
+
+      </ScrollView>
     </SafeAreaView>
   );
 };

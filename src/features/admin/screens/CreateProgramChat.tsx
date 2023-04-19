@@ -53,7 +53,7 @@ const CreateProgramChat = ({ navigation, route }) => {
       quality: 1,
     });
 
-    console.log("RESULT", result);
+    // console.log("RESULT", result);
 
     if (!result.canceled) {
       const url = await uploadImage(result.assets[0].uri);

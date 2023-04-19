@@ -41,8 +41,10 @@ const Home = ({route, navigation}) => {
           }}>
           <Text
             style={{
+              marginBottom: 15,
+              marginTop: -15,
               fontSize: 25,
-              // marginLeft: 20,
+              fontWeight: '500',
               color: '#000000',
             }}>
             Hi {user?.firstname}!
@@ -71,7 +73,7 @@ const Home = ({route, navigation}) => {
             data={announcements
               .filter(item => item.program_id == null || userPrograms.includes(item.program_id) || item.program_id == '0')
               .sort((a, b) => b.createdAt - a.createdAt)
-              .slice(0, 5)
+              .slice(0, 4)
             }
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => (
